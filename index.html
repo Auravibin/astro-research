@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Aura Vibin Astrology Research</title>
+<meta name="description" content="A living astrology research hub — learn the real mechanics of astrology and contribute to community-driven pattern research.">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg: #f5f1ea;
+    --bg-card: #fae3ee;
+    --bg-card-deep: #f6d7e6;
+    --bg-input: #f1ece3;
+    --bg-white: #fdfbf7;
+    --text-primary: #1d1418;
+    --text-secondary: #6d4a58;
+    --text-muted: #8d6c7a;
+    --border: #f2c3d8;
+    --border-strong: #eaa5c4;
+    --accent: #e5087e;
+    --accent-deep: #c00668;
+    --gold: #8a6a2c;
+    --success: #3e8656;
+    --danger: #b03040;
+    --pill-bg: #fdd3e8;
+    --pill-text: #a3145f;
+    --diagram-line: #6d4a58;
+    --diagram-accent: #e5087e;
+    --diagram-gold: #96742f;
+    --nav-bg: rgba(253, 251, 247, 0.96);
+  }
+  [data-theme="dark"] {
+    --bg: #121011;
+    --bg-card: #221419;
+    --bg-card-deep: #2c1a21;
+    --bg-input: #1b1518;
+    --bg-white: #1a1416;
+    --text-primary: #f7ebe4;
+    --text-secondary: #dcb0c0;
+    --text-muted: #97707f;
+    --border: #3d2430;
+    --border-strong: #5a3346;
+    --accent: #f75fb2;
+    --accent-deep: #e5087e;
+    --gold: #d4aa72;
+    --success: #6aa87a;
+    --danger: #d97a7a;
+    --pill-bg: #3d1428;
+    --pill-text: #f7a8d2;
+    --diagram-line: #dcb0c0;
+    --diagram-accent: #f75fb2;
+    --diagram-gold: #d4aa72;
+    --nav-bg: rgba(18, 16, 17, 0.96);
+  }
+  :root { color-scheme: light; }
+  [data-theme="dark"] { color-scheme: dark; }
+  html { background: var(--bg); }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; transition: background 0.3s; }
+  header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 1rem 1.25rem 0.75rem; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; letter-spacing: 0.01em; }
+  .logo span { color: var(--accent); font-style: italic; }
+  .header-actions { display: flex; align-items: center; gap: 0.6rem; }
+  .theme-toggle { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border-strong); background: var(--bg-card); cursor: pointer; font-size: 16px; }
+  .admin-link { display: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); cursor: pointer; }
+  .admin-link.show { display: block; }
+  main { max-width: 1100px; margin: 0 auto; padding: 1.25rem 1.25rem 7.5rem; }
+  .section { display: none; }
+  .section.active { display: block; animation: fade 0.25s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .section-eyebrow { font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 0.5rem; }
+  .section-title { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 600; line-height: 1.08; margin-bottom: 0.6rem; }
+  .section-sub { font-size: 14.5px; color: var(--text-secondary); line-height: 1.65; max-width: 620px; font-weight: 300; margin-bottom: 1.75rem; }
+  .search-bar { width: 100%; padding: 0.95rem 1.25rem; border: 1.5px solid var(--border); border-radius: 18px; background: var(--bg-input); color: var(--text-primary); font-size: 14.5px; font-family: inherit; margin-bottom: 1.25rem; outline: none; }
+  .search-bar:focus { border-color: var(--accent); }
+  .search-bar::placeholder { color: var(--text-muted); }
+  .card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 26px; padding: 1.6rem 1.5rem; margin-bottom: 1rem; }
+  .acc-head { display: flex; justify-content: space-between; align-items: center; cursor: pointer; padding: 1.05rem 1.4rem; border-radius: 22px; background: var(--bg-card); border: 1.5px solid var(--border); margin-bottom: 0.55rem; transition: border-color 0.15s; }
+  .acc-head:active { border-color: var(--accent); }
+  .acc-head h3 { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; }
+  .acc-arrow { color: var(--accent); transition: transform 0.2s; font-size: 15px; }
+  .acc-head.open { border-radius: 22px 22px 0 0; border-bottom-color: transparent; margin-bottom: 0; }
+  .acc-head.open .acc-arrow { transform: rotate(180deg); }
+  .acc-body { display: none; padding: 0.4rem 1.4rem 1.3rem; background: var(--bg-card); border: 1.5px solid var(--border); border-top: none; border-radius: 0 0 22px 22px; margin: 0 0 0.55rem; font-size: 14px; color: var(--text-secondary); line-height: 1.75; font-weight: 300; }
+  .acc-body.open { display: block; }
+  .acc-body strong { color: var(--text-primary); font-weight: 500; }
+  .acc-body table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 0.7rem 0; }
+  .acc-body th { text-align: left; padding: 0.45rem 0.5rem; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); border-bottom: 1.5px solid var(--border); font-weight: 500; }
+  .acc-body td { padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .acc-body td:first-child { font-weight: 500; color: var(--text-primary); }
+  .hl { background: var(--bg-card-deep); border-radius: 18px; padding: 1rem 1.2rem; margin: 0.9rem 0; font-size: 13.5px; line-height: 1.7; }
+  .hl strong { display: block; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.35rem; }
+  .diagram { display: block; margin: 1.1rem auto; max-width: 100%; }
+  .diagram text { font-family: 'DM Sans', sans-serif; }
+  .pill { display: inline-block; padding: 4px 13px; border-radius: 999px; font-size: 10.5px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; margin: 0 4px 8px 0; background: var(--pill-bg); color: var(--pill-text); }
+  .gloss-item { padding: 1rem 1.35rem; border-bottom: 1.5px solid var(--border); display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; }
+  .gloss-item:last-child { border-bottom: none; }
+  .gloss-term { font-weight: 500; font-size: 14.5px; color: var(--text-primary); min-width: 150px; }
+  .gloss-cat { font-size: 9.5px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); display: block; margin-top: 3px; font-weight: 500; opacity: 0.8; }
+  .gloss-def { font-size: 13.5px; color: var(--text-secondary); line-height: 1.65; flex: 1; font-weight: 300; }
+  .bookmark-btn { background: none; border: none; cursor: pointer; font-size: 17px; color: var(--text-muted); padding: 2px 6px; }
+  .bookmark-btn.saved { color: var(--accent); }
+  .filter-row { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+  .filter-chip { padding: 0.45rem 1.05rem; border-radius: 999px; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; border: 1.5px solid var(--border-strong); background: transparent; color: var(--text-secondary); cursor: pointer; font-weight: 500; }
+  .filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  label { display: block; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin: 1.15rem 0 0.45rem; font-weight: 500; }
+  .optional-tag { color: var(--text-muted); font-weight: 400; letter-spacing: 0.05em; text-transform: none; }
+  input[type="text"], input[type="date"], input[type="time"], input[type="email"], input[type="password"], select, textarea { width: 100%; padding: 0.85rem 1.1rem; border: 1.5px solid var(--border); border-radius: 16px; background: var(--bg-input); color: var(--text-primary); font-size: 14.5px; font-family: inherit; outline: none; }
+  textarea { min-height: 115px; resize: vertical; line-height: 1.6; }
+  input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+  .btn { margin-top: 1.35rem; padding: 0.85rem 1.9rem; background: var(--accent); color: #fff; border: none; border-radius: 999px; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
+  .btn:hover { background: var(--accent-deep); }
+  .btn-ghost { background: transparent; border: 1.5px solid var(--border-strong); color: var(--text-secondary); }
+  .btn-ghost:hover { background: var(--bg-card); }
+  .btn-sm { padding: 0.5rem 1.1rem; font-size: 10.5px; margin-top: 0; }
+  .btn-approve { background: var(--success); }
+  .btn-reject { background: var(--danger); }
+  .toggle-row { display: flex; align-items: center; gap: 0.65rem; margin-top: 1.15rem; font-size: 13.5px; color: var(--text-secondary); }
+  .toggle-row input { width: auto; accent-color: var(--accent); }
+  .msg { padding: 0.9rem 1.15rem; border-radius: 16px; font-size: 13.5px; margin-top: 1rem; display: none; }
+  .msg.ok { background: rgba(62,134,86,0.13); color: var(--success); display: block; }
+  .msg.err { background: rgba(176,48,64,0.12); color: var(--danger); display: block; }
+  .sub-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 24px; padding: 1.3rem 1.45rem; margin-bottom: 0.85rem; }
+  .sub-meta { font-size: 11.5px; color: var(--text-muted); margin-bottom: 0.4rem; letter-spacing: 0.03em; }
+  .sub-placements { font-size: 13px; color: var(--accent); margin: 0.4rem 0; font-weight: 500; }
+  .sub-story { font-size: 13.5px; color: var(--text-secondary); line-height: 1.7; font-weight: 300; }
+  .note-entry { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 26px; padding: 1.6rem 1.5rem; margin-bottom: 1rem; }
+  .note-entry h3 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; margin-bottom: 0.3rem; }
+  .note-date { font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.7rem; font-weight: 500; }
+  .note-body { font-size: 14px; color: var(--text-secondary); line-height: 1.78; font-weight: 300; white-space: pre-wrap; }
+  .admin-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
+  .stat { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 22px; padding: 1.1rem 0.9rem; text-align: center; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 34px; font-weight: 600; color: var(--accent); }
+  .stat-label { font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted); font-weight: 500; }
+  .empty { color: var(--text-muted); font-size: 13.5px; padding: 1.75rem 0; text-align: center; font-weight: 300; }
+  .saved-note { background: var(--bg-card-deep); border-radius: 18px; padding: 1rem 1.15rem; margin-bottom: 0.7rem; font-size: 13.5px; color: var(--text-secondary); line-height: 1.65; position: relative; }
+  .del-x { position: absolute; top: 0.7rem; right: 0.85rem; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; }
+  h2.subhead { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; margin: 2rem 0 1rem; }
+  h2.subhead em { color: var(--accent); font-style: italic; }
+  .subtabs { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
+  .subtab { padding: 0.5rem 1.05rem; border-radius: 999px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border: 1.5px solid var(--border-strong); background: transparent; color: var(--text-secondary); cursor: pointer; font-weight: 500; }
+  .subtab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .subsection { display: none; }
+  .subsection.active { display: block; }
+  .flashcard { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 28px; padding: 2.75rem 1.75rem; text-align: center; cursor: pointer; min-height: 200px; display: flex; flex-direction: column; justify-content: center; }
+  .flash-term { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; }
+  .flash-def { font-size: 14px; color: var(--text-secondary); line-height: 1.75; margin-top: 0.85rem; font-weight: 300; }
+  .flash-hint { font-size: 9.5px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--accent); margin-top: 1.4rem; font-weight: 500; }
+  .check-item { display: flex; gap: 0.65rem; align-items: flex-start; padding: 0.8rem 1.05rem; background: var(--bg-card-deep); border-radius: 16px; margin-bottom: 0.5rem; font-size: 13.5px; color: var(--text-secondary); position: relative; }
+  .check-item input { width: auto; margin-top: 3px; accent-color: var(--accent); }
+  .check-item.done span { text-decoration: line-through; opacity: 0.5; }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1.5px solid var(--border); display: flex; justify-content: space-around; align-items: stretch; padding: 0.5rem 0.25rem calc(0.6rem + env(safe-area-inset-bottom)); }
+  .tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0.3rem 0.35rem; cursor: pointer; border-radius: 14px; min-width: 42px; }
+  .tab-icon { font-size: 21px; line-height: 1; filter: grayscale(0.35) opacity(0.75); transition: filter 0.15s, transform 0.15s; }
+  .tab-label { font-size: 9.5px; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 500; }
+  .tab.active .tab-icon { filter: none; transform: scale(1.08); }
+  .tab.active .tab-label { color: var(--accent); font-weight: 500; }
+  .card table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 0.5rem 0; }
+  .card table th { text-align: left; padding: 0.45rem 0.5rem; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); border-bottom: 1.5px solid var(--border); font-weight: 500; }
+  .card table td { padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text-secondary); font-weight: 300; line-height: 1.5; }
+  .card table tr:last-child td { border-bottom: none; }
+  .card table td:first-child { font-weight: 500; color: var(--text-primary); }
+  .brand-img { display: block; width: 100%; max-width: 640px; margin: 0.9rem auto; border-radius: 20px; border: 1.5px solid var(--border); }
+  .img-caption { text-align: center; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin: -0.3rem 0 0.9rem; font-weight: 500; }
+  .chart-row { background: var(--bg-card-deep); border-radius: 18px; padding: 1rem 1.1rem 1.2rem; margin-top: 0.7rem; position: relative; }
+  .chart-row label { margin-top: 0.7rem; }
+  .chart-row label:first-of-type { margin-top: 0; }
+  .rising-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem; }
+  .rising-grid img { width: 100%; border-radius: 14px; border: 1.5px solid var(--border); }
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 0.9rem; }
+  .cheat-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 20px; padding: 1.1rem 1.15rem; }
+  .cheat-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; margin-bottom: 0.15rem; }
+  .cheat-card .signs { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 0.4rem; }
+  .cheat-card p { font-size: 12.5px; color: var(--text-secondary); line-height: 1.6; font-weight: 300; }
+  @media (max-width: 480px) { .cheat-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 640px) {
+    .gloss-item { flex-direction: column; gap: 0.3rem; }
+    .gloss-term { min-width: 0; }
+    .section-title { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-top">
+    <div class="logo" onclick="logoTap()">Astro <span>Research</span></div>
+    <div class="header-actions">
+      <div class="admin-link tab" data-tab="admin" id="admin-tab" onclick="showTab('admin')">Admin</div>
+      <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+    </div>
+  </div>
+</header>
+<main>
+
+<div class="section active" id="section-learn">
+  <div class="section-eyebrow">Study</div>
+  <h1 class="section-title">Learn</h1>
+  <p class="section-sub">The real mechanics of astrology, explained the way they should have been explained to you the first time. Click any topic to expand.</p>
+  <input class="search-bar" id="learn-search" placeholder="Search topics — try 'cazimi' or 'yod'..." oninput="filterLearn()">
+
+  <h2 class="subhead">The Chart Itself</h2>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Anatomy of a birth chart</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">A birth chart is a snapshot of the sky at the exact moment and place of birth, drawn as a circle. Every element of that circle has a job:<br><br>
+  <img class="brand-img" src="img/aura-anatomy-master.jpg" alt="Anatomy of a birth chart — quadrants, bounds, decans, signs, rulers, houses, and the four angles ASC, DSC, MC, IC" loading="lazy" style="max-width:700px;">
+  <div class="img-caption">Rings, outside in: quadrants · bounds · decans · sign · ruler · house — with the ASC, DSC, MC, and IC anchoring the wheel</div>
+  <svg class="diagram" viewBox="0 0 360 360" width="330"><circle cx="180" cy="180" r="150" fill="none" stroke="var(--diagram-line)" stroke-width="1.5"/><circle cx="180" cy="180" r="110" fill="none" stroke="var(--diagram-line)" stroke-width="0.75" opacity="0.4"/><line x1="30" y1="180" x2="330" y2="180" stroke="var(--diagram-accent)" stroke-width="1.5"/><line x1="180" y1="30" x2="180" y2="330" stroke="var(--diagram-gold)" stroke-width="1.5"/><line x1="74" y1="74" x2="286" y2="286" stroke="var(--diagram-line)" stroke-width="0.5" opacity="0.35"/><line x1="286" y1="74" x2="74" y2="286" stroke="var(--diagram-line)" stroke-width="0.5" opacity="0.35"/><text x="18" y="184" font-size="13" fill="var(--diagram-accent)" font-weight="500">ASC</text><text x="334" y="184" font-size="13" fill="var(--diagram-accent)" text-anchor="start" font-weight="500" transform="translate(-28,0)">DSC</text><text x="180" y="22" font-size="13" fill="var(--diagram-gold)" text-anchor="middle" font-weight="500">MC</text><text x="180" y="348" font-size="13" fill="var(--diagram-gold)" text-anchor="middle" font-weight="500">IC</text><text x="120" y="130" font-size="10" fill="var(--diagram-line)" opacity="0.8">12</text><text x="150" y="105" font-size="10" fill="var(--diagram-line)" opacity="0.8">11</text><text x="205" y="105" font-size="10" fill="var(--diagram-line)" opacity="0.8">10</text><text x="235" y="130" font-size="10" fill="var(--diagram-line)" opacity="0.8">9</text><text x="252" y="165" font-size="10" fill="var(--diagram-line)" opacity="0.8">8</text><text x="252" y="205" font-size="10" fill="var(--diagram-line)" opacity="0.8">7</text><text x="235" y="240" font-size="10" fill="var(--diagram-line)" opacity="0.8">6</text><text x="205" y="268" font-size="10" fill="var(--diagram-line)" opacity="0.8">5</text><text x="150" y="268" font-size="10" fill="var(--diagram-line)" opacity="0.8">4</text><text x="120" y="240" font-size="10" fill="var(--diagram-line)" opacity="0.8">3</text><text x="102" y="205" font-size="10" fill="var(--diagram-line)" opacity="0.8">2</text><text x="102" y="165" font-size="10" fill="var(--diagram-line)" opacity="0.8">1</text></svg>
+  <strong>The horizon</strong> — the horizontal pink line. Left end is the Ascendant (ASC): the sign rising in the east at birth — the self, the body, the lens. Right end is the Descendant (DSC) — partnership, the other. Everything above the line was visibly in the sky at birth; everything below was beneath the earth.<br><br>
+  <strong>The meridian</strong> — the vertical gold line. Top is the Midheaven (MC): career, reputation, public life. Bottom is the IC: home, roots, the private foundation.<br><br>
+  <strong>The four angles</strong> — ASC, IC, DSC, MC. The pillars. Planets near them are dramatically amplified.<br><br>
+  <strong>Quadrants</strong> — the two axes create four quarters, each with a developmental theme: self-development (houses 1–3), grounding and expression (4–6), relationship (7–9), and contribution to the world (10–12).<br><br>
+  <strong>Houses</strong> — the twelve slices, numbered counterclockwise from the ASC. Each governs an area of life: 1 self, 2 money and resources, 3 communication and siblings, 4 home, 5 creativity and romance, 6 health and daily work, 7 partnership, 8 shared resources and transformation, 9 belief and travel, 10 career, 11 community, 12 the hidden and the unconscious.<br><br>
+  <img class="brand-img" src="img/aura-houses-wheel.jpg" alt="The Aura Vibin houses wheel — every theme of all twelve houses" loading="lazy">
+  <div class="img-caption">The full territory of each house</div>
+  <strong>Degrees</strong> — the circle is 360°, each sign holds 30°. A planet's exact degree determines its aspects and dignity. Each degree divides into 60 minutes of arc, each minute into 60 seconds — written 14°32'18".<br><br>
+  <strong>Decans</strong> — each sign divides into three 10° faces, each with its own planetary sub-ruler. Two people with the same Sun sign but different decans carry a different flavor of it.<br><br>
+  <strong>Sect</strong> — whether the Sun sits above the horizon (a day chart) or below it (a night chart). One of the oldest and fastest ways to judge how the planets in a chart will behave — covered fully in the Traditional Technique section.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Why the wheel runs counterclockwise</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Two motions are happening on every chart at once — at two totally different speeds — and this is the thing that confuses almost everyone.<br>
+  <svg class="diagram" viewBox="0 0 340 320" width="300"><circle cx="170" cy="160" r="120" fill="none" stroke="var(--diagram-line)" stroke-width="1.5"/><circle cx="170" cy="160" r="70" fill="none" stroke="var(--diagram-line)" stroke-width="0.75" opacity="0.4"/><line x1="50" y1="160" x2="290" y2="160" stroke="var(--diagram-line)" stroke-width="0.75" opacity="0.5"/><line x1="170" y1="40" x2="170" y2="280" stroke="var(--diagram-line)" stroke-width="0.75" opacity="0.5"/><text x="42" y="152" font-size="12" font-weight="500" fill="var(--text-primary)" text-anchor="start">ASC</text><text x="298" y="152" font-size="12" font-weight="500" fill="var(--text-primary)" text-anchor="end">DSC</text><text x="170" y="32" font-size="12" font-weight="500" fill="var(--text-primary)" text-anchor="middle">MC</text><text x="170" y="296" font-size="12" font-weight="500" fill="var(--text-primary)" text-anchor="middle">IC</text><path d="M 76 105 A 108 108 0 0 1 170 52" fill="none" stroke="var(--diagram-gold)" stroke-width="2"/><path d="M 162 45 L 174 52 L 164 61" fill="none" stroke="var(--diagram-gold)" stroke-width="2"/><text x="95" y="66" font-size="10" fill="var(--diagram-gold)">APPARENT DAILY — clockwise</text><text x="95" y="79" font-size="9" fill="var(--diagram-gold)" opacity="0.9">rise at ASC, peak at MC, set at DSC</text><path d="M 170 218 A 58 58 0 0 0 226 174" fill="none" stroke="var(--diagram-accent)" stroke-width="2"/><path d="M 220 166 L 227 176 L 216 180" fill="none" stroke="var(--diagram-accent)" stroke-width="2"/><text x="170" y="243" font-size="10" fill="var(--diagram-accent)" text-anchor="middle">TRUE ORBITS — counterclockwise</text><text x="170" y="256" font-size="9" fill="var(--diagram-accent)" text-anchor="middle" opacity="0.9">planets crawling through the signs</text></svg>
+  <strong>Motion 1 — the apparent daily sweep (clockwise on the chart).</strong> Earth itself spins <strong>counterclockwise</strong> — eastward, viewed from above the North Pole. Because we ride the spinning Earth eastward, the sky <em>appears</em> to sweep the opposite way: everything rises at the Ascendant, arcs over the Midheaven, and sets at the Descendant. On the wheel that apparent sweep runs clockwise. A planet that rose an hour ago now sits in the 12th house — carried up and over by the sweep.<br><br>
+  <strong>Motion 2 — the real crawl (counterclockwise).</strong> Every planet is also genuinely traveling its own orbit through the signs — Aries to Taurus to Gemini. That crawl is counterclockwise, same as Earth's spin, and slow: the Moon takes 2.5 days per sign, Saturn 2.5 years. <strong>The wheel is numbered counterclockwise because it follows this motion</strong> — the actual direction everything in the solar system moves.<br><br>
+  <div class="hl"><strong>The train window</strong>You're on a train gliding forward — the scenery outside appears to slide backward. It isn't moving; you are. Earth spins counterclockwise, so the sky appears to wheel clockwise across your chart. The rising and setting is the scenery. The planets' crawl through the signs is other trains genuinely traveling the same direction as yours, at different speeds.</div>
+  <div class="hl"><strong>The elegant truth</strong>Viewed from above the North Pole, the entire solar system runs counterclockwise — Earth's spin, Earth's orbit, every planet's orbit, the Moon around us. The only clockwise motion in all of astrology is an illusion created by standing on the spinning thing.</div>
+  <strong>And why east is on the left</strong> — the chart is drawn as if you're standing facing south (toward the Sun's path in the northern hemisphere). Face south: east is at your left hand, west at your right. The Sun rises on your left (ASC), arcs overhead (MC at the top), and sets on your right (DSC). The chart is literally that view of your sky.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>The four quadrants</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">The horizon and meridian axes slice the chart into four quarters — and each quadrant carries a developmental arc, moving counterclockwise from the Ascendant:<br>
+  <img class="brand-img" src="img/aura-quadrants-wheel.jpg" alt="The four quadrants — awareness of self, integration of self with environment, awareness of others, integration of self with society" loading="lazy" style="max-width:520px;">
+  <strong>Quadrant 1 — houses 1, 2, 3 — Awareness of Self.</strong> Birth, body, resources, voice. The soul learning that it exists and what it has to work with. Planets here turn the life inward toward self-definition.<br><br>
+  <strong>Quadrant 2 — houses 4, 5, 6 — Integration of Self with Environment.</strong> Home, creativity, daily practice. Taking that self and rooting it into the immediate world — family, expression, routine, the body's rhythms.<br><br>
+  <strong>Quadrant 3 — houses 7, 8, 9 — Awareness of Others.</strong> Partnership, intimacy, belief. The self meets what it is not — other people, shared resources, foreign worlds — and is transformed by the encounter.<br><br>
+  <strong>Quadrant 4 — houses 10, 11, 12 — Integration of Self with Society.</strong> Career, community, transcendence. The matured self gives its work back to the collective, then dissolves toward spirit.<br><br>
+  A chart heavy in one quadrant tilts the whole life toward that arc — count where the planets cluster before reading anything else.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Bounds & decans — the layers inside every sign</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Every sign contains two hidden layers of rulership — you can see both as rings on the anatomy wheel above (bounds ring, then decans ring).<br><br>
+  <strong>Bounds (Terms)</strong> — each sign divided into <strong>five unequal segments</strong>, each ruled by one of the five non-luminary planets (Mercury, Venus, Mars, Jupiter, Saturn — the Sun and Moon rule no bounds). The planet ruling the bound you were born in colors that placement significantly, especially the Ascendant degree. In circumambulation, the bound lord of a directed degree becomes a time lord — which is why the ancients treated bounds as serious business, not trivia.<br><br>
+  <strong>Egyptian vs Ptolemaic bounds</strong> — the Egyptian bounds are the oldest and most widely used system in Hellenistic practice. Ptolemy proposed a revised scheme with slightly different boundaries and orders. Most traditional revival astrologers work with the Egyptian set — it's the one on the anatomy wheel.<br><br>
+  <strong>Decans (Faces)</strong> — each sign divided into <strong>three equal 10° sections</strong>, each with a planetary sub-ruler. Two systems:<br><br>
+  <table><tr><th>System</th><th>How it works</th><th>Example — Leo</th></tr>
+  <tr><td>Chaldean</td><td>One repeating descending planetary sequence (Saturn, Jupiter, Mars, Sun, Venus, Mercury, Moon) runs through all 36 decans, starting with Mars at 0° Aries</td><td>Sun · Jupiter · Mars</td></tr>
+  <tr><td>Triplicity</td><td>Each decan takes the flavor of the three signs of that element in order — the sign itself, then the next two of its element</td><td>Leo · Sagittarius · Aries</td></tr></table>
+  The decan of your Sun, Moon, or Rising adds a layer of texture to how that energy expresses — two Leo Suns in different decans are two different Leos.<br><br>
+  <strong>Face vs term — the distinction</strong> — both are minor essential dignities, but they're not the same thing. The face (decan) is a fixed equal 10° slice; the bound (term) is unequal and unique per sign. In classical dignity scoring the bound outranks the face:<br><br>
+  <table><tr><th>Dignity</th><th>Points</th></tr><tr><td>Domicile</td><td>5</td></tr><tr><td>Exaltation</td><td>4</td></tr><tr><td>Triplicity</td><td>3</td></tr><tr><td>Bound / Term</td><td>2</td></tr><tr><td>Face / Decan</td><td>1</td></tr></table>
+  These weights are how the <strong>almuten</strong> of a degree is calculated — add up every planet's points at that degree and the highest scorer governs it.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>The ecliptic and the celestial equator</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Stand outside and watch the Sun for a full year — mark where it rises every morning. Far north of east in summer, far south of east in winter. The line connecting every position the Sun occupies through the whole year is the <strong>ecliptic</strong> — the Sun's annual road through the sky. All planets travel roughly along that same road because the solar system is a flat disc.<br><br>Now draw a line straight across the middle of the sky dome from east to west. That's the <strong>celestial equator</strong> — Earth's equator projected into space.<br><br>
+  <svg class="diagram" viewBox="0 0 480 200" width="100%"><line x1="20" y1="100" x2="460" y2="100" stroke="var(--diagram-gold)" stroke-width="1.5"/><path d="M 20 100 Q 130 20 240 100 T 460 100" fill="none" stroke="var(--diagram-accent)" stroke-width="1.5"/><circle cx="20" cy="100" r="5" fill="var(--diagram-line)"/><circle cx="240" cy="100" r="5" fill="var(--diagram-line)"/><text x="130" y="40" font-size="12" fill="var(--diagram-accent)" text-anchor="middle">ecliptic — the Sun's road</text><text x="380" y="90" font-size="12" fill="var(--diagram-gold)" text-anchor="middle">celestial equator</text><text x="20" y="125" font-size="11.5" fill="var(--diagram-line)" text-anchor="start">0° Aries</text><text x="20" y="139" font-size="10.5" fill="var(--diagram-line)" opacity="0.7" text-anchor="start">vernal equinox</text><text x="240" y="125" font-size="11.5" fill="var(--diagram-line)" text-anchor="middle">0° Libra</text><text x="240" y="139" font-size="10.5" fill="var(--diagram-line)" opacity="0.7" text-anchor="middle">autumnal equinox</text><text x="130" y="72" font-size="10.5" fill="var(--diagram-line)" opacity="0.7" text-anchor="middle">0° Cancer — solstice peak</text><text x="350" y="152" font-size="10.5" fill="var(--diagram-line)" opacity="0.7" text-anchor="middle">0° Capricorn — solstice low</text></svg>
+  Earth is tilted 23.4°, so the Sun's road is tilted relative to that middle line. The two lines cross at exactly two points each year — the equinoxes. The peaks between the crossings are the solstices. Everything in astrology is built on these two lines and their four meeting points.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Why the zodiac starts at 0° Aries</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">The zodiac starts at 0° Aries because that's the moment the Sun crosses the celestial equator <strong>heading north</strong> — the vernal equinox. Day and night are equal, and light starts winning.<br><br>For ancient people this moment meant everything: winter is over, plant now, you survived, the world is reborn. Aries carrying the energy of initiation and raw life force isn't decorative symbolism — it's encoded in what that astronomical moment meant for human survival.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Equinoxes vs solstices — the four turning points</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Equinoxes are the <strong>crossings</strong> — the Sun crossing the celestial equator. Solstices are the <strong>peaks</strong> — the Sun at maximum north or south, appearing to stand still (sol = sun, sistere = to stand still) before turning back.<br><br>
+  <svg class="diagram" viewBox="0 0 340 340" width="300"><circle cx="170" cy="170" r="130" fill="none" stroke="var(--diagram-line)" stroke-width="1.5"/><line x1="40" y1="170" x2="300" y2="170" stroke="var(--diagram-line)" stroke-width="0.5" opacity="0.4"/><line x1="170" y1="40" x2="170" y2="300" stroke="var(--diagram-line)" stroke-width="0.5" opacity="0.4"/><circle cx="40" cy="170" r="6" fill="var(--diagram-accent)"/><circle cx="170" cy="40" r="6" fill="var(--diagram-gold)"/><circle cx="300" cy="170" r="6" fill="var(--diagram-accent)"/><circle cx="170" cy="300" r="6" fill="var(--diagram-gold)"/><text x="34" y="150" font-size="12" fill="var(--diagram-accent)" font-weight="500" text-anchor="start">0° Aries</text><text x="34" y="136" font-size="10" fill="var(--diagram-line)" opacity="0.75" text-anchor="start">spring equinox</text><text x="170" y="24" font-size="12" fill="var(--diagram-gold)" font-weight="500" text-anchor="middle">0° Cancer</text><text x="170" y="12" font-size="10" fill="var(--diagram-line)" opacity="0.75" text-anchor="middle">summer solstice</text><text x="306" y="150" font-size="12" fill="var(--diagram-accent)" font-weight="500" text-anchor="end">0° Libra</text><text x="306" y="136" font-size="10" fill="var(--diagram-line)" opacity="0.75" text-anchor="end">autumn equinox</text><text x="170" y="322" font-size="12" fill="var(--diagram-gold)" font-weight="500" text-anchor="middle">0° Capricorn</text><text x="170" y="336" font-size="10" fill="var(--diagram-line)" opacity="0.75" text-anchor="middle">winter solstice</text><text x="170" y="165" font-size="11" fill="var(--diagram-line)" text-anchor="middle" opacity="0.8">the four cardinal</text><text x="170" y="182" font-size="11" fill="var(--diagram-line)" text-anchor="middle" opacity="0.8">turning points</text></svg>
+  <table><tr><th>Point</th><th>Sign</th><th>What happens</th></tr><tr><td>Vernal equinox</td><td>0° Aries</td><td>Sun crosses equator heading north — light starts winning</td></tr><tr><td>Summer solstice</td><td>0° Cancer</td><td>Sun at highest north point — maximum light</td></tr><tr><td>Autumnal equinox</td><td>0° Libra</td><td>Sun crosses heading south — balance tipping to dark</td></tr><tr><td>Winter solstice</td><td>0° Capricorn</td><td>Sun at lowest point — minimum light, then returns</td></tr></table>Two crossings, two peaks — and these are exactly the four cardinal signs. That's literally why they're called cardinal: they mark the four astronomical turning points of the year. The zodiac is a map of one complete cycle of light.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Tropical vs sidereal</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>Tropical</strong> (Western) is anchored to the seasons — 0° Aries is always the vernal equinox, regardless of the constellations. It measures your relationship to Earth's cycles.<br><br><strong>Sidereal</strong> (Vedic) is anchored to the actual star constellations, tracking where they physically are now.<br><br>Earth wobbles slowly on its axis over 26,000 years, and that wobble has drifted the two systems about 24° apart. Neither is wrong — they measure different things.<div class="hl"><strong>The simplest way to hold it</strong>Imagine riding a carousel that passes four trees — the trees are your seasons and they never move relative to you. But the whole carousel is also slowly rotating, so the stars behind the trees gradually change. Tropical astrology measures the trees. Sidereal measures the stars behind them. Same ride, two different backdrops.</div></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Precession of the equinoxes & the Great Year</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Earth spins daily, but its axis also wobbles in a slow circle like a spinning top — one full wobble takes about <strong>26,000 years</strong> (the Great Year). This drift moves the equinox point backwards through the constellations about 1° every 72 years — roughly <strong>2,150 years per sign</strong>. That's what creates the astrological ages.<br><br><table><tr><th>Age</th><th>Rough era</th><th>Themes</th></tr><tr><td>Cancer</td><td>~8000–6000 BC</td><td>Matriarchy, moon worship, domestication</td></tr><tr><td>Gemini</td><td>~6000–4000 BC</td><td>Writing, communication</td></tr><tr><td>Taurus</td><td>~4000–2000 BC</td><td>Bull worship, agriculture</td></tr><tr><td>Aries</td><td>~2000 BC–0</td><td>Warfare, conquest, ram symbolism</td></tr><tr><td>Pisces</td><td>last ~2000 yrs</td><td>Sacrifice, martyrdom, dissolution of self</td></tr><tr><td>Aquarius</td><td>entering now</td><td>Technology, collective consciousness, breaking systems</td></tr></table>In tropical astrology your chart degrees never change — the zodiac is locked to the seasons. What shifts is the relationship between the tropical zodiac and the actual sky.</div>
+  <h2 class="subhead">Aspects & Orbs</h2>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Major aspects</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Aspects are the angular relationships between planets — the geometry that puts them in conversation.<br><br>
+  <svg class="diagram" viewBox="0 0 480 130" width="100%"><g transform="translate(50,62)"><circle r="42" fill="none" stroke="var(--diagram-line)" stroke-width="1"/><circle cx="0" cy="-42" r="5" fill="var(--diagram-accent)"/><circle cx="0" cy="-42" r="9" fill="none" stroke="var(--diagram-accent)" stroke-width="1"/><text y="66" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Conjunction 0°</text></g><g transform="translate(145,62)"><circle r="42" fill="none" stroke="var(--diagram-line)" stroke-width="1"/><circle cx="0" cy="-42" r="5" fill="var(--diagram-accent)"/><circle cx="36.4" cy="-21" r="5" fill="var(--diagram-accent)"/><line x1="0" y1="-42" x2="36.4" y2="-21" stroke="var(--diagram-accent)" stroke-width="1.25"/><text y="66" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Sextile 60°</text></g><g transform="translate(240,62)"><circle r="42" fill="none" stroke="var(--diagram-line)" stroke-width="1"/><circle cx="0" cy="-42" r="5" fill="var(--diagram-accent)"/><circle cx="42" cy="0" r="5" fill="var(--diagram-accent)"/><line x1="0" y1="-42" x2="42" y2="0" stroke="var(--diagram-accent)" stroke-width="1.25"/><text y="66" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Square 90°</text></g><g transform="translate(335,62)"><circle r="42" fill="none" stroke="var(--diagram-line)" stroke-width="1"/><circle cx="0" cy="-42" r="5" fill="var(--diagram-accent)"/><circle cx="36.4" cy="21" r="5" fill="var(--diagram-accent)"/><line x1="0" y1="-42" x2="36.4" y2="21" stroke="var(--diagram-accent)" stroke-width="1.25"/><text y="66" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Trine 120°</text></g><g transform="translate(430,62)"><circle r="42" fill="none" stroke="var(--diagram-line)" stroke-width="1"/><circle cx="0" cy="-42" r="5" fill="var(--diagram-accent)"/><circle cx="0" cy="42" r="5" fill="var(--diagram-accent)"/><line x1="0" y1="-42" x2="0" y2="42" stroke="var(--diagram-accent)" stroke-width="1.25"/><text y="66" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Opposition 180°</text></g></svg>
+  <table><tr><th>Aspect</th><th>Degrees</th><th>Orb</th><th>Meaning</th></tr><tr><td>Conjunction ☌</td><td>0°</td><td>6–8°</td><td>Merger — energies blend and amplify</td></tr><tr><td>Sextile ⚹</td><td>60°</td><td>4–6°</td><td>Opportunity — ease that needs a little effort</td></tr><tr><td>Square □</td><td>90°</td><td>6–8°</td><td>Friction — growth through pressure</td></tr><tr><td>Trine △</td><td>120°</td><td>6–8°</td><td>Natural flow — talent that can go lazy</td></tr><tr><td>Opposition ☍</td><td>180°</td><td>6–8°</td><td>Polarity — often projected onto others</td></tr></table><div class="hl"><strong>The orb rule</strong>An orb is allowable distance from exact. Tighter = stronger. Orbs also tighten as patterns grow more complex — a single aspect can run 6–8°, but a Yod needs 2–3° max.</div></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Minor aspects</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Minor aspects need tight orbs — 1–2° max. If chart software isn't drawing a line you expected, the orb settings are probably narrow or minor aspects are switched off.<br><br><table><tr><th>Aspect</th><th>Degrees</th><th>Orb</th><th>Meaning</th></tr><tr><td>Semi-sextile</td><td>30°</td><td>1–2°</td><td>Awkward neighbors, different agendas</td></tr><tr><td>Semi-square</td><td>45°</td><td>1–2°</td><td>Subtle friction and agitation</td></tr><tr><td>Quintile</td><td>72°</td><td>1–2°</td><td>Unusual talent, genius</td></tr><tr><td>Sesquiquadrate</td><td>135°</td><td>1–2°</td><td>Irritation that builds — Thor's Hammer</td></tr><tr><td>Bi-quintile</td><td>144°</td><td>1–2°</td><td>Internalized creative gift</td></tr><tr><td>Quincunx</td><td>150°</td><td>2–3°</td><td>Chronic adjustment — core of the Yod</td></tr><tr><td>Septile</td><td>~51.4°</td><td>1°</td><td>Fated, karmic compulsion</td></tr><tr><td>Novile</td><td>40°</td><td>1°</td><td>Completion, gestation, mystical</td></tr></table></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Declination, parallels & out of bounds</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">
+  <svg class="diagram" viewBox="0 0 460 190" width="100%"><line x1="25" y1="95" x2="435" y2="95" stroke="var(--diagram-gold)" stroke-width="1.5"/><text x="230" y="110" font-size="10.5" text-anchor="middle" fill="var(--diagram-gold)">celestial equator — 0° declination</text><line x1="25" y1="40" x2="435" y2="40" stroke="var(--diagram-line)" stroke-width="0.75" stroke-dasharray="5 4" opacity="0.6"/><text x="430" y="32" font-size="9.5" text-anchor="end" fill="var(--diagram-line)" opacity="0.85">+23.4° N — the Sun's limit</text><line x1="25" y1="150" x2="435" y2="150" stroke="var(--diagram-line)" stroke-width="0.75" stroke-dasharray="5 4" opacity="0.6"/><text x="430" y="166" font-size="9.5" text-anchor="end" fill="var(--diagram-line)" opacity="0.85">−23.4° S — the Sun's limit</text><circle cx="105" cy="62" r="6" fill="var(--diagram-accent)"/><circle cx="215" cy="62" r="6" fill="var(--diagram-accent)"/><line x1="105" y1="62" x2="215" y2="62" stroke="var(--diagram-accent)" stroke-width="1" stroke-dasharray="3 3"/><text x="160" y="50" font-size="10" text-anchor="middle" fill="var(--diagram-accent)">parallel — same height, same side</text><circle cx="310" cy="62" r="6" fill="var(--diagram-line)"/><circle cx="310" cy="128" r="6" fill="var(--diagram-line)"/><line x1="310" y1="62" x2="310" y2="128" stroke="var(--diagram-line)" stroke-width="1" stroke-dasharray="3 3"/><text x="310" y="146" font-size="10" text-anchor="middle" fill="var(--diagram-line)">contra-parallel — mirror sides</text><circle cx="395" cy="22" r="6" fill="var(--diagram-accent)"/><text x="395" y="12" font-size="10" text-anchor="middle" fill="var(--diagram-accent)">out of bounds</text></svg>
+  The chart wheel only tracks planets left-to-right along the ecliptic. <strong>Declination</strong> is the up-and-down measurement — how high or low a planet rides above or below the celestial equator. Higher = north, lower = south.<br><br><strong>Parallel</strong> — two planets at the same declination degree, same side (orb 1–1.2°). Traditionally read like a conjunction, though it behaves more like a resonance — two tuning forks at the same frequency rather than a merger.<br><br><strong>Contra-parallel</strong> — same degree, opposite sides. Reads like an opposition.<br><br><strong>Out of bounds</strong> — the Sun's declination maxes at 23.4° N/S. A planet beyond that range is out of bounds: ungoverned, erratic, extra powerful. Check the declination table in chart software — it never shows on the wheel itself.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Applying vs separating</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>Applying</strong> — the faster planet is moving toward exact aspect. Energy building, incoming.<br><strong>Separating</strong> — the aspect already perfected and is fading. Energy already expressed.<br>
+  <svg class="diagram" viewBox="0 0 460 150" width="100%"><g transform="translate(115,62)"><line x1="-95" y1="0" x2="95" y2="0" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="55" cy="0" r="8" fill="var(--diagram-gold)"/><text x="55" y="-16" font-size="10.5" text-anchor="middle" fill="var(--diagram-gold)">Sun 18°</text><circle cx="-35" cy="0" r="6" fill="var(--diagram-accent)"/><text x="-35" y="-16" font-size="10.5" text-anchor="middle" fill="var(--diagram-accent)">Moon 14°</text><path d="M -22 10 L 38 10" stroke="var(--diagram-accent)" stroke-width="1.25" marker-end="none"/><path d="M 34 6 L 42 10 L 34 14" fill="none" stroke="var(--diagram-accent)" stroke-width="1.25"/><text x="8" y="30" font-size="10" text-anchor="middle" fill="var(--diagram-line)">moving toward exact</text><text x="0" y="62" font-size="11.5" font-weight="500" text-anchor="middle" fill="var(--text-primary)">APPLYING — energy building</text></g><g transform="translate(345,62)"><line x1="-95" y1="0" x2="95" y2="0" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="-55" cy="0" r="8" fill="var(--diagram-gold)"/><text x="-55" y="-16" font-size="10.5" text-anchor="middle" fill="var(--diagram-gold)">Sun 18°</text><circle cx="35" cy="0" r="6" fill="var(--diagram-accent)"/><text x="35" y="-16" font-size="10.5" text-anchor="middle" fill="var(--diagram-accent)">Moon 22°</text><path d="M 48 10 L 80 10" stroke="var(--diagram-accent)" stroke-width="1.25"/><path d="M 76 6 L 84 10 L 76 14" fill="none" stroke="var(--diagram-accent)" stroke-width="1.25"/><text x="14" y="30" font-size="10" text-anchor="middle" fill="var(--diagram-line)">already past exact</text><text x="0" y="62" font-size="11.5" font-weight="500" text-anchor="middle" fill="var(--text-primary)">SEPARATING — energy fading</text></g></svg>
+  The faster planet does the applying (Moon fastest, then Mercury, Venus, Sun, Mars, Jupiter, Saturn, outward). Faster planet at a lower degree moving toward the slower one = applying. Past it = separating.<br><br><strong>Watch retrogrades</strong> — a retrograde planet moves backwards through degrees, which flips the logic. Always check for the ℞ symbol before calling it.</div>
+
+  <h2 class="subhead">Planets in Motion</h2>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Planetary speeds — how long everything takes</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Speed is everything in timing work — the faster the planet, the more personal and fleeting its influence; the slower, the more generational and structural.<br><br>
+  <table><tr><th>Planet</th><th>~1 degree</th><th>One sign (30°)</th><th>Full zodiac</th></tr>
+  <tr><td>Moon</td><td>~2 hours</td><td>~2.5 days</td><td>~27–29 days</td></tr>
+  <tr><td>Sun</td><td>~1 day</td><td>~1 month</td><td>1 year</td></tr>
+  <tr><td>Mercury</td><td>~1–2 days</td><td>~2–3 weeks</td><td>~1 year</td></tr>
+  <tr><td>Venus</td><td>~1–2 days</td><td>~4–5 weeks</td><td>~1 year</td></tr>
+  <tr><td>Mars</td><td>~2 days</td><td>~6–7 weeks</td><td>~2 years</td></tr>
+  <tr><td>Jupiter</td><td>~1 month</td><td>~1 year</td><td>~12 years</td></tr>
+  <tr><td>Saturn</td><td>~2–3 months</td><td>~2.5 years</td><td>~29–30 years</td></tr>
+  <tr><td>Uranus</td><td>~7 months</td><td>~7 years</td><td>~84 years</td></tr>
+  <tr><td>Neptune</td><td>~14 months</td><td>~14 years</td><td>~165 years</td></tr>
+  <tr><td>Pluto</td><td>~1–2 years</td><td>12–31 years</td><td>~248 years</td></tr></table>
+  <div class="hl"><strong>Pluto's strange orbit</strong>Pluto's orbit is elliptical and tilted, so it races through some signs and crawls through others — about 12 years in Scorpio but around 31 in Taurus. That's why entire generations share a Pluto sign.</div></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Transits & retrogrades — the cycles</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">A transit is a moving planet touching your natal chart — the weather passing over your fixed landscape. Each planet's transit has a characteristic duration and rhythm:<br>
+  <img class="brand-img" src="img/aura-transits-retrogrades.jpg" alt="Transits and retrogrades — how long each planet's transit lasts and when each planet goes retrograde" loading="lazy" style="max-width:760px;">
+  <table><tr><th>Retrograde</th><th>How often</th><th>How long</th></tr>
+  <tr><td>Mercury ℞</td><td>~4 times a year</td><td>~3 weeks</td></tr>
+  <tr><td>Venus ℞</td><td>Every 18 months</td><td>~40–43 days</td></tr>
+  <tr><td>Mars ℞</td><td>Every 2 years</td><td>~8–10 weeks</td></tr>
+  <tr><td>Jupiter ℞</td><td>Yearly</td><td>~120 days</td></tr>
+  <tr><td>Saturn ℞</td><td>Yearly</td><td>~140 days</td></tr>
+  <tr><td>Uranus ℞</td><td>Yearly</td><td>~150 days</td></tr>
+  <tr><td>Neptune ℞</td><td>Yearly</td><td>~150 days</td></tr>
+  <tr><td>Pluto ℞</td><td>Yearly</td><td>~185 days</td></tr></table>
+  <div class="hl"><strong>The Sun and Moon never go retrograde</strong>Only the planets appear to move backwards from Earth's view. The outer planets spend nearly half of every year retrograde — it's normal, not a crisis. The inner planet retrogrades (Mercury, Venus, Mars) are the rare, personally felt ones.</div>
+  Remember the <strong>shadow period</strong> — the degrees a retrograde planet crosses three times. Themes that begin before the retrograde only fully resolve after the final pass.</div>
+
+
+  <h2 class="subhead">Aspect Patterns</h2>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Yod — Finger of God</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Two planets in sextile, both quincunx a single apex planet. <strong>Orbs strict: 2–3° max.</strong><br><br>
+  <svg class="diagram" viewBox="0 0 220 210" width="200"><circle cx="110" cy="105" r="88" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="66" cy="29" r="6" fill="var(--diagram-gold)"/><circle cx="154" cy="29" r="6" fill="var(--diagram-gold)"/><circle cx="110" cy="193" r="7" fill="var(--diagram-accent)"/><line x1="66" y1="29" x2="154" y2="29" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="66" y1="29" x2="110" y2="193" stroke="var(--diagram-accent)" stroke-width="1.25" stroke-dasharray="4 3"/><line x1="154" y1="29" x2="110" y2="193" stroke="var(--diagram-accent)" stroke-width="1.25" stroke-dasharray="4 3"/><text x="110" y="18" font-size="10.5" text-anchor="middle" fill="var(--diagram-gold)">sextile base</text><text x="110" y="209" font-size="10.5" text-anchor="middle" fill="var(--diagram-accent)">apex — the finger</text></svg>
+  The apex is the finger — the focal point of the fated energy. Angles can participate; outer planets at the apex intensify it. The sextile base is gifted; the quincunxes create chronic adjustment and a restlessness that's hard to locate. It reads as a life mission the person struggles to consciously access.<br><br><strong>Apex by modality</strong> — cardinal apex: the mission initiates, restlessness is action-oriented. Fixed apex: deeply internalized, harder to shift. Mutable apex: mental, scattered, communicative.<br><br><strong>Boomerang Yod</strong> — add an opposition to the apex and the tension gets a release valve at the opposing planet:<br>
+  <svg class="diagram" viewBox="0 0 220 214" width="190"><circle cx="110" cy="107" r="88" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="66" cy="31" r="6" fill="var(--diagram-gold)"/><circle cx="154" cy="31" r="6" fill="var(--diagram-gold)"/><circle cx="110" cy="195" r="7" fill="var(--diagram-accent)"/><circle cx="110" cy="19" r="6" fill="var(--diagram-line)"/><line x1="66" y1="31" x2="154" y2="31" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="66" y1="31" x2="110" y2="195" stroke="var(--diagram-accent)" stroke-width="1.25" stroke-dasharray="4 3"/><line x1="154" y1="31" x2="110" y2="195" stroke="var(--diagram-accent)" stroke-width="1.25" stroke-dasharray="4 3"/><line x1="110" y1="19" x2="110" y2="195" stroke="var(--diagram-line)" stroke-width="1.25"/><text x="110" y="10" font-size="10" text-anchor="middle" fill="var(--diagram-line)">release point</text><text x="110" y="211" font-size="10" text-anchor="middle" fill="var(--diagram-accent)">apex</text></svg></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>T-Square & Grand Cross</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">
+  <svg class="diagram" viewBox="0 0 420 200" width="100%"><g transform="translate(105,100)"><circle r="80" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="-80" cy="0" r="6" fill="var(--diagram-gold)"/><circle cx="80" cy="0" r="6" fill="var(--diagram-gold)"/><circle cx="0" cy="-80" r="7" fill="var(--diagram-accent)"/><line x1="-80" y1="0" x2="80" y2="0" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="0" y1="-80" x2="-80" y2="0" stroke="var(--diagram-accent)" stroke-width="1.25"/><line x1="0" y1="-80" x2="80" y2="0" stroke="var(--diagram-accent)" stroke-width="1.25"/><circle cx="0" cy="80" r="6" fill="none" stroke="var(--diagram-line)" stroke-width="1" stroke-dasharray="2 2"/><text x="0" y="97" font-size="9.5" text-anchor="middle" fill="var(--diagram-line)" opacity="0.8">empty leg</text><text x="0" y="115" font-size="11" text-anchor="middle" fill="var(--diagram-line)">T-Square</text></g><g transform="translate(315,100)"><circle r="80" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="-80" cy="0" r="6" fill="var(--diagram-accent)"/><circle cx="80" cy="0" r="6" fill="var(--diagram-accent)"/><circle cx="0" cy="-80" r="6" fill="var(--diagram-accent)"/><circle cx="0" cy="80" r="6" fill="var(--diagram-accent)"/><line x1="-80" y1="0" x2="80" y2="0" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="0" y1="-80" x2="0" y2="80" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="0" y1="-80" x2="80" y2="0" stroke="var(--diagram-accent)" stroke-width="1"/><line x1="80" y1="0" x2="0" y2="80" stroke="var(--diagram-accent)" stroke-width="1"/><line x1="0" y1="80" x2="-80" y2="0" stroke="var(--diagram-accent)" stroke-width="1"/><line x1="-80" y1="0" x2="0" y2="-80" stroke="var(--diagram-accent)" stroke-width="1"/><text x="0" y="115" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Grand Cross</text></g></svg>
+  <strong>T-Square</strong> (orb 6–8°) — two planets in opposition, a third squaring both. The <strong>empty leg</strong> opposite the apex is where resolution lives — people often attract partners and situations that fill it.<br><br><strong>Grand Cross</strong> (orb 6–8°) — the empty leg filled: four planets, two oppositions, four squares. Relentless four-way tension, incredible drive when integrated.<br><br><strong>By modality</strong> — Cardinal: urgent, initiates constantly, struggles to finish. Fixed: the most intense — immovable willpower, locked patterns, transformation through breakdown or surrender. Mutable: scattered, adaptable, over-thinks instead of acting.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Grand Trine & Kite</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">
+  <svg class="diagram" viewBox="0 0 420 200" width="100%"><g transform="translate(105,100)"><circle r="80" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="0" cy="-80" r="6" fill="var(--diagram-gold)"/><circle cx="-69" cy="40" r="6" fill="var(--diagram-gold)"/><circle cx="69" cy="40" r="6" fill="var(--diagram-gold)"/><line x1="0" y1="-80" x2="-69" y2="40" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="0" y1="-80" x2="69" y2="40" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="-69" y1="40" x2="69" y2="40" stroke="var(--diagram-gold)" stroke-width="1.25"/><text x="0" y="115" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Grand Trine</text></g><g transform="translate(315,100)"><circle r="80" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="0" cy="-80" r="6" fill="var(--diagram-gold)"/><circle cx="-69" cy="40" r="6" fill="var(--diagram-gold)"/><circle cx="69" cy="40" r="6" fill="var(--diagram-gold)"/><circle cx="0" cy="80" r="7" fill="var(--diagram-accent)"/><line x1="0" y1="-80" x2="-69" y2="40" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="0" y1="-80" x2="69" y2="40" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="-69" y1="40" x2="69" y2="40" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="0" y1="80" x2="0" y2="-80" stroke="var(--diagram-accent)" stroke-width="1.25"/><line x1="0" y1="80" x2="-69" y2="40" stroke="var(--diagram-accent)" stroke-width="1" stroke-dasharray="4 3"/><line x1="0" y1="80" x2="69" y2="40" stroke="var(--diagram-accent)" stroke-width="1" stroke-dasharray="4 3"/><text x="0" y="115" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Kite — opposition is the engine</text></g></svg>
+  <strong>Grand Trine</strong> (orb 6–8°) — three planets trine in one element. Natural gift, but too easy — it can just sit there.<br><br>Fire: charisma and confidence. Earth: practical genius, can get too comfortable. Air: intellectual brilliance, can live in the head. Water: emotional depth and psychic sensitivity, can drown in it.<br><br><strong>Kite</strong> — a Grand Trine plus one planet opposing one of the trine planets and sextiling the other two. The opposition planet is the engine — it gives the passive trine direction and something to push against. The two planets it sextiles remain in trine to each other as the base of the triangle.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Thor's Hammer & Mystic Rectangle</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">
+  <svg class="diagram" viewBox="0 0 420 210" width="100%"><g transform="translate(105,100)"><circle r="80" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="0" cy="-80" r="6" fill="var(--diagram-gold)"/><circle cx="80" cy="0" r="6" fill="var(--diagram-gold)"/><circle cx="-56.6" cy="56.6" r="7" fill="var(--diagram-accent)"/><line x1="0" y1="-80" x2="80" y2="0" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="0" y1="-80" x2="-56.6" y2="56.6" stroke="var(--diagram-accent)" stroke-width="1.25" stroke-dasharray="4 3"/><line x1="80" y1="0" x2="-56.6" y2="56.6" stroke="var(--diagram-accent)" stroke-width="1.25" stroke-dasharray="4 3"/><text x="45" y="-50" font-size="10" fill="var(--diagram-gold)">square</text><text x="-56" y="78" font-size="10" text-anchor="middle" fill="var(--diagram-accent)">apex — the hammer</text><text x="0" y="105" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Thor's Hammer</text></g><g transform="translate(315,100)"><circle r="80" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="69" cy="-40" r="6" fill="var(--diagram-accent)"/><circle cx="-69" cy="-40" r="6" fill="var(--diagram-accent)"/><circle cx="-69" cy="40" r="6" fill="var(--diagram-accent)"/><circle cx="69" cy="40" r="6" fill="var(--diagram-accent)"/><line x1="69" y1="-40" x2="-69" y2="40" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="-69" y1="-40" x2="69" y2="40" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="-69" y1="-40" x2="69" y2="-40" stroke="var(--diagram-accent)" stroke-width="1.25"/><line x1="-69" y1="40" x2="69" y2="40" stroke="var(--diagram-accent)" stroke-width="1.25"/><line x1="-69" y1="-40" x2="-69" y2="40" stroke="var(--diagram-accent)" stroke-width="1" stroke-dasharray="4 3"/><line x1="69" y1="-40" x2="69" y2="40" stroke="var(--diagram-accent)" stroke-width="1" stroke-dasharray="4 3"/><text x="0" y="105" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Mystic Rectangle</text></g></svg>
+  <strong>Thor's Hammer / God's Fist</strong> (orb 1–2°) — two planets square each other (gold line), both sesquiquadrate (135°, dashed) to an apex. Yod energy but angrier — concentrated frustration seeking discharge. Cardinal apex explodes outward; fixed implodes first; mutable discharges through words and nerves.<br><br><strong>Mystic Rectangle</strong> (orb 4–6°) — two oppositions (the gold diagonals) held together by two trines (solid long sides) and two sextiles (dashed short sides). Practical mysticism — holding paradox productively.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Grand Sextile & Cradle</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">
+  <svg class="diagram" viewBox="0 0 420 210" width="100%"><g transform="translate(105,100)"><circle r="80" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="0" cy="-80" r="5.5" fill="var(--diagram-accent)"/><circle cx="69" cy="-40" r="5.5" fill="var(--diagram-accent)"/><circle cx="69" cy="40" r="5.5" fill="var(--diagram-accent)"/><circle cx="0" cy="80" r="5.5" fill="var(--diagram-accent)"/><circle cx="-69" cy="40" r="5.5" fill="var(--diagram-accent)"/><circle cx="-69" cy="-40" r="5.5" fill="var(--diagram-accent)"/><path d="M 0 -80 L 69 -40 L 69 40 L 0 80 L -69 40 L -69 -40 Z" fill="none" stroke="var(--diagram-accent)" stroke-width="1.25"/><path d="M 0 -80 L 69 40 L -69 40 Z" fill="none" stroke="var(--diagram-gold)" stroke-width="1"/><path d="M 0 80 L 69 -40 L -69 -40 Z" fill="none" stroke="var(--diagram-gold)" stroke-width="1"/><text x="0" y="105" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Grand Sextile — Star of David</text></g><g transform="translate(315,100)"><circle r="80" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="80" cy="0" r="6" fill="var(--diagram-gold)"/><circle cx="40" cy="-69" r="6" fill="var(--diagram-accent)"/><circle cx="-40" cy="-69" r="6" fill="var(--diagram-accent)"/><circle cx="-80" cy="0" r="6" fill="var(--diagram-gold)"/><line x1="80" y1="0" x2="-80" y2="0" stroke="var(--diagram-gold)" stroke-width="1.25"/><line x1="80" y1="0" x2="40" y2="-69" stroke="var(--diagram-accent)" stroke-width="1.25"/><line x1="40" y1="-69" x2="-40" y2="-69" stroke="var(--diagram-accent)" stroke-width="1.25"/><line x1="-40" y1="-69" x2="-80" y2="0" stroke="var(--diagram-accent)" stroke-width="1.25"/><line x1="80" y1="0" x2="-40" y2="-69" stroke="var(--diagram-line)" stroke-width="0.75" stroke-dasharray="4 3"/><line x1="-80" y1="0" x2="40" y2="-69" stroke="var(--diagram-line)" stroke-width="0.75" stroke-dasharray="4 3"/><text x="0" y="105" font-size="11" text-anchor="middle" fill="var(--diagram-line)">Cradle</text></g></svg>
+  <strong>Grand Sextile / Star of David</strong> (orb 4–6°) — six planets in mutual sextile, containing two interlocking Grand Trines. Extremely rare. Exceptional multi-channel flow — a chart that can route energy in almost any direction.<br><br><strong>Cradle</strong> (orb 4–6°) — one opposition (gold) bridged by a chain of sextiles, with trines running inside (dashed). Protective and gifted at softening conflict — but can rock itself to sleep inside its own comfort. The open side of the cradle is where growth lives.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Chart shapes</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Before reading a single placement, look at the overall shape the planets make — it sets the temperament of the whole chart.<br>
+  <svg class="diagram" viewBox="0 0 480 320" width="100%"><circle cx="85" cy="80" r="46" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="77.0" cy="34.7" r="4.5" fill="var(--diagram-accent)"/><circle cx="62.0" cy="40.2" r="4.5" fill="var(--diagram-accent)"/><circle cx="49.8" cy="50.4" r="4.5" fill="var(--diagram-accent)"/><circle cx="41.8" cy="64.3" r="4.5" fill="var(--diagram-accent)"/><circle cx="39.0" cy="80.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="41.8" cy="95.7" r="4.5" fill="var(--diagram-accent)"/><text x="85" y="146" font-size="12" font-weight="500" text-anchor="middle" fill="var(--text-primary)">Bundle</text><text x="85" y="160" font-size="9.5" text-anchor="middle" fill="var(--diagram-line)" opacity="0.8">all within 120°</text><circle cx="240" cy="80" r="46" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="194.0" cy="80.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="200.2" cy="103.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="217.0" cy="119.8" r="4.5" fill="var(--diagram-accent)"/><circle cx="240.0" cy="126.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="263.0" cy="119.8" r="4.5" fill="var(--diagram-accent)"/><circle cx="279.8" cy="103.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="286.0" cy="80.0" r="4.5" fill="var(--diagram-accent)"/><text x="240" y="146" font-size="12" font-weight="500" text-anchor="middle" fill="var(--text-primary)">Bowl</text><text x="240" y="160" font-size="9.5" text-anchor="middle" fill="var(--diagram-line)" opacity="0.8">one half occupied</text><circle cx="395" cy="80" r="46" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="349.0" cy="80.0" r="4.5" fill="var(--diagram-gold)"/><circle cx="355.2" cy="103.0" r="4.5" fill="var(--diagram-gold)"/><circle cx="372.0" cy="119.8" r="4.5" fill="var(--diagram-gold)"/><circle cx="395.0" cy="126.0" r="4.5" fill="var(--diagram-gold)"/><circle cx="418.0" cy="119.8" r="4.5" fill="var(--diagram-gold)"/><circle cx="434.8" cy="103.0" r="4.5" fill="var(--diagram-gold)"/><circle cx="441.0" cy="80.0" r="4.5" fill="var(--diagram-gold)"/><circle cx="395.0" cy="34.0" r="4.5" fill="var(--diagram-accent)"/><text x="395" y="146" font-size="12" font-weight="500" text-anchor="middle" fill="var(--text-primary)">Bucket</text><text x="395" y="160" font-size="9.5" text-anchor="middle" fill="var(--diagram-line)" opacity="0.8">bowl + handle</text><circle cx="85" cy="235" r="46" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="69.3" cy="278.2" r="4.5" fill="var(--diagram-accent)"/><circle cx="47.3" cy="261.4" r="4.5" fill="var(--diagram-gold)"/><circle cx="39.0" cy="235.0" r="4.5" fill="var(--diagram-gold)"/><circle cx="47.3" cy="208.6" r="4.5" fill="var(--diagram-gold)"/><circle cx="69.3" cy="191.8" r="4.5" fill="var(--diagram-gold)"/><circle cx="96.9" cy="190.6" r="4.5" fill="var(--diagram-gold)"/><circle cx="120.2" cy="205.4" r="4.5" fill="var(--diagram-gold)"/><circle cx="130.8" cy="231.0" r="4.5" fill="var(--diagram-gold)"/><text x="85" y="301" font-size="12" font-weight="500" text-anchor="middle" fill="var(--text-primary)">Locomotive</text><text x="85" y="315" font-size="9.5" text-anchor="middle" fill="var(--diagram-line)" opacity="0.8">~240° — leader drives</text><circle cx="240" cy="235" r="46" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="263.0" cy="195.2" r="4.5" fill="var(--diagram-accent)"/><circle cx="249.6" cy="190.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="235.2" cy="189.3" r="4.5" fill="var(--diagram-accent)"/><circle cx="221.3" cy="193.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="217.0" cy="274.8" r="4.5" fill="var(--diagram-accent)"/><circle cx="230.4" cy="280.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="244.8" cy="280.7" r="4.5" fill="var(--diagram-accent)"/><circle cx="258.7" cy="277.0" r="4.5" fill="var(--diagram-accent)"/><text x="240" y="301" font-size="12" font-weight="500" text-anchor="middle" fill="var(--text-primary)">Seesaw</text><text x="240" y="315" font-size="9.5" text-anchor="middle" fill="var(--diagram-line)" opacity="0.8">two opposing groups</text><circle cx="395" cy="235" r="46" fill="none" stroke="var(--diagram-line)" stroke-width="1" opacity="0.5"/><circle cx="440.3" cy="227.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="421.4" cy="197.3" r="4.5" fill="var(--diagram-accent)"/><circle cx="391.0" cy="189.2" r="4.5" fill="var(--diagram-accent)"/><circle cx="359.8" cy="205.4" r="4.5" fill="var(--diagram-accent)"/><circle cx="349.7" cy="243.0" r="4.5" fill="var(--diagram-accent)"/><circle cx="362.5" cy="267.5" r="4.5" fill="var(--diagram-accent)"/><circle cx="399.0" cy="280.8" r="4.5" fill="var(--diagram-accent)"/><circle cx="430.2" cy="264.6" r="4.5" fill="var(--diagram-accent)"/><text x="395" y="301" font-size="12" font-weight="500" text-anchor="middle" fill="var(--text-primary)">Splash</text><text x="395" y="315" font-size="9.5" text-anchor="middle" fill="var(--diagram-line)" opacity="0.8">scattered everywhere</text></svg>
+  <strong>Bundle</strong> — all planets within about 120°. Hyper-focused, specialized, narrow and deep.<br><br><strong>Bowl</strong> — one half of the chart occupied. The empty half becomes the life's longing — what the person reaches toward.<br><br><strong>Bucket</strong> — a bowl plus one singleton handle on the empty side. The handle planet (pink) channels the entire chart and dominates regardless of its dignity.<br><br><strong>Locomotive</strong> — planets spanning about 240°. The leading planet (pink — the first one clockwise into the empty space) is the engine driving the personality.<br><br><strong>Seesaw</strong> — two opposing groups. A life of weighing, balancing, and negotiating between two worlds.<br><br><strong>Splash</strong> — scattered through most signs. Versatile and wide-ranging, at risk of diffusion.<br><br><strong>Stellium</strong> — not a shape but worth checking at the same moment: 3+ planets in one sign or house creates an overwhelming concentration the person can't escape.</div>
+  <h2 class="subhead">Traditional Technique</h2>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Sect — day charts and night charts</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Sun above the horizon (houses 7–12) = <strong>day chart</strong>. Below (houses 1–6) = <strong>night chart</strong>.<br><br><strong>Day team:</strong> Sun, Jupiter, Saturn. <strong>Night team:</strong> Moon, Venus, Mars. Mercury switches — day sect if rising before the Sun, night sect if after.<br><br>In-sect planets express their best qualities; out-of-sect planets run hotter and less controlled. The big one is the malefics: Saturn in sect (day) builds with purpose, out of sect (night) turns colder and heavier. Mars in sect (night) is focused courage, out of sect (day) is impulsive and combustive.<br><br><strong>Hayz</strong> — a planet in sect AND in a sign of its own gender AND correctly placed above/below the horizon. Maximally comfortable — one of the strongest classical conditions.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Bonification & maltreatment</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>Bonification</strong> — a planet helped by contact with a benefic (Jupiter, Venus). A bonified malefic softens: Saturn conjunct Jupiter is a far easier Saturn.<br><br><strong>Maltreatment</strong> — a planet harmed by malefic contact: conjunct Saturn or Mars, hard-aspected with no mitigation, combust, or <strong>besieged</strong> (sandwiched between both malefics — classically one of the worst conditions).<br><br>This is the language for why a dignified planet still underperforms — Venus in Libra besieged can't express her dignity — and why a rough placement sometimes delivers anyway.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Combustion, cazimi & under the beams</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Proximity to the Sun, measured precisely:<br><br><table><tr><th>Condition</th><th>Distance</th><th>Effect</th></tr><tr><td>Under the beams</td><td>within 17°</td><td>Dimmed, weakened</td></tr><tr><td>Combust</td><td>within 8°</td><td>Burned — voice lost, maltreated</td></tr><tr><td>Cazimi</td><td>within 17 minutes of arc</td><td>In the heart of the Sun — empowered, elevated</td></tr></table><strong>Why cazimi flips</strong> — being near the king burns you; sitting at the king's right hand makes you his voice. Weakened → burned → glorified as you get closer.<br><br><strong>Minutes of arc</strong> — each degree divides into 60 minutes ('), each minute into 60 seconds ("). So 17' is under a third of one degree. Two planets can share a degree number and still not be cazimi — Sun 14°05' and Venus 14°55' are 50 minutes apart. Check the data table, not the wheel.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Trigon lords / triplicity rulers</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Trigon is the Hellenistic word for triplicity — the element teams. Each element has three rulers whose importance depends on whether the chart is day or night:<br><br><table><tr><th>Element</th><th>Day</th><th>Night</th><th>Participating</th></tr><tr><td>Fire</td><td>Sun</td><td>Jupiter</td><td>Saturn</td></tr><tr><td>Earth</td><td>Venus</td><td>Moon</td><td>Mars</td></tr><tr><td>Air</td><td>Saturn</td><td>Mercury</td><td>Jupiter</td></tr><tr><td>Water</td><td>Venus</td><td>Mars</td><td>Moon</td></tr></table>A planet can be triplicity ruler of a sign without ruling it by domicile — a separate kind of dignity that traditional astrologers weight heavily.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Angular, succedent & cadent houses</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>Angular (1, 4, 7, 10)</strong> — the power houses. Planets here are loud, visible, actively expressed. A planet within 5° of an angle is one of the strongest placements in any chart.<br><br><strong>Succedent (2, 5, 8, 11)</strong> — steady, building strength. Power that develops over time rather than radiating instantly.<br><br><strong>Cadent (3, 6, 9, 12)</strong> — traditionally weakest for outward action; more internal, mental, spiritual, diffuse.<br><br><strong>Angular = loud. Succedent = steady. Cadent = internalized.</strong> Always weigh house position against sign dignity — an exalted planet in the 12th is pure but struggles to act; a debilitated planet on the MC still expresses loudly.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Barren & fruitful signs</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">A classification used mainly in horary, electional, and agricultural astrology:<br><br><table><tr><th>Category</th><th>Signs</th></tr><tr><td>Barren</td><td>Gemini, Leo, Virgo</td></tr><tr><td>Semi-barren</td><td>Aries, Sagittarius, Aquarius</td></tr><tr><td>Semi-fruitful</td><td>Taurus, Capricorn, Libra</td></tr><tr><td>Fruitful</td><td>Cancer, Scorpio, Pisces</td></tr></table>The water signs — womb, depth, gestation — are most fruitful. Used for fertility questions in horary, and for timing plantings, launches, and anything meant to grow.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Zodiacal releasing</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">A Hellenistic timing technique — recovered largely through Chris Brennan's work — that divides life into planetary chapters from the Lot of Spirit (career/action) or Lot of Fortune (body/circumstance).<br><br>Each sign's ruler governs a set number of years: Moon 25, Mercury 20, Venus 8, Sun 19, Mars 15, Jupiter 12, Saturn 30. Periods nest into sub-periods (levels 1–4).<br><br><strong>Loosing of the bond</strong> — when the sequence hits a sign square or opposite the starting Lot — marks the major turning points: career breaks, public recognition, pivotal decisions. Free calculators exist on Astro-Seek. Most timing techniques show what's happening; zodiacal releasing shows what chapter of the story you're in.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Annual profections — your theme of the year</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">A time-tested Hellenistic technique that unlocks the energetic focus of each year of your life. At birth you begin in the 1st house. Every birthday, the activated house advances by one — and after twelve years the cycle begins again. Your current age reveals which house holds your soul curriculum for the next 12 months.<br><br>
+  <img class="brand-img" src="img/aura-profection-wheel.jpg" alt="The Aura Vibin annual profection wheel — find your age to find your house, with traditional planetary rulers and signs" loading="lazy" style="max-width:560px;">
+  <div class="img-caption">Find your age in the rings — ages keep adding 12 for life</div>
+  <strong>Finding your year</strong> — divide your age by 12 and take the remainder, then add 1. Age 30: remainder 6, so you're in a 7th house profection year. Or just find your age in the wheel above.<br><br>
+  <table><tr><th>House</th><th>Ages</th><th>The Year Of</th><th>Theme</th></tr>
+  <tr><td>1st</td><td>0 · 12 · 24 · 36 · 48 · 60 · 72</td><td>Identity & Initiation</td><td>Personal rebirth — an energetic New Year opening a fresh 12-year cycle. Identity, self-concept, appearance, personal power.</td></tr>
+  <tr><td>2nd</td><td>1 · 13 · 25 · 37 · 49 · 61 · 73</td><td>Worth & Wealth</td><td>A reclamation of value. Self-worth, money, values, stability, voice.</td></tr>
+  <tr><td>3rd</td><td>2 · 14 · 26 · 38 · 50 · 62 · 74</td><td>Mind & Messaging</td><td>A mental renaissance. Mindset, communication, learning, expression, siblings.</td></tr>
+  <tr><td>4th</td><td>3 · 15 · 27 · 39 · 51 · 63 · 75</td><td>Roots & Remembering</td><td>Emotional anchoring and ancestral healing. Foundations, family, belonging, homecoming.</td></tr>
+  <tr><td>5th</td><td>4 · 16 · 28 · 40 · 52 · 64 · 76</td><td>Creativity & Confidence</td><td>The glow-up year — create, express, be fully seen. Romance, joy, magnetic visibility.</td></tr>
+  <tr><td>6th</td><td>5 · 17 · 29 · 41 · 53 · 65 · 77</td><td>Sacred Structure</td><td>Becoming reliable to your future self. Devotion, discipline, health, embodied service.</td></tr>
+  <tr><td>7th</td><td>6 · 18 · 30 · 42 · 54 · 66 · 78</td><td>Mirror Work</td><td>Relationships take center stage — partners become the curriculum. Contracts, reflection, sacred union.</td></tr>
+  <tr><td>8th</td><td>7 · 19 · 31 · 43 · 55 · 67 · 79</td><td>Sacred Alchemy</td><td>A descent and metamorphosis. Transformation, power, intimacy, death & rebirth, soul contracts.</td></tr>
+  <tr><td>9th</td><td>8 · 20 · 32 · 44 · 56 · 68 · 80</td><td>The Great Becoming</td><td>The spirit stretches beyond its old edges. Expansion, faith, truth, wisdom, vision.</td></tr>
+  <tr><td>10th</td><td>9 · 21 · 33 · 45 · 57 · 69 · 81</td><td>Visibility</td><td>The world takes notice — work becomes legacy. Career, purpose, public life, mastery.</td></tr>
+  <tr><td>11th</td><td>10 · 22 · 34 · 46 · 58 · 70 · 82</td><td>Expansion</td><td>Your network becomes your net worth. Community, vision, influence, support, innovation.</td></tr>
+  <tr><td>12th</td><td>11 · 23 · 35 · 47 · 59 · 71 · 83</td><td>The Unseen</td><td>Sacred stillness before the rebirth. Solitude, surrender, subconscious, spiritual renewal, completion.</td></tr>
+  </table>
+  <div class="hl"><strong>The Lord of the Year</strong>The sign on your profected house cusp has a ruler — and that planet becomes your Time Lord for the year. If you're 30 and your 7th house is Aquarius, then Saturn — not Venus — is your Time Lord. Its natal condition, house, aspects, and the transits it receives all color how the year unfolds. Watch that planet like a headline.</div>
+  <strong>Layering deeper</strong> — for the full picture, overlay your profection year with your solar return chart (cast for the Sun's exact return to its birth degree each birthday). The house the solar return emphasizes plus the profected house plus the Time Lord's condition = the energetic texture of your year.<br><br>
+  <strong>Monthly profections</strong> — the same wheel can run monthly: starting from your birthday each year, the profected house advances one house per month, giving each month within your year its own sub-theme. A 7th house year with a 10th house month is relationship growth expressing through career and visibility.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>How to read a birth chart — the full sequence</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>1. The Container</strong> — what a chart is, the four angles, the twelve houses, chart shape first.<br><strong>2. The Players</strong> — the ten planets as core drives, luminaries first, dignities, retrogrades.<br><strong>3. The Signs</strong> — twelve modes of expression, elements as operating systems, modalities as how energy moves.<br><strong>4. The Houses</strong> — angular/succedent/cadent, cusps, empty houses, stelliums, house rulers.<br><strong>5. The Aspects</strong> — majors, applying/separating, orbs, patterns, prioritizing.<br><strong>6. The Chart Ruler</strong> — ruler of the ASC sign, its condition, house, aspects, dispositors.<br><strong>7. Synthesis</strong> — building one story from many factors; the actual skill.<br><strong>8. Timing</strong> — transits, progressions, solar returns, profections, eclipses.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Planetary signatures — known combinations</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">No single aspect causes an event — signatures create potential; the whole chart and transits decide expression.<br><br><table><tr><th>Combination</th><th>Theme</th></tr><tr><td>Jupiter opp. Pluto</td><td>Overexpansion meets destruction — a classic bankruptcy signature</td></tr><tr><td>Neptune in/opp. 2nd</td><td>Financial confusion, fraud vulnerability</td></tr><tr><td>Saturn sq. Venus</td><td>Love and money blocked or delayed</td></tr><tr><td>Mars conj. Saturn</td><td>Effort stopped — frustration, accidents</td></tr><tr><td>Pluto in 8th, hard</td><td>Forced financial transformation, inheritance battles</td></tr><tr><td>Venus–Neptune hard</td><td>Idealization, rose-colored blindness in love</td></tr><tr><td>Moon–Pluto hard</td><td>Emotional intensity, mother wound, loss</td></tr></table></div>
+</div>
+
+<div class="section" id="section-cheat">
+  <div class="section-eyebrow">Quick Reference</div>
+  <h1 class="section-title">The <span style="color:var(--accent);font-style:italic;">Cheat Sheet</span></h1>
+  <p class="section-sub">Everything at a glance — the tables and frameworks you reach for mid-reading.</p>
+  <img class="brand-img" src="img/aura-cheat-sheet.jpg" alt="The Aura Vibin astro cheat sheet — elements, modalities, planets, houses, and angles on one page" loading="lazy" style="max-width:760px;">
+  <div class="img-caption">The one-page version — save it to your camera roll</div>
+
+  <h2 class="subhead">Elements</h2>
+  <div class="cheat-grid">
+    <div class="cheat-card"><h4>Fire</h4><div class="signs">Aries · Leo · Sagittarius</div><p>Passionate, leadership, inspiring. Identity, action, self-expression.</p></div>
+    <div class="cheat-card"><h4>Earth</h4><div class="signs">Taurus · Virgo · Capricorn</div><p>Grounded, realistic, manifestors. Body, resources, the material world.</p></div>
+    <div class="cheat-card"><h4>Air</h4><div class="signs">Gemini · Libra · Aquarius</div><p>Social, intelligent, innovative. Thought, language, connection.</p></div>
+    <div class="cheat-card"><h4>Water</h4><div class="signs">Cancer · Scorpio · Pisces</div><p>Emotional, intuitive, psychic. Feeling, memory, the unconscious.</p></div>
+  </div>
+
+  <h2 class="subhead">Modalities</h2>
+  <div class="cheat-grid">
+    <div class="cheat-card"><h4>Cardinal</h4><div class="signs">Aries · Cancer · Libra · Capricorn</div><p>Initiative, movement, leadership. Action-oriented, assertive, independent, energetic, ambitious. Each one opens a season.</p></div>
+    <div class="cheat-card"><h4>Fixed</h4><div class="signs">Taurus · Leo · Scorpio · Aquarius</div><p>Stability, reliability, stubbornness. Consistent, deep, loyal, patient, enduring, resilient. Mid-season anchors.</p></div>
+    <div class="cheat-card"><h4>Mutable</h4><div class="signs">Gemini · Virgo · Sagittarius · Pisces</div><p>Communication, adaptability, change. Chameleon energy, duality, exploration. Each one closes a season.</p></div>
+    <div class="cheat-card"><h4>Polarity</h4><div class="signs">Yang / Yin</div><p>Fire and air signs are yang — expressive, outward. Earth and water signs are yin — receptive, inward. Traditional texts call these masculine and feminine.</p></div>
+  </div>
+
+  <h2 class="subhead">Planets & What They Rule</h2>
+  <div class="card"><table>
+    <tr><th>Planet</th><th>Rules</th><th>Represents</th></tr>
+    <tr><td>☉ Sun</td><td>Leo</td><td>Vitality, identity, desires, conscious mind</td></tr>
+    <tr><td>☽ Moon</td><td>Cancer</td><td>Intuition, emotions, cycles, subconscious mind</td></tr>
+    <tr><td>☿ Mercury</td><td>Gemini, Virgo</td><td>Communication, intellect, learning, expression</td></tr>
+    <tr><td>♀ Venus</td><td>Taurus, Libra</td><td>Love, beauty, harmony, money, values</td></tr>
+    <tr><td>♂ Mars</td><td>Aries <em>(+ Scorpio trad.)</em></td><td>Energy, drive, action, passion, war, sex</td></tr>
+    <tr><td>♃ Jupiter</td><td>Sagittarius <em>(+ Pisces trad.)</em></td><td>Expansion, growth, optimism, abundance, faith</td></tr>
+    <tr><td>♄ Saturn</td><td>Capricorn <em>(+ Aquarius trad.)</em></td><td>Discipline, karma, responsibility, limits, time</td></tr>
+    <tr><td>♅ Uranus</td><td>Aquarius <em>(modern)</em></td><td>Innovation, rebellion, independence, the unpredictable</td></tr>
+    <tr><td>♆ Neptune</td><td>Pisces <em>(modern)</em></td><td>Dreams, illusions, spirituality, psychic ability</td></tr>
+    <tr><td>♇ Pluto</td><td>Scorpio <em>(modern)</em></td><td>Transformation, rebirth, power, depth, death</td></tr>
+  </table></div>
+
+  <h2 class="subhead">The Houses</h2>
+  <div class="card"><table>
+    <tr><th>House</th><th>Themes</th></tr>
+    <tr><td>1</td><td>Identity, appearance, self-expression, beginnings, birth — the Ascendant</td></tr>
+    <tr><td>2</td><td>Money, possessions, self-worth, values, income streams</td></tr>
+    <tr><td>3</td><td>Communication, siblings, learning, the mind, social media, neighborhood</td></tr>
+    <tr><td>4</td><td>Home, family, roots, the mother, psychological foundation — the IC</td></tr>
+    <tr><td>5</td><td>Creativity, romance, children, joy, play, inner child healing</td></tr>
+    <tr><td>6</td><td>Daily routine, health, work, service, habits, pets</td></tr>
+    <tr><td>7</td><td>Partnerships, marriage, contracts, projection of self — the Descendant</td></tr>
+    <tr><td>8</td><td>Transformation, shared resources, intimacy, death & rebirth, the occult</td></tr>
+    <tr><td>9</td><td>Higher learning, travel, beliefs, philosophy, publishing, faith</td></tr>
+    <tr><td>10</td><td>Career, ambition, public life, reputation, legacy — the Midheaven</td></tr>
+    <tr><td>11</td><td>Friendships, networks, collective goals, dreams & wishes, the future</td></tr>
+    <tr><td>12</td><td>Subconscious, isolation, spirituality, karma, hidden things, the womb</td></tr>
+  </table></div>
+
+  <h2 class="subhead">The Four Angles</h2>
+  <div class="cheat-grid">
+    <div class="cheat-card"><h4>Ascendant</h4><div class="signs">1st house cusp</div><p>Your perspective of the world. Persona, outer self, appearance, first impression — and its ruler is your chart ruler, setting up the life path.</p></div>
+    <div class="cheat-card"><h4>Descendant</h4><div class="signs">7th house cusp</div><p>Partnerships, how you project onto others, qualities you secretly admire, marriage, collaboration, contracts.</p></div>
+    <div class="cheat-card"><h4>Midheaven</h4><div class="signs">10th house cusp</div><p>Your heaven on earth — ideal way of living. Career pinnacle, public image, reputation, aspirations, authority.</p></div>
+    <div class="cheat-card"><h4>Imum Coeli</h4><div class="signs">4th house cusp</div><p>What you need to feel safe. Private life, family roots, heritage, emotional healing, hermit mode, what feels like home.</p></div>
+  </div>
+
+  <h2 class="subhead">Nodes & Chiron</h2>
+  <div class="cheat-grid">
+    <div class="cheat-card"><h4>☊ North Node</h4><div class="signs">The direction</div><p>Life purpose, growth, destiny, evolution — the uncomfortable, unfamiliar forward direction of the soul's journey.</p></div>
+    <div class="cheat-card"><h4>☋ South Node</h4><div class="signs">The inheritance</div><p>Karma, past patterns, comfort zone, innate talents, soul-tribe connections, over-reliance, ingrained habits.</p></div>
+    <div class="cheat-card" style="grid-column: 1 / -1;"><h4>⚷ Chiron</h4><div class="signs">The wounded healer</div><p>Where you are deeply wounded, experience inner pain, and seek to integrate your shadow — so you can help others heal the same wound.</p></div>
+  </div>
+
+  <h2 class="subhead">Essential Dignities</h2>
+  <div class="card"><table>
+    <tr><th>Planet</th><th>Domicile</th><th>Exalted</th><th>Detriment</th><th>Fall</th></tr>
+    <tr><td>Sun</td><td>Leo</td><td>Aries</td><td>Aquarius</td><td>Libra</td></tr>
+    <tr><td>Moon</td><td>Cancer</td><td>Taurus</td><td>Capricorn</td><td>Scorpio</td></tr>
+    <tr><td>Mercury</td><td>Gemini, Virgo</td><td>Virgo</td><td>Sagittarius, Pisces</td><td>Pisces</td></tr>
+    <tr><td>Venus</td><td>Taurus, Libra</td><td>Pisces</td><td>Aries, Scorpio</td><td>Virgo</td></tr>
+    <tr><td>Mars</td><td>Aries, Scorpio</td><td>Capricorn</td><td>Taurus, Libra</td><td>Cancer</td></tr>
+    <tr><td>Jupiter</td><td>Sagittarius, Pisces</td><td>Cancer</td><td>Gemini, Virgo</td><td>Capricorn</td></tr>
+    <tr><td>Saturn</td><td>Capricorn, Aquarius</td><td>Libra</td><td>Cancer, Leo</td><td>Aries</td></tr>
+  </table>
+  <p style="font-size:12px;color:var(--text-muted);margin-top:0.5rem;font-weight:300;">Domicile = at home, full strength. Exalted = honored guest, elevated. Detriment = opposite its home, compensating. Fall = opposite its exaltation, working uphill. Modern rulers: Uranus in Aquarius, Neptune in Pisces, Pluto in Scorpio (detriments: Leo, Virgo, Taurus).</p></div>
+
+  <h2 class="subhead">Degree Meanings</h2>
+  <div class="card"><p style="font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.65;margin-bottom:0.5rem;">Every degree within any sign carries the flavor of one of the twelve signs — the sequence repeats every 12 degrees.</p><table>
+    <tr><th>Degrees</th><th>Sign energy</th><th>Flavor</th></tr>
+    <tr><td>1, 13, 25</td><td>Aries — Mars</td><td>Assertiveness, independence, courage, pioneering</td></tr>
+    <tr><td>2, 14, 26</td><td>Taurus — Venus</td><td>Stability, practicality, material wealth, sensuality</td></tr>
+    <tr><td>3, 15, 27</td><td>Gemini — Mercury</td><td>Communication, adaptability, curiosity, versatility</td></tr>
+    <tr><td>4, 16, 28</td><td>Cancer — Moon</td><td>Nurture, home, emotional depth, protection</td></tr>
+    <tr><td>5, 17, 29</td><td>Leo — Sun</td><td>Creativity, visibility, leadership, the spotlight</td></tr>
+    <tr><td>6, 18, 30</td><td>Virgo — Mercury</td><td>Service, refinement, health, precision</td></tr>
+    <tr><td>7, 19</td><td>Libra — Venus</td><td>Partnership, balance, beauty, diplomacy</td></tr>
+    <tr><td>8, 20</td><td>Scorpio — Mars/Pluto</td><td>Intensity, transformation, power, depth</td></tr>
+    <tr><td>9, 21</td><td>Sagittarius — Jupiter</td><td>Expansion, philosophy, travel, faith</td></tr>
+    <tr><td>10, 22</td><td>Capricorn — Saturn</td><td>Ambition, mastery, structure, public standing</td></tr>
+    <tr><td>11, 23</td><td>Aquarius — Saturn/Uranus</td><td>Innovation, community, rebellion, the future</td></tr>
+    <tr><td>12, 24</td><td>Pisces — Jupiter/Neptune</td><td>Dissolution, spirituality, dreams, endings</td></tr>
+  </table></div>
+
+  <div class="card"><h4 style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;margin-bottom:0.4rem;">Critical Degrees</h4><table>
+    <tr><th>Degrees</th><th>Modality</th><th>Signature</th></tr>
+    <tr><td>0, 13, 26</td><td>Cardinal — Aries, Cancer, Libra, Capricorn</td><td>Where you over-exert yourself</td></tr>
+    <tr><td>8–9, 21–22</td><td>Fixed — Taurus, Leo, Scorpio, Aquarius</td><td>Where you under-exert yourself</td></tr>
+    <tr><td>4, 17</td><td>Mutable — Gemini, Virgo, Sagittarius, Pisces</td><td>Flexibility toward action</td></tr>
+    <tr><td>29 — anaretic</td><td>Any sign</td><td>Urgency, mastery, or crisis around that sign's themes</td></tr>
+  </table></div>
+
+  <h2 class="subhead">The Four Quadrants</h2>
+  <img class="brand-img" src="img/aura-quadrants-wheel.jpg" alt="The four quadrants of the chart — awareness of self, integration with environment, awareness of others, integration with society" loading="lazy" style="max-width:560px;">
+  <div class="cheat-grid">
+    <div class="cheat-card"><h4>Q1 — Houses 1–3</h4><div class="signs">Awareness of Self</div><p>Birth, identity, resources, voice. Learning who you are.</p></div>
+    <div class="cheat-card"><h4>Q2 — Houses 4–6</h4><div class="signs">Integration of Self with Environment</div><p>Home, creativity, daily life. Rooting the self into the world around you.</p></div>
+    <div class="cheat-card"><h4>Q3 — Houses 7–9</h4><div class="signs">Awareness of Others</div><p>Partnership, intimacy, belief. Meeting what is not you.</p></div>
+    <div class="cheat-card"><h4>Q4 — Houses 10–12</h4><div class="signs">Integration of Self with Society</div><p>Career, community, transcendence. Giving the self back to the collective.</p></div>
+  </div>
+
+  <h2 class="subhead">To Be · To Have · To Know</h2>
+  <div class="cheat-grid">
+    <div class="cheat-card" style="grid-column: 1 / -1;"><h4>Angular Houses — To Be</h4><div class="signs">1 · 4 · 7 · 10</div><p>Forward-moving, action-based catalysts for change — your basic needs and foundations. Planets here make you driven and self-motivated.<br><br><strong style="color:var(--text-primary);">1st</strong> to be independent · <strong style="color:var(--text-primary);">4th</strong> to be dependable to family · <strong style="color:var(--text-primary);">7th</strong> to be dependent on your partner · <strong style="color:var(--text-primary);">10th</strong> to be dependable to society</p><img class="brand-img" src="img/aura-angular-wheel.jpg" alt="Angular houses wheel — to be" loading="lazy" style="max-width:420px;"></div>
+    <div class="cheat-card" style="grid-column: 1 / -1;"><h4>Succedent Houses — To Have</h4><div class="signs">2 · 5 · 8 · 11</div><p>Fixed angles — pausing, getting comfortable with your values and self-worth, building wealth and community. Planets here can take a while to get moving, but once they do, they're VERY confident.<br><br><strong style="color:var(--text-primary);">2nd</strong> to have for self · <strong style="color:var(--text-primary);">5th</strong> to have fun for creative expression · <strong style="color:var(--text-primary);">8th</strong> to have connections for resources · <strong style="color:var(--text-primary);">11th</strong> to have social networks for impact</p><img class="brand-img" src="img/aura-succedent-wheel.jpg" alt="Succedent houses wheel — to have" loading="lazy" style="max-width:420px;"></div>
+    <div class="cheat-card" style="grid-column: 1 / -1;"><h4>Cadent Houses — To Know</h4><div class="signs">3 · 6 · 9 · 12</div><p>From the Latin <em>cado</em>, to decline — falling away from the strength of the angles. Planets here bring many changes and transformations, since these houses are ruled by mutable signs.<br><br><strong style="color:var(--text-primary);">3rd</strong> to know thyself · <strong style="color:var(--text-primary);">6th</strong> to know the body and serve physically · <strong style="color:var(--text-primary);">9th</strong> to know philosophies and connect the world · <strong style="color:var(--text-primary);">12th</strong> to know others and serve spiritually</p><img class="brand-img" src="img/aura-cadent-wheel.jpg" alt="Cadent houses wheel — to know" loading="lazy" style="max-width:420px;"></div>
+  </div>
+
+  <h2 class="subhead">The Cheat Sheet <em>Library</em></h2>
+  <p class="section-sub" style="margin-bottom:1rem;">The full Aura Vibin graphic collection — tap any topic to open its sheet.</p>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Planetary hours</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">The ancient division of day and night into hours ruled by the seven visible planets — used for timing spells, launches, and magical work by planetary energy.<img class="brand-img" src="img/aura-planetary-hours.jpg" alt="Planetary hours chart" loading="lazy"><img class="brand-img" src="img/aura-planetary-hour-activities.jpg" alt="Planetary hour activities — what to do in each planet's hour" loading="lazy"></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Modalities grid</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Every sign located by its element and modality in one grid.<img class="brand-img" src="img/aura-modalities.jpg" alt="Modalities and elements grid" loading="lazy"></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Elements & planetary rulers</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><img class="brand-img" src="img/aura-elements-rulers.jpg" alt="The four elements and the ruling planets of every sign" loading="lazy"></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Qualities of each planet</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">What every planet represents and how to work with it for self-concept — the luminaries, rising sign, and all eight planets plus Pluto.<img class="brand-img" src="img/aura-planet-qualities-1.jpg" alt="Qualities of the Sun, Moon, and rising sign" loading="lazy"><img class="brand-img" src="img/aura-planet-qualities-2.jpg" alt="Qualities of Mercury, Venus, and Earth" loading="lazy"><img class="brand-img" src="img/aura-planet-qualities-3.jpg" alt="Qualities of Mars, Jupiter, and Saturn" loading="lazy"><img class="brand-img" src="img/aura-planet-qualities-4.jpg" alt="Qualities of Uranus, Neptune, and Pluto" loading="lazy"></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Rising sign charts — whole sign houses</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Your rising sign sets the whole wheel. Find yours below to see which sign rules every house of your chart.<div class="rising-grid"><img src="img/aura-rising-aries.jpg" alt="Aries rising chart" loading="lazy"><img src="img/aura-rising-taurus.jpg" alt="Taurus rising chart" loading="lazy"><img src="img/aura-rising-gemini.jpg" alt="Gemini rising chart" loading="lazy"><img src="img/aura-rising-cancer.jpg" alt="Cancer rising chart" loading="lazy"><img src="img/aura-rising-leo.jpg" alt="Leo rising chart" loading="lazy"><img src="img/aura-rising-virgo.jpg" alt="Virgo rising chart" loading="lazy"><img src="img/aura-rising-libra.jpg" alt="Libra rising chart" loading="lazy"><img src="img/aura-rising-scorpio.jpg" alt="Scorpio rising chart" loading="lazy"><img src="img/aura-rising-sagittarius.jpg" alt="Sagittarius rising chart" loading="lazy"><img src="img/aura-rising-capricorn.jpg" alt="Capricorn rising chart" loading="lazy"><img src="img/aura-rising-aquarius.jpg" alt="Aquarius rising chart" loading="lazy"><img src="img/aura-rising-pisces.jpg" alt="Pisces rising chart" loading="lazy"></div></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Retrograde tips — focus on the R's</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><img class="brand-img" src="img/aura-retrograde-tips.jpg" alt="Retrograde tips — rest, reflect, reorganize, research, reconnect, revisit, reprogram, realign, renew" loading="lazy" style="max-width:520px;"></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Moon phases</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><img class="brand-img" src="img/aura-moon-phases.jpg" alt="The eight moon phases and their meanings" loading="lazy" style="max-width:520px;"></div>
+</div>
+
+<div class="section" id="section-glossary">
+  <div class="section-eyebrow">Quick Reference</div>
+  <h1 class="section-title">Glossary</h1>
+  <p class="section-sub">The full working vocabulary of astrology — one clean line per term. Star anything to save it into your Study Space.</p>
+  <input class="search-bar" id="gloss-search" placeholder="Search terms..." oninput="renderGloss()">
+  <div class="filter-row" id="gloss-cats"></div>
+  <div class="card" style="padding: 0;" id="gloss-list"></div>
+</div>
+
+<div class="section" id="section-library">
+  <div class="section-eyebrow">Community Research</div>
+  <h1 class="section-title">Pattern Library</h1>
+  <p class="section-sub">Real placements, real life events, submitted by the community and reviewed before publishing. Names appear only when the contributor chose to share them.</p>
+  <input class="search-bar" id="lib-search" placeholder="Search stories, placements, events..." oninput="renderLibrary()">
+  <div class="filter-row" id="lib-filters"></div>
+  <div id="lib-list"><p class="empty">Loading submissions...</p></div>
+</div>
+
+<div class="section" id="section-submit">
+  <div class="section-eyebrow">Contribute</div>
+  <h1 class="section-title">Submit Your Research</h1>
+  <p class="section-sub">Your placements plus your lived experience = real astrological data. Everything except the event and your story is optional — share exactly as much as feels right. Submissions are anonymous unless you choose otherwise, and reviewed before appearing in the Pattern Library.</p>
+
+  <div class="card">
+    <label>Event / Theme *</label>
+    <select id="sub-category">
+      <option value="">Select one...</option>
+      <optgroup label="Love & Union">
+        <option>Got engaged / proposed to</option>
+        <option>Met life partner / soulmate</option>
+        <option>Marriage 20+ years</option>
+        <option>Divorce</option>
+        <option>Domestic violence</option>
+      </optgroup>
+      <optgroup label="Family & Fertility">
+        <option>Had a baby</option>
+        <option>Twin pregnancy / multiples</option>
+        <option>Adoption</option>
+        <option>Miscarriage / pregnancy loss</option>
+      </optgroup>
+      <optgroup label="Career & Money">
+        <option>Major career peak</option>
+        <option>Dream job / big promotion</option>
+        <option>Launched a business</option>
+        <option>Financial windfall</option>
+        <option>Viral moment / sudden fame</option>
+        <option>Job loss</option>
+        <option>Bankruptcy / financial ruin</option>
+      </optgroup>
+      <optgroup label="Health & Healing">
+        <option>Recovery / healing breakthrough</option>
+        <option>Sobriety milestone</option>
+        <option>Sudden illness / diagnosis</option>
+        <option>Accident / trauma</option>
+        <option>Addiction</option>
+      </optgroup>
+      <optgroup label="Life Path">
+        <option>Spiritual awakening</option>
+        <option>Big move / immigration</option>
+        <option>Graduation / education milestone</option>
+        <option>Sexuality / coming out</option>
+        <option>Incarceration</option>
+        <option>Death of loved one</option>
+        <option>Other</option>
+      </optgroup>
+    </select>
+    <div id="other-wrap" style="display:none;"><label>Describe the event</label><input type="text" id="sub-other" placeholder="e.g. won the lottery, immigrated, adopted..."></div>
+
+    <label>Your Story *</label>
+    <textarea id="sub-story" placeholder="What happened? Include any astrology you noticed — e.g. 'this happened when transiting Mars was conjunct my natal Saturn'..."></textarea>
+
+    <label>When did it happen? <span class="optional-tag">— optional</span></label>
+    <input type="date" id="sub-edate">
+
+    <label>Key Placements <span class="optional-tag">— optional</span></label>
+    <input type="text" id="sub-placements" placeholder="e.g. Mars conjunct Saturn in 7th, Moon square Pluto...">
+
+    <label>Birth Date <span class="optional-tag">— optional</span></label>
+    <input type="date" id="sub-bdate">
+    <label>Birth Time <span class="optional-tag">— optional</span></label>
+    <input type="time" id="sub-btime">
+    <label>Birth Location <span class="optional-tag">— optional</span></label>
+    <input type="text" id="sub-bloc" placeholder="City, Country">
+
+    <label>Other people's charts <span class="optional-tag">— optional, add as many as you like</span></label>
+    <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.4rem;">If your story involves other people — a partner, parent, sibling, child — you can include their birth data too. Synastry data is gold for the research.</p>
+    <div id="charts-wrap"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addChartRow()" style="margin-top:0.6rem;">＋ Add a chart</button>
+
+    <label>Email <span class="optional-tag">— optional, never shown publicly</span></label>
+    <input type="email" id="sub-email" placeholder="Only if you're open to follow-up questions about your story">
+
+    <div class="toggle-row">
+      <input type="checkbox" id="sub-showname">
+      <span>I consent to my name being shown publicly with this entry</span>
+    </div>
+    <div id="name-wrap" style="display:none;"><label>Name or initials to display</label><input type="text" id="sub-name" placeholder="e.g. Sarah M."></div>
+
+    <input type="text" id="sub-website" style="position:absolute;left:-9999px;" tabindex="-1" autocomplete="off">
+
+    <button class="btn" onclick="submitEntry()">Submit for Review</button>
+    <div class="msg" id="sub-msg"></div>
+  </div>
+</div>
+<div class="section" id="section-mynotes">
+  <div class="section-eyebrow">Yours</div>
+  <h1 class="section-title">My Study Space</h1>
+  <p class="section-sub">Your private corner of the site. Everything here lives only in your browser — nobody else can see it.</p>
+
+  <div class="subtabs">
+    <div class="subtab active" data-sub="saved" onclick="showSub('saved')">Saved Terms</div>
+    <div class="subtab" data-sub="notes" onclick="showSub('notes')">Study Notes</div>
+    <div class="subtab" data-sub="flash" onclick="showSub('flash')">Flashcards</div>
+    <div class="subtab" data-sub="practice" onclick="showSub('practice')">Chart Practice Log</div>
+    <div class="subtab" data-sub="questions" onclick="showSub('questions')">Questions to Research</div>
+  </div>
+
+  <div class="subsection active" id="sub-saved">
+    <div id="saved-terms"><p class="empty">Nothing saved yet — star glossary terms to collect them here.</p></div>
+  </div>
+
+  <div class="subsection" id="sub-notes">
+    <textarea id="my-note-input" placeholder="Write a note — something that clicked, a pattern you noticed, a concept in your own words..."></textarea>
+    <button class="btn" onclick="saveMyNote()">Save Note</button>
+    <div style="margin-top:1.25rem;" id="my-notes-list"></div>
+  </div>
+
+  <div class="subsection" id="sub-flash">
+    <p class="section-sub" style="margin-bottom:1rem;">Test yourself — a random term appears, recall the definition, then tap to reveal.</p>
+    <div class="flashcard" id="flashcard" onclick="flipFlash()">
+      <div class="flash-term" id="flash-term">Tap to start</div>
+      <div class="flash-def" id="flash-def" style="display:none;"></div>
+      <div class="flash-hint" id="flash-hint">tap the card</div>
+    </div>
+    <div style="display:flex;gap:0.6rem;justify-content:center;">
+      <button class="btn btn-ghost" onclick="nextFlash()">Next Card</button>
+      <button class="btn btn-ghost" onclick="flashSavedOnly=!flashSavedOnly;nextFlash();this.textContent=flashSavedOnly?'All Terms':'Saved Terms Only';">Saved Terms Only</button>
+    </div>
+  </div>
+
+  <div class="subsection" id="sub-practice">
+    <p class="section-sub" style="margin-bottom:1rem;">Log every chart you practice on. Watching this list grow is watching yourself become a reader.</p>
+    <label>Whose chart / what chart</label>
+    <input type="text" id="prac-chart" placeholder="e.g. my sister, celebrity chart, client practice...">
+    <label>What I saw</label>
+    <textarea id="prac-saw" placeholder="Placements, patterns, the story I built from them..."></textarea>
+    <label>What I learned or missed</label>
+    <textarea id="prac-learned" style="min-height:70px;" placeholder="What I'd read differently next time..."></textarea>
+    <button class="btn" onclick="savePractice()">Log This Chart</button>
+    <div style="margin-top:1.25rem;" id="practice-list"></div>
+  </div>
+
+  <div class="subsection" id="sub-questions">
+    <p class="section-sub" style="margin-bottom:1rem;">Every question you can't answer yet is a future strength. Collect them here and check them off as you learn.</p>
+    <input type="text" id="q-input" placeholder="e.g. What's the difference between bounds and decans?" onkeydown="if(event.key==='Enter')addQuestion()">
+    <button class="btn" onclick="addQuestion()">Add Question</button>
+    <div style="margin-top:1.25rem;" id="q-list"></div>
+  </div>
+</div>
+
+<div class="section" id="section-notes">
+  <div class="section-eyebrow">From Aura</div>
+  <h1 class="section-title">Research Notes</h1>
+  <p class="section-sub">Syntheses, findings, and patterns emerging from the research.</p>
+  <div id="notes-list"><p class="empty">Loading notes...</p></div>
+</div>
+
+<div class="section" id="section-admin">
+  <div class="section-eyebrow">Private</div>
+  <h1 class="section-title">Admin</h1>
+  <div id="admin-login" class="card">
+    <label>Email</label>
+    <input type="email" id="adm-email">
+    <label>Password</label>
+    <input type="password" id="adm-pass">
+    <button class="btn" onclick="adminLogin()">Log In</button>
+    <div class="msg" id="adm-msg"></div>
+  </div>
+  <div id="admin-panel" style="display:none;">
+    <div class="admin-stats">
+      <div class="stat"><div class="stat-num" id="stat-pending">–</div><div class="stat-label">Pending</div></div>
+      <div class="stat"><div class="stat-num" id="stat-approved">–</div><div class="stat-label">Approved</div></div>
+      <div class="stat"><div class="stat-num" id="stat-total">–</div><div class="stat-label">Total</div></div>
+    </div>
+    <h2 class="subhead">Pending Queue</h2>
+    <div id="pending-list"><p class="empty">Loading...</p></div>
+    <h2 class="subhead">Write a Research Note</h2>
+    <div class="card">
+      <label>Title</label>
+      <input type="text" id="note-title">
+      <label>Body</label>
+      <textarea id="note-body" style="min-height:160px;"></textarea>
+      <button class="btn" onclick="publishNote()">Publish Note</button>
+      <div class="msg" id="note-msg"></div>
+    </div>
+    <h2 class="subhead">Add a Glossary Term</h2>
+    <div class="card">
+      <label>Term</label>
+      <input type="text" id="new-term">
+      <label>Category</label>
+      <select id="new-term-cat"><option>Foundations</option><option>Chart Anatomy</option><option>Signs & Elements</option><option>Planets & Points</option><option>Aspects & Patterns</option><option>Dignity & Condition</option><option>Timing</option><option>Relationship</option><option>Branches & Systems</option></select>
+      <label>Definition</label>
+      <textarea id="new-term-def" style="min-height:70px;"></textarea>
+      <button class="btn" onclick="addTerm()">Add Term</button>
+      <div class="msg" id="term-msg"></div>
+    </div>
+    <button class="btn btn-ghost" style="margin-top:2rem;" onclick="adminLogout()">Log Out</button>
+  </div>
+</div>
+
+</main>
+<nav class="bottom-nav">
+  <div class="tab active" data-tab="learn" onclick="showTab('learn')"><span class="tab-icon">✨</span><span class="tab-label">Learn</span></div>
+  <div class="tab" data-tab="cheat" onclick="showTab('cheat')"><span class="tab-icon">📋</span><span class="tab-label">Cheats</span></div>
+  <div class="tab" data-tab="glossary" onclick="showTab('glossary')"><span class="tab-icon">💎</span><span class="tab-label">Glossary</span></div>
+  <div class="tab" data-tab="library" onclick="showTab('library')"><span class="tab-icon">🔮</span><span class="tab-label">Patterns</span></div>
+  <div class="tab" data-tab="submit" onclick="showTab('submit')"><span class="tab-icon">💌</span><span class="tab-label">Submit</span></div>
+  <div class="tab" data-tab="mynotes" onclick="showTab('mynotes')"><span class="tab-icon">🌙</span><span class="tab-label">Study</span></div>
+  <div class="tab" data-tab="notes" onclick="showTab('notes')"><span class="tab-icon">⭐</span><span class="tab-label">Notes</span></div>
+</nav>
+<footer style="display:none;"></footer>
+<script>
+const SB_URL = 'https://ifzzkrbizxwzwhkquuob.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmenprcmJpenh3endoa3F1dW9iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUwOTc5NzgsImV4cCI6MjA5MDY3Mzk3OH0.lMKwzdnTAGzyIKxhmxV1ugejc70k78MkF7A_-m6VFpk';
+const db = supabase.createClient(SB_URL, SB_KEY);
+
+const FALLBACK_TERMS = [["Ecliptic", "Foundations", "The Sun's apparent annual path through the sky — the road all planets roughly travel and the circle the zodiac is measured on."], ["Celestial equator", "Foundations", "Earth's equator projected out into space — the flat middle line of the sky, tilted 23.4° relative to the ecliptic."], ["Vernal equinox", "Foundations", "The Sun crossing the celestial equator heading north — 0° Aries, equal day and night, the start of the tropical zodiac."], ["Autumnal equinox", "Foundations", "The Sun crossing the celestial equator heading south — 0° Libra, equal day and night, light beginning to lose."], ["Summer solstice", "Foundations", "The Sun's highest northern point — 0° Cancer, maximum daylight. From Latin sol (sun) + sistere (to stand still)."], ["Winter solstice", "Foundations", "The Sun's lowest southern point — 0° Capricorn, minimum daylight, after which light returns."], ["Equinox", "Foundations", "Either of the two yearly moments when the Sun crosses the celestial equator and day equals night."], ["Solstice", "Foundations", "Either of the two yearly moments when the Sun reaches maximum distance north or south and appears to pause."], ["Tropical zodiac", "Foundations", "The zodiac anchored to the seasons — 0° Aries is always the vernal equinox regardless of the constellations. Used in Western astrology."], ["Sidereal zodiac", "Foundations", "The zodiac anchored to the actual constellations — used in Vedic astrology, currently about 24° behind tropical."], ["Ayanamsa", "Foundations", "The measured offset between the tropical and sidereal zodiacs — different Vedic traditions use slightly different values."], ["Precession of the equinoxes", "Foundations", "Earth's slow axial wobble drifting the equinox point backwards through the constellations about 1° every 72 years."], ["Great Year", "Foundations", "One complete precession cycle of roughly 26,000 years — about 2,150 years per astrological age."], ["Astrological age", "Foundations", "A ~2,150-year era defined by which constellation the vernal equinox points toward — we are moving from Pisces into Aquarius."], ["Declination", "Foundations", "A planet's distance north or south of the celestial equator — the vertical axis the standard chart wheel ignores."], ["Out of bounds", "Foundations", "A planet beyond the Sun's maximum declination of 23.4° north or south — read as ungoverned, erratic, and unusually powerful."], ["Latitude (celestial)", "Foundations", "A planet's distance north or south of the ecliptic itself — distinct from declination, which measures from the equator."], ["Longitude (celestial)", "Foundations", "A planet's position measured along the ecliptic in zodiac degrees — the standard coordinate every chart uses."], ["Minutes of arc", "Foundations", "Subdivisions of a degree: 60 minutes per degree, 60 seconds per minute. Written 14°32'18\"."], ["Ephemeris", "Foundations", "A table listing the daily positions of the planets — the raw data every chart is calculated from."], ["Horizon", "Foundations", "The local dividing line between the visible and invisible sky — in a chart, the Ascendant–Descendant axis."], ["Meridian", "Foundations", "The vertical axis of the chart running from the Midheaven to the IC — the highest and lowest points of the sky."], ["Zenith", "Foundations", "The point directly overhead at your location."], ["Zodiac", "Foundations", "The band of sky about 8° either side of the ecliptic through which the Sun, Moon, and planets appear to move, divided into twelve 30° signs."], ["Constellation", "Foundations", "An actual grouping of stars in the sky — related to but distinct from the zodiac signs named after them."], ["Luminaries", "Foundations", "The Sun and the Moon — the two lights, weighted above all other bodies in chart reading."], ["Geocentric", "Foundations", "Measured from Earth's point of view — the perspective virtually all astrology uses."], ["Heliocentric", "Foundations", "Measured from the Sun's point of view — a specialized alternative chart perspective."], ["Ascendant (ASC)", "Chart Anatomy", "The sign and degree rising on the eastern horizon at birth — the self, the body, the lens you meet life through. Start of the 1st house."], ["Descendant (DSC)", "Chart Anatomy", "The point setting on the western horizon — partnership, the other, what you seek and attract. Start of the 7th house."], ["Midheaven (MC)", "Chart Anatomy", "The highest point of the chart — career, reputation, public life, legacy. Start of the 10th house."], ["Imum Coeli (IC)", "Chart Anatomy", "The lowest point of the chart — home, roots, family, the private foundation of the life. Start of the 4th house."], ["Angles", "Chart Anatomy", "The four pillars of the chart: ASC, IC, DSC, MC. Planets close to them are dramatically amplified."], ["Houses", "Chart Anatomy", "The twelve divisions of the chart mapping areas of life — self, money, communication, home, and so on around the wheel."], ["House cusp", "Chart Anatomy", "The starting boundary of a house — the sign on the cusp and its ruler color everything that house governs."], ["Whole sign houses", "Chart Anatomy", "The oldest house system — each house equals one entire sign, with the rising sign as the whole 1st house."], ["Placidus", "Chart Anatomy", "The most common modern house system — divides houses by time, producing unequal house sizes, especially at high latitudes."], ["Quadrant", "Chart Anatomy", "One of the four quarters of the chart created by the horizon and meridian axes — each carries a developmental theme."], ["Hemisphere emphasis", "Chart Anatomy", "Whether planets cluster above/below the horizon or east/west of the meridian — public vs private, self-directed vs other-directed."], ["Degree", "Chart Anatomy", "One 360th of the circle; each sign holds 30. A planet's degree determines its aspects, dignity, and precision of timing."], ["Decan", "Chart Anatomy", "A 10° subdivision — three per sign, 36 total — each with its own planetary ruler adding a sub-flavor to placements."], ["Anaretic degree", "Chart Anatomy", "The 29th degree of any sign — a degree of urgency, mastery, or crisis around that sign's themes."], ["Critical degrees", "Chart Anatomy", "Traditional sensitive degrees (0°, 13°, 26° of cardinal signs and others) believed to intensify a placement."], ["Cusp (sign)", "Chart Anatomy", "The boundary between two signs. A planet is always in one sign or the other — 'born on the cusp' describes proximity, not blending."], ["Intercepted sign", "Chart Anatomy", "In unequal house systems, a sign fully enclosed inside a house without touching a cusp — its themes can feel harder to access."], ["Chart ruler", "Chart Anatomy", "The planet ruling the Ascendant sign — its sign, house, and condition color the entire chart."], ["Angular houses", "Chart Anatomy", "Houses 1, 4, 7, 10 — the power positions. Planets here act loudly and visibly."], ["Succedent houses", "Chart Anatomy", "Houses 2, 5, 8, 11 — stabilizing positions. Planets here build steadily over time."], ["Cadent houses", "Chart Anatomy", "Houses 3, 6, 9, 12 — mental, adaptive, internalized positions. Planets here work behind the scenes."], ["Singleton", "Chart Anatomy", "The only planet in a hemisphere, element, or modality — it becomes a dominant focal point."], ["Chart shape", "Chart Anatomy", "The overall distribution pattern of planets — bundle, bowl, bucket, locomotive, seesaw, splash, splay — read before any single placement."], ["Bundle chart", "Chart Anatomy", "All planets within about 120° — concentrated, specialized, narrow and deep."], ["Bowl chart", "Chart Anatomy", "All planets within one half of the chart — a life seeking what the empty half represents."], ["Bucket chart", "Chart Anatomy", "All planets on one side except a lone handle planet — that singleton channels the entire chart."], ["Locomotive chart", "Chart Anatomy", "Planets spanning about 240° — the planet leading clockwise into the empty space drives the personality."], ["Splash chart", "Chart Anatomy", "Planets scattered through most signs — versatile, wide-ranging, at risk of diffusion."], ["Seesaw chart", "Chart Anatomy", "Two opposing groups of planets — a life of weighing, balancing, and negotiating polarities."], ["Cardinal signs", "Signs & Elements", "Aries, Cancer, Libra, Capricorn — the initiators. Each begins a season at an equinox or solstice."], ["Fixed signs", "Signs & Elements", "Taurus, Leo, Scorpio, Aquarius — the sustainers. Mid-season stability, loyalty, and stubbornness."], ["Mutable signs", "Signs & Elements", "Gemini, Virgo, Sagittarius, Pisces — the adapters. End-of-season flexibility, transition, and change."], ["Modality", "Signs & Elements", "How a sign's energy moves: cardinal initiates, fixed sustains, mutable adapts. Also called quadruplicity."], ["Element", "Signs & Elements", "A sign's fundamental substance: fire (spirit), earth (matter), air (mind), water (feeling). Also called triplicity."], ["Fire signs", "Signs & Elements", "Aries, Leo, Sagittarius — identity, inspiration, action, self-expression."], ["Earth signs", "Signs & Elements", "Taurus, Virgo, Capricorn — body, resources, craft, the material world."], ["Air signs", "Signs & Elements", "Gemini, Libra, Aquarius — thought, language, relationship, social systems."], ["Water signs", "Signs & Elements", "Cancer, Scorpio, Pisces — emotion, memory, intuition, the unconscious."], ["Polarity (signs)", "Signs & Elements", "The day/night or yang/yin classification — fire and air signs are diurnal/masculine, earth and water nocturnal/feminine in traditional language."], ["Barren signs", "Signs & Elements", "Gemini, Leo, Virgo — classically least supportive of fertility and growth, used in horary and electional work."], ["Fruitful signs", "Signs & Elements", "Cancer, Scorpio, Pisces — the water signs, classically most supportive of fertility, growth, and gestation."], ["Bestial signs", "Signs & Elements", "Signs symbolized by animals (Aries, Taurus, Leo, Capricorn) in traditional classification."], ["Human signs", "Signs & Elements", "Gemini, Virgo, Libra, Aquarius (and the first half of Sagittarius) — signs of human form, linked to communication and reason."], ["Double-bodied signs", "Signs & Elements", "Gemini, Sagittarius, Pisces (and Virgo in some traditions) — signs of duality, multiplicity, and second chapters."], ["Mute signs", "Signs & Elements", "The water signs in traditional classification — connected to what is felt but not spoken."], ["Signs of long ascension", "Signs & Elements", "Cancer through Sagittarius — signs that take longer to rise in northern latitudes, relevant in timing techniques."], ["Antiscia", "Signs & Elements", "Mirror points across the solstice axis (Cancer–Capricorn 0°) — two planets at each other's antiscia are in hidden sympathy."], ["Contra-antiscia", "Signs & Elements", "Mirror points across the equinox axis (Aries–Libra 0°) — a subtler reflective connection."], ["Personal planets", "Planets & Points", "Sun, Moon, Mercury, Venus, Mars — fast movers that define individual character."], ["Social planets", "Planets & Points", "Jupiter and Saturn — the bridge between personal life and generational context: growth and structure."], ["Outer planets", "Planets & Points", "Uranus, Neptune, Pluto — slow generational forces of disruption, dissolution, and transformation."], ["Sun", "Planets & Points", "Core identity, vitality, purpose — what you are becoming. Rules Leo."], ["Moon", "Planets & Points", "Emotional nature, needs, instinct, memory, the body's rhythms — what you already are. Rules Cancer."], ["Mercury", "Planets & Points", "Mind, language, learning, commerce, movement. Rules Gemini and Virgo."], ["Venus", "Planets & Points", "Attraction, values, love, beauty, money, pleasure. Rules Taurus and Libra."], ["Mars", "Planets & Points", "Drive, desire, anger, courage, the ability to act and to cut. Rules Aries (and traditionally Scorpio)."], ["Jupiter", "Planets & Points", "Expansion, faith, luck, wisdom, excess — the Greater Benefic. Rules Sagittarius (and traditionally Pisces)."], ["Saturn", "Planets & Points", "Structure, limits, time, discipline, fear, mastery — the Greater Malefic. Rules Capricorn (and traditionally Aquarius)."], ["Uranus", "Planets & Points", "Disruption, awakening, rebellion, sudden change, genius. Modern ruler of Aquarius."], ["Neptune", "Planets & Points", "Dissolution, dreams, illusion, spirituality, escapism. Modern ruler of Pisces."], ["Pluto", "Planets & Points", "Death and rebirth, power, obsession, the underworld, total transformation. Modern ruler of Scorpio."], ["Chiron", "Planets & Points", "The wounded healer — the wound that never fully closes and becomes your medicine for others."], ["North Node", "Planets & Points", "The soul's direction of growth this lifetime — unfamiliar, uncomfortable, and necessary."], ["South Node", "Planets & Points", "The soul's default inheritance — gifts and patterns from the past that must not become a hiding place."], ["Lunar nodes", "Planets & Points", "The points where the Moon's orbit crosses the ecliptic — the karmic axis, where eclipses occur."], ["Black Moon Lilith", "Planets & Points", "The lunar apogee — the rejected, the raw, the untamed feminine, suppressed power."], ["Vertex", "Planets & Points", "A point of fated encounters on the western side of the chart — often activated at destiny-heavy meetings."], ["Part of Fortune", "Planets & Points", "The primary Arabic Lot — where body, circumstance, and wellbeing flow. Calculated from Sun, Moon, and Ascendant."], ["Part of Spirit", "Planets & Points", "The Lot of action, career, and soul intention — the active counterpart to Fortune. Basis for zodiacal releasing of career."], ["Arabic Parts / Lots", "Planets & Points", "Hundreds of calculated sensitive points (Marriage, Bankruptcy, Death, Children...) each derived from three chart factors."], ["Juno", "Planets & Points", "Asteroid of marriage, commitment, and contract — what you need in binding partnership."], ["Vesta", "Planets & Points", "Asteroid of devotion, sacred focus, and what you tend like a flame."], ["Pallas", "Planets & Points", "Asteroid of strategy, pattern recognition, and creative intelligence."], ["Ceres", "Planets & Points", "Asteroid of nurture, food, grief, and cycles of loss and return."], ["Nessus", "Planets & Points", "Asteroid associated with abuse cycles and the misuse of power in research astrology."], ["Dejanira", "Planets & Points", "Asteroid associated with victimization patterns in research astrology."], ["Retrograde", "Planets & Points", "A planet appearing to move backwards from Earth's view — energy turned inward, revised, or delayed; flips applying/separating logic."], ["Stationary", "Planets & Points", "A planet at standstill while changing direction — its energy concentrated and loud in a chart or by transit."], ["Direct", "Planets & Points", "A planet in normal forward motion through the zodiac."], ["Combust", "Planets & Points", "Within about 8° of the Sun — burned out, hidden, its agenda absorbed by the Sun's."], ["Cazimi", "Planets & Points", "Within 17 minutes of arc of the Sun — 'in the heart of the king,' elevated and empowered rather than burned."], ["Under the beams", "Planets & Points", "Within about 17° of the Sun — dimmed and weakened but not fully combust."], ["Oriental / Occidental", "Planets & Points", "Rising before the Sun (oriental) or after it (occidental) — changes a planet's expression and, for Mercury, its sect."], ["Aspect", "Aspects & Patterns", "An angular relationship between two planets that puts them in conversation — the geometry of the chart."], ["Conjunction", "Aspects & Patterns", "0° — merger. Two planets blend and amplify into one combined force. Orb 6–8°."], ["Sextile", "Aspects & Patterns", "60° — opportunity. Harmonious but requires effort to activate. Orb 4–6°."], ["Square", "Aspects & Patterns", "90° — friction. The growth aspect: pressure, conflict, and drive. Orb 6–8°."], ["Trine", "Aspects & Patterns", "120° — flow. Natural talent and ease that can slide into laziness. Orb 6–8°."], ["Opposition", "Aspects & Patterns", "180° — polarity. Awareness through the other; often experienced as projection. Orb 6–8°."], ["Quincunx / Inconjunct", "Aspects & Patterns", "150° — chronic adjustment between signs sharing no element, modality, or polarity. Orb 2–3°."], ["Semi-sextile", "Aspects & Patterns", "30° — awkward neighbors with different agendas. Orb 1–2°."], ["Semi-square", "Aspects & Patterns", "45° — subtle ongoing friction. Orb 1–2°."], ["Sesquiquadrate", "Aspects & Patterns", "135° — irritation that accumulates and discharges. Orb 1–2°. Key to Thor's Hammer."], ["Quintile", "Aspects & Patterns", "72° — unusual creative talent, sometimes genius. Orb 1–2°."], ["Bi-quintile", "Aspects & Patterns", "144° — internalized creative gift. Orb 1–2°."], ["Septile", "Aspects & Patterns", "~51.4° — fated, compulsive, karmic undertone. Orb 1°."], ["Novile", "Aspects & Patterns", "40° — gestation, completion, spiritual maturation. Orb 1°."], ["Orb", "Aspects & Patterns", "Allowable distance from exact aspect. Tighter equals stronger; complex patterns demand tighter orbs than single aspects."], ["Applying", "Aspects & Patterns", "The faster planet moving toward exact aspect — the energy is still building and will complete."], ["Separating", "Aspects & Patterns", "The aspect has already perfected — the energy is expressed and fading."], ["Partile", "Aspects & Patterns", "An aspect exact to the same degree — maximum strength."], ["Platic", "Aspects & Patterns", "An aspect within orb but not degree-exact — present but softer."], ["Dexter / Sinister", "Aspects & Patterns", "Traditional distinction of aspect direction — cast backwards (dexter) or forwards (sinister) through the zodiac."], ["Parallel", "Aspects & Patterns", "Two planets at the same declination on the same side of the equator — a resonance traditionally read like a conjunction. Orb ~1°."], ["Contra-parallel", "Aspects & Patterns", "Same declination, opposite sides of the equator — read like an opposition. Orb ~1°."], ["Aspect pattern", "Aspects & Patterns", "A configuration of three or more planets forming a recognizable geometric shape with its own theme."], ["Stellium", "Aspects & Patterns", "Three or more planets in one sign or house — an overwhelming concentration that dominates the life."], ["T-Square", "Aspects & Patterns", "Two planets in opposition, both squared by a third — the empty leg opposite the apex is the release point."], ["Grand Cross", "Aspects & Patterns", "Four planets in two crossed oppositions joined by four squares — relentless four-way tension, enormous drive when integrated."], ["Grand Trine", "Aspects & Patterns", "Three planets trine in one element — a closed circuit of talent that needs activation to manifest."], ["Kite", "Aspects & Patterns", "A Grand Trine plus a planet opposing one corner and sextiling the other two — the opposition is the engine."], ["Yod", "Aspects & Patterns", "Two planets sextile, both quincunx a single apex — the Finger of God. Fated redirection. Orbs 2–3° max."], ["Boomerang Yod", "Aspects & Patterns", "A Yod with an opposition to its apex — the reaction point gives the tension somewhere to discharge."], ["Thor's Hammer", "Aspects & Patterns", "Two squared planets both sesquiquadrate an apex — Yod-like fate with explosive pressure. Also called God's Fist."], ["Mystic Rectangle", "Aspects & Patterns", "Two oppositions connected by two trines and two sextiles — productive paradox, practical mysticism."], ["Grand Sextile", "Aspects & Patterns", "Six planets in mutual sextile forming a Star of David — extremely rare, exceptional flow."], ["Cradle", "Aspects & Patterns", "A chain of sextiles and trines bridging one opposition — protected, comfort-seeking, gifted at softening conflict."], ["Aspect grid", "Aspects & Patterns", "The triangular table below a chart listing every aspect and its exact orb — read it instead of guessing from the wheel."], ["Essential dignity", "Dignity & Condition", "A planet's intrinsic strength by zodiac position — domicile, exaltation, triplicity, bounds, decan."], ["Accidental dignity", "Dignity & Condition", "A planet's situational strength by chart position — angularity, speed, direction, freedom from the Sun."], ["Domicile", "Dignity & Condition", "A planet in a sign it rules — at home, full access to its own resources."], ["Detriment", "Dignity & Condition", "A planet in the sign opposite its home — working in unfamiliar territory, compensating."], ["Exaltation", "Dignity & Condition", "A planet in the sign of its highest honored expression — an esteemed guest performing at its best."], ["Fall", "Dignity & Condition", "A planet in the sign opposite its exaltation — depressed expression, working uphill."], ["Peregrine", "Dignity & Condition", "A planet with no essential dignity at all — a wanderer without resources, taking the color of its dispositor."], ["Dispositor", "Dignity & Condition", "The planet ruling the sign another planet occupies — Mars in Cancer is disposed by the Moon."], ["Final dispositor", "Dignity & Condition", "A planet in its own sign that ultimately rules a chain of dispositors — a quiet power center of the chart."], ["Mutual reception", "Dignity & Condition", "Two planets each in the other's sign — an alliance that lets them trade strength and rescue each other."], ["Bounds / Terms", "Dignity & Condition", "Unequal subdivisions of each sign assigned to five planets — a minor but ancient dignity used in Hellenistic work."], ["Triplicity rulers / Trigon lords", "Dignity & Condition", "Each element's team of three ruling planets — day ruler, night ruler, participating ruler."], ["Sect", "Dignity & Condition", "Whether a chart is day (Sun above horizon) or night (Sun below) — the single fastest way to judge how planets will behave."], ["Diurnal planets", "Dignity & Condition", "The day team: Sun, Jupiter, Saturn — plus Mercury when it rises before the Sun."], ["Nocturnal planets", "Dignity & Condition", "The night team: Moon, Venus, Mars — plus Mercury when it rises after the Sun."], ["In sect", "Dignity & Condition", "A planet on the team matching the chart's sect — supported, expressing its constructive side."], ["Out of sect", "Dignity & Condition", "A planet on the opposite team from the chart — hotter, less controlled, more prone to its difficult expression."], ["Hayz", "Dignity & Condition", "In sect, in a sign of its own gender, and in the correct hemisphere — a planet maximally at home. Rare and strong."], ["Benefic", "Dignity & Condition", "Jupiter (greater) and Venus (lesser) — the planets that help, ease, and give."], ["Malefic", "Dignity & Condition", "Saturn (greater) and Mars (lesser) — the planets that test, cut, and take. Softened when in sect."], ["Bonification", "Dignity & Condition", "A planet supported by a benefic through conjunction or harmonious aspect — its difficulties eased, its gifts amplified."], ["Maltreatment", "Dignity & Condition", "A planet afflicted by a malefic — conjunct, hard-aspected without mitigation, combust, or besieged."], ["Besiegement", "Dignity & Condition", "A planet enclosed between Mars and Saturn — classically among the worst conditions, pressured from both sides."], ["Enclosure by benefics", "Dignity & Condition", "A planet enclosed between Jupiter and Venus — protected and supported from both sides."], ["Reception", "Dignity & Condition", "One planet aspecting another from a sign the second planet has dignity in — hospitality that softens hard aspects."], ["Overcoming", "Dignity & Condition", "A planet in the tenth sign from another dominates it — superior position in Hellenistic aspect doctrine."], ["Retrograde (condition)", "Dignity & Condition", "Counted as an accidental debility in traditional astrology — the planet revisits, delays, and internalizes."], ["Swift / Slow in motion", "Dignity & Condition", "Moving faster or slower than average speed — swiftness adds strength, slowness weakens or delays."], ["Transit", "Timing", "A moving planet's current position touching a natal chart point — the weather passing over your fixed landscape."], ["Secondary progressions", "Timing", "A day-for-a-year unfolding of the natal chart — the inner developmental clock. The progressed Moon is its hand."], ["Progressed Moon", "Timing", "The fastest progressed body — a 27–28 year loop through the houses marking emotional chapters of roughly 2.5 years per sign."], ["Solar arc directions", "Timing", "Every chart point advanced by the Sun's progressed motion (~1° per year) — sharp, event-oriented timing."], ["Solar return", "Timing", "The chart cast for the Sun's exact return to its natal degree each year — the map of your personal year."], ["Lunar return", "Timing", "The chart for the Moon's monthly return to its natal position — the emotional month ahead."], ["Saturn return", "Timing", "Saturn's return to its natal place around ages 29, 58, and 87 — the great maturation checkpoints."], ["Annual profections", "Timing", "A Hellenistic technique advancing one house per year of life — the profected house's ruler becomes the Lord of the Year."], ["Lord of the Year", "Timing", "In profections, the ruler of the activated house — its natal condition and transits color the whole year."], ["Zodiacal releasing", "Timing", "Hellenistic timing dividing life into planetary chapters from the Lot of Spirit or Fortune — reveals peak and quiet periods."], ["Loosing of the bond", "Timing", "In zodiacal releasing, a dramatic chapter shift into the sign square or opposite the starting Lot — major turning points."], ["Peak period", "Timing", "In zodiacal releasing, a period angular to the Lot of Fortune — when actions carry maximum visibility and consequence."], ["Firdaria", "Timing", "A Persian time-lord system assigning planetary rulers to fixed multi-year periods of life."], ["Planetary periods", "Timing", "The years assigned each planet in Hellenistic timing: Moon 25, Mercury 20, Venus 8, Sun 19, Mars 15, Jupiter 12, Saturn 30."], ["Eclipse", "Timing", "A Sun–Moon alignment at the lunar nodes — a compressed, fated new or full moon that activates whatever it touches in a chart."], ["Saros cycle", "Timing", "The ~18-year family cycle of related eclipses — each eclipse belongs to a lineage with a shared signature."], ["Eclipse season", "Timing", "The twice-yearly window when the Sun travels near the nodes and eclipses occur."], ["Retrograde cycle", "Timing", "A planet's regular pattern of apparent backward motion — Mercury three times yearly, Venus every 18 months, Mars every 2 years."], ["Shadow period", "Timing", "The degrees a retrograde planet crosses three times — themes begun before the retrograde resolve only after the final pass."], ["Ingress", "Timing", "A planet's entry into a new sign — a chapter change in that planet's expression."], ["Synodic cycle", "Timing", "The full relationship cycle of two planets from conjunction to conjunction — e.g. the 20-year Jupiter–Saturn cycle."], ["Great conjunction", "Timing", "The Jupiter–Saturn conjunction every 20 years — traditionally the marker of societal chapter changes."], ["Void of course Moon", "Timing", "The Moon past its last major aspect before changing signs — traditionally a time when new undertakings drift."], ["Planetary hours", "Timing", "The ancient division of day and night into hours ruled by the seven visible planets — used in electional and magical timing."], ["Primary directions", "Timing", "The oldest predictive technique — rotating the chart by the Earth's daily motion, roughly 1° per year of life."], ["Synastry", "Relationship", "Overlaying two natal charts to read the chemistry, friction, and purpose between two people."], ["Composite chart", "Relationship", "A relationship chart built from the midpoints of two people's planets — the energy field of the couple."], ["Davison chart", "Relationship", "A relationship chart cast for the midpoint in time and place between two births — the relationship as its own entity."], ["House overlay", "Relationship", "Where one person's planets fall in the other's houses — which rooms of your life they move into."], ["Double whammy", "Relationship", "The same aspect repeating both directions in synastry (his Venus aspects her Mars AND her Venus aspects his Mars) — a locked-in theme."], ["Vertex contacts", "Relationship", "Synastry connections to the Vertex — the signature of fated, destiny-flavored meetings."], ["Nodal synastry", "Relationship", "Planets conjunct another person's lunar nodes — karmic recognition and unfinished business."], ["Midpoint", "Relationship", "The halfway degree between two planets — a sensitive point carrying both planets' combined signature."], ["Natal astrology", "Branches & Systems", "The reading of birth charts — character, potential, and life pattern."], ["Horary astrology", "Branches & Systems", "Answering a specific question from a chart cast at the moment the question is asked and understood."], ["Electional astrology", "Branches & Systems", "Choosing the best moment to begin something — a wedding, launch, signing, surgery."], ["Mundane astrology", "Branches & Systems", "The astrology of world events, nations, politics, and collective cycles."], ["Medical astrology", "Branches & Systems", "The traditional mapping of signs and planets to the body and its ailments."], ["Evolutionary astrology", "Branches & Systems", "A modern school reading the chart as the soul's journey across lifetimes, centered on Pluto and the nodes."], ["Hellenistic astrology", "Branches & Systems", "The foundational Greco-Egyptian tradition (~1st c. BC) — source of houses, aspects, sect, lots, and time-lords."], ["Vedic astrology / Jyotish", "Branches & Systems", "The Indian sidereal tradition — whole sign houses, nakshatras, dashas, and remedial measures."], ["Nakshatra", "Branches & Systems", "One of 27 lunar mansions in Vedic astrology — a finer, Moon-based zodiac within the zodiac."], ["Traditional astrology", "Branches & Systems", "The pre-modern body of technique — dignities, sect, profections, horary — revived over the last few decades."], ["Modern astrology", "Branches & Systems", "Psychological, humanistic astrology developed in the 20th century — growth-oriented, archetypal."], ["Uranian astrology", "Branches & Systems", "A 20th-century German school using midpoints, dials, and hypothetical points."], ["Harmonic astrology", "Branches & Systems", "Reading charts through mathematical harmonics — the 5th harmonic reveals quintiles, the 7th septiles, and so on."], ["Draconic chart", "Branches & Systems", "A chart recalculated with the North Node at 0° Aries — read as the soul-level layer beneath the natal chart."], ["Heliacal rising", "Branches & Systems", "A star or planet's first visible dawn appearance after invisibility — a rebirth moment in ancient star lore."], ["Fixed stars", "Branches & Systems", "Individual stars (Regulus, Algol, Spica...) conjunct chart points — ancient signatures of fame, danger, or gift."], ["Astrocartography", "Branches & Systems", "Mapping where planetary lines fall across the Earth — how your chart activates differently by location."], ["Relocation chart", "Branches & Systems", "The natal chart recalculated for a different location — same planets, new houses and angles."], ["Rectification", "Branches & Systems", "Working backwards from life events to determine an unknown or uncertain birth time."], ["Horoscope", "Branches & Systems", "Literally 'hour-watcher' — originally the Ascendant itself; now any chart or forecast."], ["Time lord", "Timing", "Any planet activated as ruler of a period of life — through profections, zodiacal releasing, firdaria, or decennials. The chart's planets take turns holding the microphone."], ["Chronocrator", "Timing", "Greek for 'time ruler' — a time lord; also used for Jupiter and Saturn as the great markers of historical eras."], ["Circumambulation", "Timing", "'Walking around' — directing a significator degree slowly through the bounds of the zodiac; each bound lord it enters becomes a time lord. An ancient primary-direction technique."], ["Directing through the bounds", "Timing", "The circumambulation method — following a directed point through the Egyptian bounds to see which planet governs each life chapter."], ["Ascensional times", "Timing", "The rising times of each sign at a given latitude, used as symbolic years in Hellenistic timing techniques."], ["Decennials", "Timing", "A Hellenistic time-lord system dividing life into 129-month planetary periods, distributed among the planets in zodiacal order."], ["Tertiary progressions", "Timing", "A day-for-a-lunar-month symbolic movement of the chart — a faster-moving cousin of secondary progressions."], ["Converse directions", "Timing", "Directing or progressing the chart backwards in time — symbolic movement before birth, used in some predictive schools."], ["Jupiter return", "Timing", "Jupiter's return to its natal place every ~12 years — expansion checkpoints at 12, 24, 36, 48..."], ["Nodal return", "Timing", "The lunar nodes returning to their natal position every ~18.6 years — karmic realignment points."], ["Chiron return", "Timing", "Chiron's return to its natal degree around age 50 — the wound revisited with the medicine in hand."], ["Midlife transits", "Timing", "The cluster around ages 38–45: Uranus opposition, Neptune square, Pluto square — the astrological midlife reckoning."], ["Progressed lunation cycle", "Timing", "The ~29.5-year cycle of the progressed Moon and progressed Sun — the progressed New Moon starts a whole new life chapter."], ["Metonic cycle", "Timing", "The 19-year cycle after which Moon phases repeat on the same calendar dates — eclipses echo across it."], ["Aries ingress chart", "Timing", "In mundane astrology, the chart cast for the Sun's entry into Aries — read as the chart of the year for a nation."], ["Decumbiture", "Timing", "A chart cast for the moment an illness takes hold — the traditional medical astrology diagnostic chart."], ["Significator", "Branches & Systems", "The planet representing a person or matter in horary — usually the ruler of the relevant house cusp."], ["Querent", "Branches & Systems", "The person asking the horary question — represented by the 1st house and its ruler."], ["Quesited", "Branches & Systems", "The thing or person asked about in horary — represented by the house governing that matter."], ["Radicality", "Branches & Systems", "Whether a horary chart is fit to be judged — a 'radical' chart genuinely describes the question."], ["Considerations before judgment", "Branches & Systems", "Traditional horary cautions checked before judging: very early or late degrees rising, void of course Moon, Saturn in the 7th, and others."], ["Translation of light", "Aspects & Patterns", "A faster planet separates from one planet and applies to another, carrying the first planet's light to the second — connecting two things through a go-between."], ["Collection of light", "Aspects & Patterns", "Two planets that don't aspect each other both apply to a slower third planet, which collects and unites their light — a mediator resolves the matter."], ["Prohibition", "Aspects & Patterns", "A third planet perfects an aspect first, blocking two planets from completing theirs — someone or something intervenes."], ["Frustration", "Aspects & Patterns", "An applying aspect fails because the planet being applied to moves and perfects with something else first."], ["Refranation", "Aspects & Patterns", "One planet stations retrograde before an applying aspect perfects — a party backs out at the last moment."], ["Mutual application", "Aspects & Patterns", "Both planets moving toward each other — one direct, one retrograde. The fastest possible perfection; both parties want it."], ["Out-of-sign aspect", "Aspects & Patterns", "Also called dissociate — an aspect within orb by degree but across a sign boundary, lacking the sign relationship. Present but awkward, often felt late."], ["Whole sign aspects", "Aspects & Patterns", "The Hellenistic view: signs themselves configure to each other — every planet in Aries is square every planet in Cancer, regardless of degree."], ["Aversion", "Aspects & Patterns", "Signs that make no major aspect (the semi-sextile and quincunx positions) — planets there cannot 'see' each other. Blind spots in the chart."], ["Unaspected planet", "Aspects & Patterns", "A planet making no major aspects — running autonomously, unmoderated, either dormant or dominating in bursts. Also called feral."], ["Paran", "Aspects & Patterns", "Two bodies simultaneously angular at the same location — a powerful mundane-space relationship used with fixed stars."], ["Occultation", "Aspects & Patterns", "The Moon or a planet passing directly in front of another body — the most exact conjunction possible, read as intensified."], ["Almuten", "Dignity & Condition", "The planet with the most combined essential dignity at a given degree — the true governor of that point, which may differ from the sign ruler."], ["Doryphory", "Dignity & Condition", "'Spear-bearing' — planets rising before the Sun or attending a luminary like bodyguards, adding eminence and prominence to the chart."], ["Planetary joys", "Dignity & Condition", "Each planet's favored house: Mercury 1st, Moon 3rd, Venus 5th, Mars 6th, Sun 9th, Jupiter 11th, Saturn 12th — where it operates with extra comfort."], ["Thema Mundi", "Dignity & Condition", "The mythical birth chart of the world — Cancer rising, each planet in its domicile — used by Hellenistic astrologers to explain why rulerships and aspects mean what they mean."], ["Sect light", "Dignity & Condition", "The luminary matching the chart's sect — the Sun in a day chart, the Moon in a night chart. The chart's primary light."], ["Hyleg", "Dignity & Condition", "The 'giver of life' — the point (Sun, Moon, ASC, Fortune, or syzygy) qualified to signify vitality in traditional length-of-life technique."], ["Alcocoden", "Dignity & Condition", "The 'giver of years' — the planet with dignity over the hyleg, whose condition indicated the vital resources of the life."], ["Anareta", "Dignity & Condition", "The 'destroyer' — the planet or point that cuts against the hyleg in traditional length-of-life doctrine."], ["Twelfth-parts", "Dignity & Condition", "Dodecatemoria — dividing each sign into twelve 2.5° slices, each mapped to a sign. A hidden zodiac inside every sign, revealing a placement's fine print."], ["Monomoiria", "Dignity & Condition", "Single-degree rulerships — each individual degree of the zodiac assigned to a planet in some Hellenistic systems."], ["Azimene degrees", "Dignity & Condition", "The 'lame' or deficient degrees — traditional degree lists associated with weakness or affliction when occupied."], ["Face (dignity)", "Dignity & Condition", "The decan as a minor essential dignity — the weakest of the five, 'a man on the porch of his house.'"], ["Mixed reception", "Dignity & Condition", "Two planets in each other's dignities of different types — one in the other's sign, the other in its exaltation. A softer alliance than full mutual reception."], ["Superior planets", "Planets & Points", "Mars, Jupiter, Saturn (and beyond) — orbiting outside Earth. They can be anywhere relative to the Sun and rule the big arcs of life."], ["Inferior planets", "Planets & Points", "Mercury and Venus — orbiting inside Earth's orbit, never far from the Sun. Morning-star and evening-star phases matter for them."], ["Heliacal setting", "Planets & Points", "A star or planet's last visible appearance before disappearing into the Sun's beams — a symbolic death or completion in ancient star lore."], ["Acronychal rising", "Planets & Points", "A planet rising at sunset, opposite the Sun — at maximum brightness and visibility all night. A planet at full power."], ["Planetary nodes", "Planets & Points", "Every planet (not just the Moon) has nodes where its orbit crosses the ecliptic — subtle karmic points used in advanced work."], ["Eris", "Planets & Points", "Dwarf planet beyond Pluto — discord, disruption, the fierce feminine who refuses to be excluded. Strong in charts of activists and disruptors."], ["Sedna", "Planets & Points", "Distant dwarf planet with a 11,400-year orbit — deep betrayal wounds, survival through isolation, and oceanic long-memory themes."], ["Pholus", "Planets & Points", "Centaur asteroid — 'small cause, big effect.' The uncorked bottle: sudden multigenerational release, often around family patterns and substances."], ["Chariklo", "Planets & Points", "Centaur asteroid of holding space — grace, boundaries, and quiet healing presence."], ["Anti-Vertex", "Planets & Points", "The point opposite the Vertex — what you actively bring to fated encounters rather than what arrives."], ["East Point", "Planets & Points", "The equatorial ascendant — a secondary rising point some astrologers read as the unfiltered self."], ["Lot of Eros", "Planets & Points", "The Hermetic lot of desire and love — what the soul reaches toward with longing."], ["Lot of Necessity", "Planets & Points", "The Hermetic lot of constraint, fate, and what must be endured — Mercury's lot in the Hermetic sequence."], ["Hermetic lots", "Planets & Points", "The seven classical lots — Fortune, Spirit, Eros, Necessity, Courage, Victory, Nemesis — one for each visible planet."], ["Prenatal syzygy", "Planets & Points", "The new or full moon immediately before birth — a sensitive degree carried into the natal chart, used in traditional vitality technique."], ["Syzygy", "Foundations", "Any straight-line alignment of Sun, Earth, and Moon — every new and full moon. From the Greek for 'yoked together.'"], ["Nadir", "Foundations", "The point directly beneath the observer, opposite the zenith — loosely used for the bottom of the chart (the IC)."], ["Lunation", "Timing", "One complete Moon cycle, new moon to new moon (~29.5 days) — the basic unit of lunar timing."], ["Balsamic Moon", "Timing", "The final waning sliver before the new moon — release, surrender, endings, composting the cycle. Being born under it marks a 'finishing' lifetime in some schools."], ["Moon phases", "Timing", "The eight-fold cycle: New (begin), Waxing Crescent (build), First Quarter (act), Waxing Gibbous (refine), Full (culminate), Waning Gibbous (share), Last Quarter (release), Balsamic (rest)."], ["Derived houses", "Chart Anatomy", "Turning the chart — reading any house as the 1st house of that topic. The 5th from the 5th describes your child's children; the 7th from the 10th, your boss's partner."], ["House ruler", "Chart Anatomy", "The planet ruling the sign on a house cusp — it carries that house's agenda wherever it sits in the chart. The condition of the ruler is the condition of the house's affairs."], ["Equal houses", "Chart Anatomy", "A house system giving every house exactly 30° starting from the Ascendant degree."], ["Quadrant house systems", "Chart Anatomy", "House systems (Placidus, Koch, Porphyry, Regiomontanus) that anchor the MC as the 10th cusp and divide the quadrants — producing unequal houses."], ["Harmonic chart", "Branches & Systems", "The natal chart multiplied by a number n — the 5th harmonic reveals quintile structures, the 7th septiles, the 9th (navamsa) is central in Vedic astrology."], ["Navamsa", "Branches & Systems", "The Vedic 9th-harmonic divisional chart — the chart of marriage, dharma, and the soul's deeper condition beneath the natal chart."], ["Dasha", "Branches & Systems", "The Vedic planetary period system — Vimshottari dasha assigns each planet a fixed span within a 120-year sequence, dictating which planet's karma is live."], ["Sade Sati", "Branches & Systems", "In Vedic astrology, Saturn's ~7.5-year transit through the sign before, of, and after the natal Moon — a famous period of pressure and maturation."], ["Archetype", "Branches & Systems", "A universal symbolic pattern — the modern psychological framing of what planets and signs are: recurring characters in the human story."], ["Astrometeorology", "Branches & Systems", "The old practice of forecasting weather from planetary cycles — one of astrology's original applied branches."], ["Katarche", "Branches & Systems", "The ancient Greek term for inceptional astrology — charts for beginnings, the ancestor of electional and horary practice."], ["Feral planet", "Planets & Points", "An older term for an unaspected planet — running wild without planetary dialogue."], ["Egyptian bounds", "Dignity & Condition", "The oldest and most widely used bound system — the five unequal planetary segments per sign favored in Hellenistic practice."], ["Ptolemaic bounds", "Dignity & Condition", "Ptolemy's revised bound scheme with slightly different boundaries — an alternative to the Egyptian set."], ["Chaldean decans", "Dignity & Condition", "Decans assigned by one repeating descending planetary sequence (Saturn, Jupiter, Mars, Sun, Venus, Mercury, Moon) through all 36 faces, starting with Mars at 0° Aries."], ["Triplicity decans", "Dignity & Condition", "Decans flavored by the three signs of the element in order — Leo's decans carry Leo, Sagittarius, then Aries energy."], ["Dignity point weights", "Dignity & Condition", "The classical scoring for essential dignity: domicile 5, exaltation 4, triplicity 3, bound 2, face 1 — used to calculate the almuten of a degree."]];
+let GLOSSARY = FALLBACK_TERMS.map(([term, category, definition]) => ({ term, category, definition }));
+let activeGlossCat = 'All';
+let activeFilter = 'All';
+let approvedCache = [];
+let flashSavedOnly = false;
+let flashCurrent = null;
+let flashRevealed = false;
+
+async function loadGlossaryFromDB() {
+  try {
+    const { data, error } = await db.from('research_glossary').select('term,category,definition').order('sort_key');
+    if (!error && data && data.length) GLOSSARY = data;
+  } catch(e) {}
+  renderGlossCats(); renderGloss();
+}
+
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('section-' + id).classList.add('active');
+  document.querySelector('.tab[data-tab="' + id + '"]').classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'library') loadLibrary();
+  if (id === 'notes') loadNotes();
+  if (id === 'mynotes') { renderSavedTerms(); renderMyNotes(); renderPractice(); renderQuestions(); }
+}
+
+function showSub(id) {
+  document.querySelectorAll('.subsection').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sub-' + id).classList.add('active');
+  document.querySelector('.subtab[data-sub="' + id + '"]').classList.add('active');
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.querySelector('.theme-toggle').textContent = isDark ? '🌙' : '☀️';
+  localStorage.setItem('avr-theme', isDark ? 'light' : 'dark');
+}
+
+function acc(head) {
+  const body = head.nextElementSibling;
+  const open = head.classList.contains('open');
+  head.classList.toggle('open', !open);
+  body.classList.toggle('open', !open);
+}
+
+function filterLearn() {
+  const q = document.getElementById('learn-search').value.toLowerCase();
+  document.querySelectorAll('#section-learn .acc-head').forEach(h => {
+    const body = h.nextElementSibling;
+    const match = (h.textContent + body.textContent).toLowerCase().includes(q);
+    h.style.display = match ? '' : 'none';
+    if (!match) { h.classList.remove('open'); body.classList.remove('open'); }
+  });
+  document.querySelectorAll('#section-learn .subhead').forEach(s => s.style.display = q ? 'none' : '');
+}
+
+function getBookmarks() { return JSON.parse(localStorage.getItem('avr-bookmarks') || '[]'); }
+function toggleBookmark(term) {
+  let b = getBookmarks();
+  b = b.includes(term) ? b.filter(t => t !== term) : [...b, term];
+  localStorage.setItem('avr-bookmarks', JSON.stringify(b));
+  renderGloss();
+}
+
+function renderGlossCats() {
+  const cats = ['All', ...new Set(GLOSSARY.map(g => g.category))];
+  document.getElementById('gloss-cats').innerHTML = cats.map(c =>
+    `<div class="filter-chip ${c === activeGlossCat ? 'active' : ''}" onclick="activeGlossCat='${c.replace(/'/g, "\\'")}';renderGlossCats();renderGloss();">${c}</div>`).join('');
+}
+
+function renderGloss() {
+  const q = (document.getElementById('gloss-search').value || '').toLowerCase();
+  const marks = getBookmarks();
+  const list = GLOSSARY.filter(g =>
+    (activeGlossCat === 'All' || g.category === activeGlossCat) &&
+    (g.term + ' ' + g.definition).toLowerCase().includes(q));
+  document.getElementById('gloss-list').innerHTML = list.length ? list.map(g =>
+    `<div class="gloss-item"><div class="gloss-term">${esc(g.term)}<span class="gloss-cat">${esc(g.category)}</span></div><div class="gloss-def">${esc(g.definition)}</div><button class="bookmark-btn ${marks.includes(g.term) ? 'saved' : ''}" onclick="toggleBookmark('${g.term.replace(/'/g, "\\'")}')">${marks.includes(g.term) ? '★' : '☆'}</button></div>`).join('')
+    : '<p class="empty">No matching terms.</p>';
+}
+
+function renderSavedTerms() {
+  const marks = getBookmarks();
+  const el = document.getElementById('saved-terms');
+  const saved = GLOSSARY.filter(g => marks.includes(g.term));
+  if (!saved.length) { el.innerHTML = '<p class="empty">Nothing saved yet — star glossary terms to collect them here.</p>'; return; }
+  el.innerHTML = '<div class="card" style="padding:0;">' + saved.map(g =>
+    `<div class="gloss-item"><div class="gloss-term">${esc(g.term)}<span class="gloss-cat">${esc(g.category)}</span></div><div class="gloss-def">${esc(g.definition)}</div><button class="bookmark-btn saved" onclick="toggleBookmark('${g.term.replace(/'/g, "\\'")}'); renderSavedTerms();">★</button></div>`).join('') + '</div>';
+}
+
+function saveMyNote() {
+  const text = document.getElementById('my-note-input').value.trim();
+  if (!text) return;
+  const notes = JSON.parse(localStorage.getItem('avr-mynotes') || '[]');
+  notes.unshift({ text, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) });
+  localStorage.setItem('avr-mynotes', JSON.stringify(notes));
+  document.getElementById('my-note-input').value = '';
+  renderMyNotes();
+}
+function deleteMyNote(i) {
+  const notes = JSON.parse(localStorage.getItem('avr-mynotes') || '[]');
+  notes.splice(i, 1);
+  localStorage.setItem('avr-mynotes', JSON.stringify(notes));
+  renderMyNotes();
+}
+function renderMyNotes() {
+  const notes = JSON.parse(localStorage.getItem('avr-mynotes') || '[]');
+  document.getElementById('my-notes-list').innerHTML = notes.length
+    ? notes.map((n, i) => `<div class="saved-note"><div style="font-size:11px;color:var(--text-muted);margin-bottom:0.2rem;">${n.date}</div>${esc(n.text).replace(/\n/g, '<br>')}<button class="del-x" onclick="deleteMyNote(${i})">×</button></div>`).join('')
+    : '<p class="empty">No notes yet.</p>';
+}
+
+function flashPool() {
+  const marks = getBookmarks();
+  const pool = flashSavedOnly ? GLOSSARY.filter(g => marks.includes(g.term)) : GLOSSARY;
+  return pool.length ? pool : GLOSSARY;
+}
+function nextFlash() {
+  const pool = flashPool();
+  flashCurrent = pool[Math.floor(Math.random() * pool.length)];
+  flashRevealed = false;
+  document.getElementById('flash-term').textContent = flashCurrent.term;
+  document.getElementById('flash-def').style.display = 'none';
+  document.getElementById('flash-hint').textContent = 'tap to reveal';
+}
+function flipFlash() {
+  if (!flashCurrent) { nextFlash(); return; }
+  flashRevealed = !flashRevealed;
+  const def = document.getElementById('flash-def');
+  def.textContent = flashCurrent.definition;
+  def.style.display = flashRevealed ? 'block' : 'none';
+  document.getElementById('flash-hint').textContent = flashRevealed ? 'tap to hide · or draw the next card' : 'tap to reveal';
+}
+
+function savePractice() {
+  const chart = document.getElementById('prac-chart').value.trim();
+  const saw = document.getElementById('prac-saw').value.trim();
+  const learned = document.getElementById('prac-learned').value.trim();
+  if (!chart && !saw) return;
+  const logs = JSON.parse(localStorage.getItem('avr-practice') || '[]');
+  logs.unshift({ chart, saw, learned, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) });
+  localStorage.setItem('avr-practice', JSON.stringify(logs));
+  ['prac-chart','prac-saw','prac-learned'].forEach(id => document.getElementById(id).value = '');
+  renderPractice();
+}
+function deletePractice(i) {
+  const logs = JSON.parse(localStorage.getItem('avr-practice') || '[]');
+  logs.splice(i, 1);
+  localStorage.setItem('avr-practice', JSON.stringify(logs));
+  renderPractice();
+}
+function renderPractice() {
+  const logs = JSON.parse(localStorage.getItem('avr-practice') || '[]');
+  document.getElementById('practice-list').innerHTML = logs.length
+    ? `<p style="font-size:12px;color:var(--gold);margin-bottom:0.75rem;letter-spacing:0.05em;">✦ ${logs.length} chart${logs.length === 1 ? '' : 's'} practiced</p>` + logs.map((l, i) =>
+      `<div class="saved-note"><div style="font-size:11px;color:var(--text-muted);">${l.date}</div><strong style="color:var(--text-primary);">${esc(l.chart)}</strong>${l.saw ? '<div style="margin-top:0.3rem;">' + esc(l.saw).replace(/\n/g, '<br>') + '</div>' : ''}${l.learned ? '<div style="margin-top:0.3rem;font-style:italic;opacity:0.85;">Learned: ' + esc(l.learned).replace(/\n/g, '<br>') + '</div>' : ''}<button class="del-x" onclick="deletePractice(${i})">×</button></div>`).join('')
+    : '<p class="empty">No charts logged yet.</p>';
+}
+
+function addQuestion() {
+  const text = document.getElementById('q-input').value.trim();
+  if (!text) return;
+  const qs = JSON.parse(localStorage.getItem('avr-questions') || '[]');
+  qs.unshift({ text, done: false });
+  localStorage.setItem('avr-questions', JSON.stringify(qs));
+  document.getElementById('q-input').value = '';
+  renderQuestions();
+}
+function toggleQuestion(i) {
+  const qs = JSON.parse(localStorage.getItem('avr-questions') || '[]');
+  qs[i].done = !qs[i].done;
+  localStorage.setItem('avr-questions', JSON.stringify(qs));
+  renderQuestions();
+}
+function deleteQuestion(i) {
+  const qs = JSON.parse(localStorage.getItem('avr-questions') || '[]');
+  qs.splice(i, 1);
+  localStorage.setItem('avr-questions', JSON.stringify(qs));
+  renderQuestions();
+}
+function renderQuestions() {
+  const qs = JSON.parse(localStorage.getItem('avr-questions') || '[]');
+  document.getElementById('q-list').innerHTML = qs.length
+    ? qs.map((q, i) => `<div class="check-item ${q.done ? 'done' : ''}"><input type="checkbox" ${q.done ? 'checked' : ''} onchange="toggleQuestion(${i})"><span>${esc(q.text)}</span><button class="del-x" onclick="deleteQuestion(${i})">×</button></div>`).join('')
+    : '<p class="empty">No questions collected yet.</p>';
+}
+
+document.getElementById('sub-category').addEventListener('change', e => {
+  document.getElementById('other-wrap').style.display = e.target.value === 'Other' ? 'block' : 'none';
+});
+document.getElementById('sub-showname').addEventListener('change', e => {
+  document.getElementById('name-wrap').style.display = e.target.checked ? 'block' : 'none';
+});
+
+let chartRowCount = 0;
+function addChartRow() {
+  chartRowCount++;
+  const div = document.createElement('div');
+  div.className = 'chart-row';
+  div.innerHTML = `<button class="del-x" onclick="this.parentElement.remove()">×</button>
+    <label>Who is this?</label><input type="text" class="cr-who" placeholder="e.g. my mother, my ex-husband, my twin...">
+    <label>Their birth date</label><input type="date" class="cr-date">
+    <label>Their birth time <span class="optional-tag">— if known</span></label><input type="time" class="cr-time">
+    <label>Their birth location <span class="optional-tag">— if known</span></label><input type="text" class="cr-loc" placeholder="City, Country">`;
+  document.getElementById('charts-wrap').appendChild(div);
+}
+function collectCharts() {
+  return Array.from(document.querySelectorAll('.chart-row')).map(r => ({
+    who: r.querySelector('.cr-who').value.trim(),
+    birth_date: r.querySelector('.cr-date').value || null,
+    birth_time: r.querySelector('.cr-time').value || null,
+    birth_location: r.querySelector('.cr-loc').value.trim() || null
+  })).filter(c => c.who || c.birth_date);
+}
+
+let lastSubmit = 0;
+async function submitEntry() {
+  const msg = document.getElementById('sub-msg');
+  msg.className = 'msg';
+  if (document.getElementById('sub-website').value) return;
+  if (Date.now() - lastSubmit < 30000) { msg.className = 'msg err'; msg.textContent = 'Please wait a moment before submitting again.'; return; }
+  const category = document.getElementById('sub-category').value;
+  const story = document.getElementById('sub-story').value.trim();
+  if (!category || !story) { msg.className = 'msg err'; msg.textContent = 'Please choose an event category and share your story.'; return; }
+  const row = {
+    event_category: category,
+    event_other: document.getElementById('sub-other').value.trim() || null,
+    story,
+    placements: document.getElementById('sub-placements').value.trim() || null,
+    event_date: document.getElementById('sub-edate').value || null,
+    birth_date: document.getElementById('sub-bdate').value || null,
+    birth_time: document.getElementById('sub-btime').value || null,
+    birth_location: document.getElementById('sub-bloc').value.trim() || null,
+    contact_email: document.getElementById('sub-email').value.trim() || null,
+    related_charts: collectCharts(),
+    show_name: document.getElementById('sub-showname').checked,
+    display_name: document.getElementById('sub-showname').checked ? (document.getElementById('sub-name').value.trim() || null) : null,
+    status: 'pending'
+  };
+  const { error } = await db.from('research_submissions').insert(row);
+  if (error) { msg.className = 'msg err'; msg.textContent = 'Something went wrong — please try again.'; console.error(error); return; }
+  lastSubmit = Date.now();
+  msg.className = 'msg ok';
+  msg.textContent = 'Received. Your submission is in the review queue — thank you for contributing to the research. ✦';
+  ['sub-story','sub-placements','sub-bloc','sub-name','sub-other','sub-email'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('sub-category').value = '';
+  ['sub-edate','sub-bdate','sub-btime'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('sub-showname').checked = false;
+  document.getElementById('name-wrap').style.display = 'none';
+  document.getElementById('charts-wrap').innerHTML = '';
+}
+
+async function loadLibrary() {
+  const { data } = await db.from('research_submissions').select('*').eq('status', 'approved').order('created_at', { ascending: false });
+  approvedCache = data || [];
+  renderFilters();
+  renderLibrary();
+}
+function renderFilters() {
+  const present = ['All', ...new Set(approvedCache.map(s => s.event_category))];
+  document.getElementById('lib-filters').innerHTML = present.map(c =>
+    `<div class="filter-chip ${c === activeFilter ? 'active' : ''}" onclick="activeFilter='${c.replace(/'/g, "\\'")}';renderFilters();renderLibrary();">${c}</div>`).join('');
+}
+function renderLibrary() {
+  const q = (document.getElementById('lib-search').value || '').toLowerCase();
+  const list = approvedCache.filter(s =>
+    (activeFilter === 'All' || s.event_category === activeFilter) &&
+    ((s.story || '') + (s.placements || '') + (s.event_category || '') + (s.event_other || '')).toLowerCase().includes(q));
+  document.getElementById('lib-list').innerHTML = list.length ? list.map(s => `
+    <div class="sub-card">
+      <span class="pill">${esc(s.event_category)}${s.event_other ? ' — ' + esc(s.event_other) : ''}</span>
+      <div class="sub-meta">${s.show_name && s.display_name ? 'Shared by ' + esc(s.display_name) : 'Anonymous'}${s.event_date ? ' · happened ' + new Date(s.event_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : ''}</div>
+      ${s.placements ? '<div class="sub-placements">' + esc(s.placements) + '</div>' : ''}
+      <div class="sub-story">${esc(s.story)}</div>
+    </div>`).join('') : '<p class="empty">No entries yet in this category — be the first to submit.</p>';
+}
+function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+async function loadNotes() {
+  const { data } = await db.from('research_notes').select('*').eq('published', true).order('created_at', { ascending: false });
+  document.getElementById('notes-list').innerHTML = (data && data.length) ? data.map(n => `
+    <div class="note-entry"><h3>${esc(n.title)}</h3><div class="note-date">${new Date(n.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div><div class="note-body">${esc(n.body)}</div></div>`).join('') : '<p class="empty">Research notes coming soon.</p>';
+}
+
+function revealAdmin() {
+  document.getElementById('admin-tab').classList.add('show');
+  showTab('admin');
+}
+
+async function adminLogin() {
+  const msg = document.getElementById('adm-msg');
+  msg.className = 'msg';
+  const { error } = await db.auth.signInWithPassword({
+    email: document.getElementById('adm-email').value.trim(),
+    password: document.getElementById('adm-pass').value
+  });
+  if (error) { msg.className = 'msg err'; msg.textContent = 'Login failed — check your credentials.'; return; }
+  showAdminPanel();
+}
+async function adminLogout() {
+  await db.auth.signOut();
+  document.getElementById('admin-panel').style.display = 'none';
+  document.getElementById('admin-login').style.display = 'block';
+}
+async function showAdminPanel() {
+  document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  loadAdminData();
+}
+async function loadAdminData() {
+  const { data } = await db.from('research_submissions').select('*').order('created_at', { ascending: false });
+  const all = data || [];
+  const pending = all.filter(s => s.status === 'pending');
+  document.getElementById('stat-pending').textContent = pending.length;
+  document.getElementById('stat-approved').textContent = all.filter(s => s.status === 'approved').length;
+  document.getElementById('stat-total').textContent = all.length;
+  document.getElementById('pending-list').innerHTML = pending.length ? pending.map(s => `
+    <div class="sub-card">
+      <span class="pill">${esc(s.event_category)}${s.event_other ? ' — ' + esc(s.event_other) : ''}</span>
+      <div class="sub-meta">${s.show_name && s.display_name ? esc(s.display_name) + ' (name consented)' : 'Anonymous'}${s.contact_email ? ' · ' + esc(s.contact_email) : ''} · submitted ${new Date(s.created_at).toLocaleString()}</div>
+      ${s.event_date ? '<div class="sub-meta">Event date: ' + s.event_date + '</div>' : ''}
+      ${s.placements ? '<div class="sub-placements">' + esc(s.placements) + '</div>' : ''}
+      ${s.birth_date ? '<div class="sub-meta">Born ' + s.birth_date + (s.birth_time ? ' at ' + s.birth_time : '') + (s.birth_location ? ' in ' + esc(s.birth_location) : '') + '</div>' : ''}
+      ${s.related_charts && s.related_charts.length ? '<div class="sub-meta">Related charts: ' + s.related_charts.map(c => esc(c.who || '?') + (c.birth_date ? ' (' + c.birth_date + (c.birth_time ? ' ' + c.birth_time : '') + (c.birth_location ? ', ' + esc(c.birth_location) : '') + ')' : '')).join(' · ') + '</div>' : ''}
+      <div class="sub-story">${esc(s.story)}</div>
+      <div style="margin-top:0.8rem;display:flex;gap:0.5rem;">
+        <button class="btn btn-sm btn-approve" onclick="setStatus('${s.id}','approved')">Approve</button>
+        <button class="btn btn-sm btn-reject" onclick="setStatus('${s.id}','rejected')">Reject</button>
+      </div>
+    </div>`).join('') : '<p class="empty">Queue is clear ✦</p>';
+}
+async function setStatus(id, status) {
+  await db.from('research_submissions').update({ status }).eq('id', id);
+  loadAdminData();
+}
+async function publishNote() {
+  const msg = document.getElementById('note-msg');
+  msg.className = 'msg';
+  const title = document.getElementById('note-title').value.trim();
+  const body = document.getElementById('note-body').value.trim();
+  if (!title || !body) { msg.className = 'msg err'; msg.textContent = 'Both title and body are needed.'; return; }
+  const { error } = await db.from('research_notes').insert({ title, body, published: true });
+  if (error) { msg.className = 'msg err'; msg.textContent = 'Failed to publish.'; return; }
+  msg.className = 'msg ok'; msg.textContent = 'Published ✦';
+  document.getElementById('note-title').value = '';
+  document.getElementById('note-body').value = '';
+}
+async function addTerm() {
+  const msg = document.getElementById('term-msg');
+  msg.className = 'msg';
+  const term = document.getElementById('new-term').value.trim();
+  const category = document.getElementById('new-term-cat').value;
+  const definition = document.getElementById('new-term-def').value.trim();
+  if (!term || !definition) { msg.className = 'msg err'; msg.textContent = 'Term and definition are both needed.'; return; }
+  const { error } = await db.from('research_glossary').insert({ term, category, definition });
+  if (error) { msg.className = 'msg err'; msg.textContent = 'Failed to add term.'; return; }
+  msg.className = 'msg ok'; msg.textContent = 'Term added ✦';
+  document.getElementById('new-term').value = '';
+  document.getElementById('new-term-def').value = '';
+  loadGlossaryFromDB();
+}
+
+let logoTaps = 0, logoTimer = null;
+function logoTap() {
+  logoTaps++;
+  clearTimeout(logoTimer);
+  logoTimer = setTimeout(() => logoTaps = 0, 1500);
+  if (logoTaps >= 5) { logoTaps = 0; revealAdmin(); }
+}
+
+(async () => {
+  if (localStorage.getItem('avr-theme') === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.querySelector('.theme-toggle').textContent = '☀️';
+  }
+  renderGlossCats();
+  renderGloss();
+  loadGlossaryFromDB();
+  const { data: { session } } = await db.auth.getSession();
+  if (session) { document.getElementById('admin-tab').classList.add('show'); }
+})();
+</script>
+</body>
+</html>
