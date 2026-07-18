@@ -169,6 +169,12 @@
   .chart-row { background: var(--bg-card-deep); border-radius: 18px; padding: 1rem 1.1rem 1.2rem; margin-top: 0.7rem; position: relative; }
   .chart-row label { margin-top: 0.7rem; }
   .chart-row label:first-of-type { margin-top: 0; }
+  .chart-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 20px; padding: 1.1rem 1.2rem; margin-bottom: 0.85rem; }
+  .chart-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.15rem; }
+  .chart-thumb { width: 100%; max-width: 300px; border-radius: 14px; border: 1.5px solid var(--border); margin: 0.6rem 0; display: block; }
+  .event-row { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 13.5px; padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
+  .event-date { color: var(--accent); font-weight: 500; white-space: nowrap; font-size: 12.5px; padding-top: 0.1rem; }
+  .event-x { margin-left: auto; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
   .backup-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
   .rising-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem; }
   .rising-grid img { width: 100%; border-radius: 14px; border: 1.5px solid var(--border); }
@@ -856,6 +862,7 @@
 
   <div class="subtabs">
     <div class="subtab active" data-sub="saved" onclick="showSub('saved')">Saved Terms</div>
+    <div class="subtab" data-sub="charts" onclick="showSub('charts')">Charts</div>
     <div class="subtab" data-sub="notes" onclick="showSub('notes')">Study Notes</div>
     <div class="subtab" data-sub="flash" onclick="showSub('flash')">Flashcards</div>
     <div class="subtab" data-sub="practice" onclick="showSub('practice')">Chart Practice Log</div>
@@ -865,6 +872,42 @@
 
   <div class="subsection active" id="sub-saved">
     <div id="saved-terms"><p class="empty">Nothing saved yet — star glossary terms to collect them here.</p></div>
+  </div>
+
+  <div class="subsection" id="sub-charts">
+    <p class="section-sub" style="margin-bottom:0.9rem;">Your private chart archive. Save the birth data of everyone in your life, attach their chart image, and log the events that actually happened to them. This is how pattern recognition is built.</p>
+
+    <div class="filter-row" id="chart-cats"></div>
+    <input class="search-bar" id="chart-search" placeholder="Search names, notes, events..." oninput="renderCharts()">
+    <button class="btn" onclick="openChartForm()">＋ Add a chart</button>
+
+    <div id="chart-form" style="display:none;margin-top:1rem;">
+      <div class="chart-row">
+        <label>Name</label>
+        <input type="text" id="ch-name" placeholder="Their name, or a nickname">
+        <label>Relationship</label>
+        <select id="ch-cat">
+          <option>Family</option><option>Friend</option><option>Romantic</option>
+          <option>Acquaintance</option><option>Client</option><option>Public figure</option><option>Other</option>
+        </select>
+        <label>Birth date</label>
+        <input type="date" id="ch-date">
+        <label>Birth time <span class="optional-tag">— if known</span></label>
+        <input type="time" id="ch-time">
+        <label>Birth location <span class="optional-tag">— if known</span></label>
+        <input type="text" id="ch-loc" placeholder="City, Country">
+        <label>Chart image <span class="optional-tag">— optional, auto-compressed</span></label>
+        <input type="file" id="ch-photo" accept="image/*" onchange="previewChartPhoto(event)">
+        <div id="ch-photo-preview"></div>
+        <label>Notes <span class="optional-tag">— placements, personality, anything</span></label>
+        <textarea id="ch-notes" placeholder="Sun/Moon/Rising, standout placements, what they're like, patterns you've noticed..."></textarea>
+        <button class="btn" onclick="saveChart()">Save Chart</button>
+        <button class="btn btn-ghost" onclick="closeChartForm()">Cancel</button>
+        <div class="msg" id="chart-msg"></div>
+      </div>
+    </div>
+
+    <div id="charts-list" style="margin-top:1.25rem;"></div>
   </div>
 
   <div class="subsection" id="sub-notes">
@@ -1040,7 +1083,7 @@ function showTab(id) {
   window.scrollTo(0, 0);
   if (id === 'library') loadLibrary();
   
-  if (id === 'mynotes') { renderSavedTerms(); renderMyNotes(); renderPractice(); renderQuestions(); loadNotes(); }
+  if (id === 'mynotes') { renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); loadNotes(); }
 }
 
 function showSub(id) {
@@ -1109,7 +1152,7 @@ function renderGloss() {
     : '<p class="empty">No matching terms.</p>';
 }
 
-const BACKUP_KEYS = ['avr-bookmarks', 'avr-mynotes', 'avr-practice', 'avr-questions'];
+const BACKUP_KEYS = ['avr-bookmarks', 'avr-mynotes', 'avr-practice', 'avr-questions', 'avr-charts'];
 
 function exportNotes() {
   const msg = document.getElementById('backup-msg');
@@ -1139,7 +1182,8 @@ function importNotes(ev) {
       if (!parsed || parsed.app !== 'aura-vibin-astro-research' || !parsed.data) throw new Error('bad file');
       if (!confirm('This will REPLACE everything currently saved in your Notes tab with the backup. Continue?')) { ev.target.value = ''; return; }
       BACKUP_KEYS.forEach(k => { if (parsed.data[k]) localStorage.setItem(k, parsed.data[k]); });
-      renderSavedTerms(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
+      CHARTS = JSON.parse(localStorage.getItem('avr-charts') || '[]');
+      renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
       msg.className = 'msg ok';
       msg.textContent = 'Backup restored ✦ Everything is back.';
     } catch (e) {
@@ -1149,6 +1193,163 @@ function importNotes(ev) {
     ev.target.value = '';
   };
   reader.readAsText(file);
+}
+
+let CHARTS = JSON.parse(localStorage.getItem('avr-charts') || '[]');
+let chartCat = 'All';
+let editingChartId = null;
+let pendingPhoto = null;
+
+function saveChartsStore() {
+  try {
+    localStorage.setItem('avr-charts', JSON.stringify(CHARTS));
+    return true;
+  } catch (e) {
+    alert("Your device's storage is full. Try deleting a chart image or two — images take the most space.");
+    return false;
+  }
+}
+
+function openChartForm(id) {
+  editingChartId = id || null;
+  pendingPhoto = null;
+  const f = document.getElementById('chart-form');
+  f.style.display = 'block';
+  document.getElementById('chart-msg').textContent = '';
+  document.getElementById('ch-photo').value = '';
+  const c = id ? CHARTS.find(x => x.id === id) : null;
+  document.getElementById('ch-name').value = c ? c.name : '';
+  document.getElementById('ch-cat').value = c ? c.cat : 'Family';
+  document.getElementById('ch-date').value = c && c.date ? c.date : '';
+  document.getElementById('ch-time').value = c && c.time ? c.time : '';
+  document.getElementById('ch-loc').value = c && c.loc ? c.loc : '';
+  document.getElementById('ch-notes').value = c && c.notes ? c.notes : '';
+  document.getElementById('ch-photo-preview').innerHTML = c && c.photo ? '<img class="chart-thumb" src="' + c.photo + '" alt="">' : '';
+  if (c && c.photo) pendingPhoto = c.photo;
+  f.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function closeChartForm() {
+  document.getElementById('chart-form').style.display = 'none';
+  editingChartId = null;
+  pendingPhoto = null;
+}
+
+function previewChartPhoto(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const msg = document.getElementById('chart-msg');
+  msg.className = 'msg';
+  msg.textContent = 'Compressing image...';
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 900;
+      let w = img.width, h = img.height;
+      if (w > max || h > max) {
+        if (w > h) { h = Math.round(h * max / w); w = max; }
+        else { w = Math.round(w * max / h); h = max; }
+      }
+      const cv = document.createElement('canvas');
+      cv.width = w; cv.height = h;
+      cv.getContext('2d').drawImage(img, 0, 0, w, h);
+      pendingPhoto = cv.toDataURL('image/jpeg', 0.72);
+      document.getElementById('ch-photo-preview').innerHTML = '<img class="chart-thumb" src="' + pendingPhoto + '" alt="">';
+      msg.className = 'msg ok';
+      msg.textContent = 'Image ready (' + Math.round(pendingPhoto.length / 1400) + ' KB)';
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function saveChart() {
+  const name = document.getElementById('ch-name').value.trim();
+  const msg = document.getElementById('chart-msg');
+  if (!name) { msg.className = 'msg err'; msg.textContent = 'A name is needed.'; return; }
+  const payload = {
+    name: name,
+    cat: document.getElementById('ch-cat').value,
+    date: document.getElementById('ch-date').value || '',
+    time: document.getElementById('ch-time').value || '',
+    loc: document.getElementById('ch-loc').value.trim(),
+    notes: document.getElementById('ch-notes').value.trim(),
+    photo: pendingPhoto || ''
+  };
+  if (editingChartId) {
+    const c = CHARTS.find(x => x.id === editingChartId);
+    Object.assign(c, payload);
+  } else {
+    CHARTS.unshift(Object.assign({ id: 'c' + Date.now(), events: [] }, payload));
+  }
+  if (!saveChartsStore()) return;
+  closeChartForm();
+  renderCharts();
+}
+
+function deleteChart(id) {
+  if (!confirm('Delete this chart and everything saved with it?')) return;
+  CHARTS = CHARTS.filter(c => c.id !== id);
+  saveChartsStore();
+  renderCharts();
+}
+
+function addChartEvent(id) {
+  const c = CHARTS.find(x => x.id === id);
+  const when = document.getElementById('ev-date-' + id).value;
+  const what = document.getElementById('ev-what-' + id).value.trim();
+  if (!what) return;
+  c.events = c.events || [];
+  c.events.push({ when: when || '', what: what });
+  c.events.sort((a, b) => (a.when || '9999').localeCompare(b.when || '9999'));
+  if (!saveChartsStore()) return;
+  renderCharts();
+}
+
+function removeChartEvent(id, idx) {
+  const c = CHARTS.find(x => x.id === id);
+  c.events.splice(idx, 1);
+  saveChartsStore();
+  renderCharts();
+}
+
+function renderCharts() {
+  const cats = ['All', ...new Set(CHARTS.map(c => c.cat))];
+  document.getElementById('chart-cats').innerHTML = cats.map(c =>
+    `<div class="filter-chip ${c === chartCat ? 'active' : ''}" onclick="chartCat='${c}';renderCharts();">${esc(c)}${c !== 'All' ? ' (' + CHARTS.filter(x => x.cat === c).length + ')' : ''}</div>`).join('');
+
+  const q = (document.getElementById('chart-search').value || '').toLowerCase();
+  const list = CHARTS.filter(c =>
+    (chartCat === 'All' || c.cat === chartCat) &&
+    ((c.name || '') + (c.notes || '') + (c.loc || '') + (c.events || []).map(e => e.what).join(' ')).toLowerCase().includes(q));
+
+  document.getElementById('charts-list').innerHTML = list.length ? list.map(c => `
+    <div class="chart-card">
+      <h4>${esc(c.name)}</h4>
+      <span class="pill">${esc(c.cat)}</span>
+      ${c.date || c.time || c.loc ? `<div class="sub-meta">${c.date ? new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'date unknown'}${c.time ? ' · ' + c.time : ''}${c.loc ? ' · ' + esc(c.loc) : ''}</div>` : ''}
+      ${c.photo ? `<img class="chart-thumb" src="${c.photo}" alt="${esc(c.name)}'s chart">` : ''}
+      ${c.notes ? `<div class="sub-story">${esc(c.notes)}</div>` : ''}
+      <div style="margin-top:0.9rem;">
+        <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem;">Life events</div>
+        ${(c.events || []).length ? c.events.map((e, i) => `
+          <div class="event-row">
+            <span class="event-date">${e.when ? new Date(e.when + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—'}</span>
+            <span>${esc(e.what)}</span>
+            <span class="event-x" onclick="removeChartEvent('${c.id}',${i})">×</span>
+          </div>`).join('') : '<p class="empty" style="padding:0.4rem 0;">No events logged yet.</p>'}
+        <div style="display:flex;gap:0.4rem;margin-top:0.6rem;flex-wrap:wrap;">
+          <input type="date" id="ev-date-${c.id}" style="flex:0 0 auto;width:auto;margin:0;">
+          <input type="text" id="ev-what-${c.id}" placeholder="What happened..." style="flex:1;min-width:140px;margin:0;">
+          <button class="btn btn-sm btn-ghost" onclick="addChartEvent('${c.id}')" style="margin:0;">Add</button>
+        </div>
+      </div>
+      <div style="margin-top:0.9rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="btn btn-sm btn-ghost" onclick="openChartForm('${c.id}')">Edit</button>
+        <button class="btn btn-sm btn-reject" onclick="deleteChart('${c.id}')">Delete</button>
+      </div>
+    </div>`).join('') : '<p class="empty">No charts yet — tap “Add a chart” to start your archive.</p>';
 }
 
 function renderSavedTerms() {
