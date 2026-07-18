@@ -968,8 +968,10 @@
       <label>Body</label>
       <textarea id="note-body" style="min-height:160px;"></textarea>
       <button class="btn" onclick="publishNote()">Publish Note</button>
+      <button class="btn btn-ghost" id="note-cancel" style="display:none;margin-left:0.5rem;" onclick="cancelEditNote()">Cancel Edit</button>
       <div class="msg" id="note-msg"></div>
     </div>
+    <div id="admin-notes-list"><p class="empty">Loading notes...</p></div>
     <h2 class="subhead">Add a Glossary Term</h2>
     <div class="card">
       <label>Term</label>
@@ -1327,6 +1329,7 @@ async function showAdminPanel() {
   document.getElementById('admin-login').style.display = 'none';
   document.getElementById('admin-panel').style.display = 'block';
   loadAdminData();
+  loadAdminNotes();
 }
 let admAll = [];
 let admView = 'pending';
@@ -1385,18 +1388,75 @@ async function setStatus(id, status) {
   await db.from('research_submissions').update({ status }).eq('id', id);
   loadAdminData();
 }
+let editingNoteId = null;
+
 async function publishNote() {
   const msg = document.getElementById('note-msg');
   msg.className = 'msg';
   const title = document.getElementById('note-title').value.trim();
   const body = document.getElementById('note-body').value.trim();
   if (!title || !body) { msg.className = 'msg err'; msg.textContent = 'Both title and body are needed.'; return; }
-  const { error } = await db.from('research_notes').insert({ title, body, published: true });
-  if (error) { msg.className = 'msg err'; msg.textContent = 'Failed to publish.'; return; }
-  msg.className = 'msg ok'; msg.textContent = 'Published ✦';
+  let error;
+  if (editingNoteId) {
+    ({ error } = await db.from('research_notes').update({ title, body }).eq('id', editingNoteId));
+  } else {
+    ({ error } = await db.from('research_notes').insert({ title, body, published: true }));
+  }
+  if (error) { msg.className = 'msg err'; msg.textContent = 'Failed to save.'; return; }
+  msg.className = 'msg ok';
+  msg.textContent = editingNoteId ? 'Note updated ✦' : 'Published ✦';
+  cancelEditNote();
+  loadAdminNotes();
+}
+
+function cancelEditNote() {
+  editingNoteId = null;
   document.getElementById('note-title').value = '';
   document.getElementById('note-body').value = '';
+  document.getElementById('note-cancel').style.display = 'none';
+  document.querySelector('#admin-panel .btn[onclick="publishNote()"]').textContent = 'Publish Note';
 }
+
+async function loadAdminNotes() {
+  const { data } = await db.from('research_notes').select('*').order('created_at', { ascending: false });
+  const notes = data || [];
+  document.getElementById('admin-notes-list').innerHTML = notes.length ? notes.map(n => `
+    <div class="sub-card">
+      <span class="pill" style="${n.published ? '' : 'background:transparent;border:1px solid var(--border-strong);color:var(--text-muted);'}">${n.published ? 'published' : 'draft — hidden'}</span>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;color:var(--text-primary);margin:0.2rem 0;">${esc(n.title)}</div>
+      <div class="sub-meta">${new Date(n.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+      <div class="sub-story" style="max-height:5.5em;overflow:hidden;">${esc(n.body)}</div>
+      <div style="margin-top:0.8rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+        <button class="btn btn-sm btn-ghost" onclick="editNote('${n.id}')">Edit</button>
+        <button class="btn btn-sm btn-ghost" onclick="toggleNotePublished('${n.id}', ${n.published})">${n.published ? 'Unpublish' : 'Publish'}</button>
+        <button class="btn btn-sm btn-reject" onclick="deleteNote('${n.id}')">Delete</button>
+      </div>
+    </div>`).join('') : '<p class="empty">No research notes yet.</p>';
+  window._admNotes = notes;
+}
+
+function editNote(id) {
+  const n = (window._admNotes || []).find(x => x.id === id);
+  if (!n) return;
+  editingNoteId = id;
+  document.getElementById('note-title').value = n.title;
+  document.getElementById('note-body').value = n.body;
+  document.getElementById('note-cancel').style.display = '';
+  document.querySelector('#admin-panel .btn[onclick="publishNote()"]').textContent = 'Save Changes';
+  document.getElementById('note-title').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+async function toggleNotePublished(id, current) {
+  await db.from('research_notes').update({ published: !current }).eq('id', id);
+  loadAdminNotes();
+}
+
+async function deleteNote(id) {
+  if (!confirm('Permanently delete this research note? This cannot be undone.')) return;
+  await db.from('research_notes').delete().eq('id', id);
+  loadAdminNotes();
+}
+
 async function addTerm() {
   const msg = document.getElementById('term-msg');
   msg.className = 'msg';
