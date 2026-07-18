@@ -169,6 +169,7 @@
   .chart-row { background: var(--bg-card-deep); border-radius: 18px; padding: 1rem 1.1rem 1.2rem; margin-top: 0.7rem; position: relative; }
   .chart-row label { margin-top: 0.7rem; }
   .chart-row label:first-of-type { margin-top: 0; }
+  .backup-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
   .rising-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem; }
   .rising-grid img { width: 100%; border-radius: 14px; border: 1.5px solid var(--border); }
   .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 0.9rem; }
@@ -845,6 +846,13 @@
   <div class="section-eyebrow">Yours</div>
   <h1 class="section-title">My <span style="color:var(--accent);font-style:italic;">Notes</span></h1>
   <p class="section-sub">Your private corner of the site. Everything here lives only in your browser on this device — it never gets sent anywhere. Nobody else can see it, including Aura Vibin. It's yours alone.</p>
+  <div class="hl" style="margin-bottom:1.5rem;"><strong>Keep a copy of anything precious</strong>Because your notes live only on this device and nowhere else, they can disappear if you clear your browser data, delete and reinstall the app, or switch to a new phone. Nothing here is backed up to a server — that's what makes it truly private, and also what makes it fragile. Use the backup buttons below before switching phones or reinstalling.</div>
+  <div class="backup-row">
+    <button class="btn btn-sm" onclick="exportNotes()">⬇ Export my notes</button>
+    <button class="btn btn-sm btn-ghost" onclick="document.getElementById('import-file').click()">⬆ Import a backup</button>
+    <input type="file" id="import-file" accept=".json,application/json" style="display:none;" onchange="importNotes(event)">
+  </div>
+  <div class="msg" id="backup-msg"></div>
 
   <div class="subtabs">
     <div class="subtab active" data-sub="saved" onclick="showSub('saved')">Saved Terms</div>
@@ -1099,6 +1107,48 @@ function renderGloss() {
   document.getElementById('gloss-list').innerHTML = list.length ? list.map(g =>
     `<div class="gloss-item"><div class="gloss-term">${esc(g.term)}<span class="gloss-cat">${esc(g.category)}</span></div><div class="gloss-def">${esc(g.definition)}</div><button class="bookmark-btn ${marks.includes(g.term) ? 'saved' : ''}" onclick="toggleBookmark('${g.term.replace(/'/g, "\\'")}')">${marks.includes(g.term) ? '★' : '☆'}</button></div>`).join('')
     : '<p class="empty">No matching terms.</p>';
+}
+
+const BACKUP_KEYS = ['avr-bookmarks', 'avr-mynotes', 'avr-practice', 'avr-questions'];
+
+function exportNotes() {
+  const msg = document.getElementById('backup-msg');
+  const payload = { app: 'aura-vibin-astro-research', version: 1, exported: new Date().toISOString(), data: {} };
+  BACKUP_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) payload.data[k] = v; });
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'aura-astro-notes-' + new Date().toISOString().slice(0, 10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  msg.className = 'msg ok';
+  msg.textContent = 'Backup saved to your downloads ✦ Keep it somewhere safe.';
+}
+
+function importNotes(ev) {
+  const msg = document.getElementById('backup-msg');
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      if (!parsed || parsed.app !== 'aura-vibin-astro-research' || !parsed.data) throw new Error('bad file');
+      if (!confirm('This will REPLACE everything currently saved in your Notes tab with the backup. Continue?')) { ev.target.value = ''; return; }
+      BACKUP_KEYS.forEach(k => { if (parsed.data[k]) localStorage.setItem(k, parsed.data[k]); });
+      renderSavedTerms(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
+      msg.className = 'msg ok';
+      msg.textContent = 'Backup restored ✦ Everything is back.';
+    } catch (e) {
+      msg.className = 'msg err';
+      msg.textContent = "That file couldn't be read. Make sure it's the .json backup this site exported.";
+    }
+    ev.target.value = '';
+  };
+  reader.readAsText(file);
 }
 
 function renderSavedTerms() {
