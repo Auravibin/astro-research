@@ -183,6 +183,11 @@
     .section-title { font-size: 34px; }
   }
 </style>
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#E01A86">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 <header>
@@ -1339,6 +1344,11 @@ function logoTap() {
   const { data: { session } } = await db.auth.getSession();
   if (session) { document.getElementById('admin-tab').classList.add('show'); }
 })();
+</script>
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js");
+  }
 </script>
 </body>
 </html>
