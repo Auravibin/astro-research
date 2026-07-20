@@ -295,6 +295,13 @@
   The decan of your Sun, Moon, or Rising adds a layer of texture to how that energy expresses — two Leo Suns in different decans are two different Leos.<br><br>
   <strong>Face vs term — the distinction</strong> — both are minor essential dignities, but they're not the same thing. The face (decan) is a fixed equal 10° slice; the bound (term) is unequal and unique per sign. In classical dignity scoring the bound outranks the face:<br><br>
   <table><tr><th>Dignity</th><th>Points</th></tr><tr><td>Domicile</td><td>5</td></tr><tr><td>Exaltation</td><td>4</td></tr><tr><td>Triplicity</td><td>3</td></tr><tr><td>Bound / Term</td><td>2</td></tr><tr><td>Face / Decan</td><td>1</td></tr></table>
+  <div class="hl"><strong>The building analogy</strong><strong>Sign ruler</strong> = the landlord who owns the whole building. <strong>Bound lord</strong> = the local manager who enforces the rules inside it. <strong>Decan lord</strong> = the interior decorator who gives each room its style and atmosphere.<br><br>A decan paints the broad, atmospheric picture of a 10° slice. A bound dictates the specific planetary authority governing that exact degree — the conditions a planet actually has to operate under.</div>
+  <table><tr><th></th><th>Decan (Face)</th><th>Bound (Term)</th></tr>
+  <tr><td>Size</td><td>3 equal 10° sections</td><td>5 unequal sections, 4–8° each</td></tr>
+  <tr><td>Rulers</td><td>All seven traditional planets</td><td>Only five — Mercury, Venus, Mars, Jupiter, Saturn (no Sun or Moon)</td></tr>
+  <tr><td>Function</td><td>Flavor, tone, atmosphere — the character of the placement</td><td>Operational authority — the rules and conditions the planet works under</td></tr>
+  <tr><td>Dignity</td><td>+1</td><td>+2</td></tr></table>
+  Traditional Hellenistic astrologers consistently weighted bounds above decans when judging how effective a planet actually is — style matters less than who's enforcing the rules.<br><br>
   These weights are how the <strong>almuten</strong> of a degree is calculated. Think of it like this: every degree of the zodiac has five planets holding claims on it — its sign ruler, its exaltation ruler, its triplicity ruler, its bound ruler, and its decan ruler. Give each claim its points, add them up per planet, and the top scorer is the almuten: the true manager of that degree, which is not always the sign ruler.<br><br>
   <strong>Worked example — 15° Cancer in a day chart:</strong><br><br>
   <table><tr><th>Claim</th><th>Held by</th><th>Points</th></tr>
@@ -1040,7 +1047,7 @@
     <div id="acct-logged-in" style="display:none;">
       <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem;">Signed in</div>
       <div id="acct-who" style="font-size:14px;color:var(--text-primary);margin-bottom:0.8rem;"></div>
-      <p style="font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.7rem;">Save from the device with your newest work, then load on the other one.</p>
+      <p style="font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.7rem;">Your notes and charts sync automatically while you're signed in — changes save a few seconds after you make them, and the newest version loads whenever you open the site. The buttons below are only there if you want to force it.</p>
       <div class="backup-row">
         <button class="btn btn-sm btn-ghost" onclick="pushSync()">☁ Save to cloud</button>
         <button class="btn btn-sm btn-ghost" onclick="pullSync()">⬇ Load from cloud</button>
@@ -1207,6 +1214,7 @@ function toggleBookmark(term) {
   let b = getBookmarks();
   b = b.includes(term) ? b.filter(t => t !== term) : [...b, term];
   localStorage.setItem('avr-bookmarks', JSON.stringify(b));
+  markLocalChange();
   renderGloss();
 }
 
@@ -1243,8 +1251,9 @@ async function acctSignUp() {
   if (!document.getElementById('acct-consent').checked) return acctMsg('Please tick the consent box to create an account.');
   const { error } = await db.auth.signUp({ email, password: pass });
   if (error) return acctMsg(error.message);
-  acctMsg('Account created ✦ You can now save your notes to the cloud.', true);
-  refreshAccountUI();
+  acctMsg('Account created ✦ Your notes will now sync automatically.', true);
+  await refreshAccountUI();
+  autoSync();
 }
 
 async function acctSignIn() {
@@ -1254,7 +1263,8 @@ async function acctSignIn() {
   const { error } = await db.auth.signInWithPassword({ email, password: pass });
   if (error) return acctMsg('Sign in failed — check your email and password.');
   acctMsg('Signed in ✦', true);
-  refreshAccountUI();
+  await refreshAccountUI();
+  autoSync();
 }
 
 async function acctReset() {
@@ -1310,22 +1320,59 @@ async function refreshAccountUI() {
 
 let IS_ADMIN = false;
 
-async function pushSync() {
-  const msg = document.getElementById('sync-msg');
-  msg.className = 'msg';
-  msg.textContent = 'Saving...';
+let syncTimer = null;
+let SYNC_READY = false;
+
+function markLocalChange() {
+  localStorage.setItem('avr-lastchange', new Date().toISOString());
+  if (!SYNC_READY) return;
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(() => pushSync(true), 2500);
+}
+
+async function autoSync() {
   const { data: { session } } = await db.auth.getSession();
-  if (!session) { msg.className = 'msg err'; msg.textContent = 'Not signed in.'; return; }
+  if (!session) { SYNC_READY = false; return; }
+  const { data } = await db.from('user_data').select('*').eq('user_id', session.user.id).maybeSingle();
+  const localTime = localStorage.getItem('avr-lastchange') || '';
+  const cloudTime = data && data.updated_at ? data.updated_at : '';
+
+  if (cloudTime && cloudTime > localTime) {
+    BACKUP_KEYS.forEach(k => { if (data.data && data.data[k]) localStorage.setItem(k, data.data[k]); });
+    localStorage.setItem('avr-lastchange', cloudTime);
+    CHARTS = JSON.parse(localStorage.getItem('avr-charts') || '[]');
+    renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
+    setSyncStatus('Up to date — loaded from cloud');
+  } else if (localTime) {
+    SYNC_READY = true;
+    await pushSync(true);
+  } else {
+    setSyncStatus('Up to date');
+  }
+  SYNC_READY = true;
+}
+
+function setSyncStatus(txt) {
+  const m = document.getElementById('sync-msg');
+  if (m) { m.className = 'msg ok'; m.textContent = txt; }
+}
+
+async function pushSync(silent) {
+  const msg = document.getElementById('sync-msg');
+  if (!silent) { msg.className = 'msg'; msg.textContent = 'Saving...'; }
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { if (!silent) { msg.className = 'msg err'; msg.textContent = 'Not signed in.'; } return; }
   const payload = {};
   BACKUP_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) payload[k] = v; });
+  const stamp = new Date().toISOString();
   const { error } = await db.from('user_data').upsert({
     user_id: session.user.id,
     data: payload,
-    updated_at: new Date().toISOString()
+    updated_at: stamp
   }, { onConflict: 'user_id' });
-  if (error) { msg.className = 'msg err'; msg.textContent = 'Save failed — check the user_data table exists.'; return; }
-  msg.className = 'msg ok';
-  msg.textContent = 'Saved to cloud ✦ ' + new Date().toLocaleString();
+  if (error) { msg.className = 'msg err'; msg.textContent = 'Save failed — check your connection.'; return; }
+  localStorage.setItem('avr-lastchange', stamp);
+  setSyncStatus('Synced ✦ ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }));
 }
 
 async function pullSync() {
@@ -1338,6 +1385,7 @@ async function pullSync() {
   if (error || !data) { msg.className = 'msg err'; msg.textContent = 'Nothing saved in the cloud yet.'; return; }
   if (!confirm('This will REPLACE the notes and charts on this device with the cloud version. Continue?')) { msg.textContent = ''; return; }
   BACKUP_KEYS.forEach(k => { if (data.data && data.data[k]) localStorage.setItem(k, data.data[k]); });
+  localStorage.setItem('avr-lastchange', data.updated_at || new Date().toISOString());
   CHARTS = JSON.parse(localStorage.getItem('avr-charts') || '[]');
   renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
   msg.className = 'msg ok';
@@ -1393,6 +1441,7 @@ let pendingPhoto = null;
 function saveChartsStore() {
   try {
     localStorage.setItem('avr-charts', JSON.stringify(CHARTS));
+  markLocalChange();
     return true;
   } catch (e) {
     alert("Your device's storage is full. Try deleting a chart image or two — images take the most space.");
@@ -1587,6 +1636,7 @@ function saveMyNote() {
   const notes = JSON.parse(localStorage.getItem('avr-mynotes') || '[]');
   notes.unshift({ text, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) });
   localStorage.setItem('avr-mynotes', JSON.stringify(notes));
+  markLocalChange();
   document.getElementById('my-note-input').value = '';
   renderMyNotes();
 }
@@ -1594,6 +1644,7 @@ function deleteMyNote(i) {
   const notes = JSON.parse(localStorage.getItem('avr-mynotes') || '[]');
   notes.splice(i, 1);
   localStorage.setItem('avr-mynotes', JSON.stringify(notes));
+  markLocalChange();
   renderMyNotes();
 }
 function renderMyNotes() {
@@ -1633,6 +1684,7 @@ function savePractice() {
   const logs = JSON.parse(localStorage.getItem('avr-practice') || '[]');
   logs.unshift({ chart, saw, learned, date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) });
   localStorage.setItem('avr-practice', JSON.stringify(logs));
+  markLocalChange();
   ['prac-chart','prac-saw','prac-learned'].forEach(id => document.getElementById(id).value = '');
   renderPractice();
 }
@@ -1640,6 +1692,7 @@ function deletePractice(i) {
   const logs = JSON.parse(localStorage.getItem('avr-practice') || '[]');
   logs.splice(i, 1);
   localStorage.setItem('avr-practice', JSON.stringify(logs));
+  markLocalChange();
   renderPractice();
 }
 function renderPractice() {
@@ -1656,6 +1709,7 @@ function addQuestion() {
   const qs = JSON.parse(localStorage.getItem('avr-questions') || '[]');
   qs.unshift({ text, done: false });
   localStorage.setItem('avr-questions', JSON.stringify(qs));
+  markLocalChange();
   document.getElementById('q-input').value = '';
   renderQuestions();
 }
@@ -1663,12 +1717,14 @@ function toggleQuestion(i) {
   const qs = JSON.parse(localStorage.getItem('avr-questions') || '[]');
   qs[i].done = !qs[i].done;
   localStorage.setItem('avr-questions', JSON.stringify(qs));
+  markLocalChange();
   renderQuestions();
 }
 function deleteQuestion(i) {
   const qs = JSON.parse(localStorage.getItem('avr-questions') || '[]');
   qs.splice(i, 1);
   localStorage.setItem('avr-questions', JSON.stringify(qs));
+  markLocalChange();
   renderQuestions();
 }
 function renderQuestions() {
@@ -1800,7 +1856,8 @@ async function adminLogin() {
   }
   IS_ADMIN = true;
   showAdminPanel();
-  refreshAccountUI();
+  await refreshAccountUI();
+  autoSync();
 }
 async function adminLogout() {
   await db.auth.signOut();
