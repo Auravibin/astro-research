@@ -169,6 +169,12 @@
   .chart-row { background: var(--bg-card-deep); border-radius: 18px; padding: 1rem 1.1rem 1.2rem; margin-top: 0.7rem; position: relative; }
   .chart-row label { margin-top: 0.7rem; }
   .chart-row label:first-of-type { margin-top: 0; }
+  #lightbox { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(20,10,18,0.94); align-items: center; justify-content: center; padding: 1rem; overflow: auto; }
+  #lightbox.open { display: flex; }
+  #lightbox-img { max-width: 100%; max-height: 92vh; border-radius: 12px; touch-action: pinch-zoom; cursor: zoom-in; transition: transform 0.25s ease; }
+  #lightbox-img.zoomed { transform: scale(2.2); cursor: zoom-out; max-height: none; }
+  #lightbox-close { position: fixed; top: 1rem; right: 1.3rem; font-size: 34px; color: #fff; cursor: pointer; line-height: 1; z-index: 10000; opacity: 0.85; }
+  .chart-thumb { cursor: zoom-in; }
   .chart-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 20px; padding: 1.1rem 1.2rem; margin-bottom: 0.85rem; }
   .chart-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.15rem; }
   .chart-thumb { width: 100%; max-width: 300px; border-radius: 14px; border: 1.5px solid var(--border); margin: 0.6rem 0; display: block; }
@@ -854,11 +860,51 @@
   <p class="section-sub">Your private corner of the site. Everything here lives only in your browser on this device — it never gets sent anywhere. Nobody else can see it, including Aura Vibin. It's yours alone.</p>
   <div class="hl" style="margin-bottom:1.5rem;"><strong>Keep a copy of anything precious</strong>Because your notes live only on this device and nowhere else, they can disappear if you clear your browser data, delete and reinstall the app, or switch to a new phone. Nothing here is backed up to a server — that's what makes it truly private, and also what makes it fragile. Use the backup buttons below before switching phones or reinstalling.</div>
   <div class="backup-row">
-    <button class="btn btn-sm" onclick="exportNotes()">⬇ Export my notes</button>
+    <button class="btn btn-sm btn-ghost" onclick="exportNotes()">⬇ Export my notes</button>
     <button class="btn btn-sm btn-ghost" onclick="document.getElementById('import-file').click()">⬆ Import a backup</button>
     <input type="file" id="import-file" accept=".json,application/json" style="display:none;" onchange="importNotes(event)">
   </div>
   <div class="msg" id="backup-msg"></div>
+
+  <div id="account-box" style="background:var(--bg-card-deep);border-radius:18px;padding:1.1rem 1.2rem;margin-bottom:1.25rem;">
+    <div id="acct-logged-out">
+      <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem;">Sync across devices — optional</div>
+      <p style="font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.8rem;">You don't need an account to use anything here. Create one only if you want your notes and charts on more than one device, or backed up in case you lose your phone.</p>
+      <label>Email</label>
+      <input type="email" id="acct-email" autocomplete="email">
+      <label>Password <span class="optional-tag">— at least 8 characters</span></label>
+      <input type="password" id="acct-pass" autocomplete="current-password">
+      <label style="display:flex;align-items:flex-start;gap:0.5rem;font-size:12.5px;font-weight:300;color:var(--text-muted);line-height:1.5;margin-top:0.7rem;cursor:pointer;">
+        <input type="checkbox" id="acct-consent" style="width:auto;margin:0.2rem 0 0 0;flex:0 0 auto;">
+        <span>I agree to my notes being stored so they can sync between my devices. I can delete everything at any time.</span>
+      </label>
+      <div class="backup-row" style="margin-top:0.8rem;">
+        <button class="btn btn-sm btn-ghost" onclick="acctSignUp()">Create account</button>
+        <button class="btn btn-sm btn-ghost" onclick="acctSignIn()">Sign in</button>
+        <button class="btn btn-sm btn-ghost" onclick="acctReset()">Forgot password</button>
+      </div>
+      <div class="msg" id="acct-msg"></div>
+      <details style="margin-top:0.9rem;">
+        <summary style="font-size:12px;color:var(--text-muted);cursor:pointer;">What gets stored, and your rights</summary>
+        <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.6;margin-top:0.5rem;">Only your email address and whatever you choose to save in this Notes tab — study notes, saved terms, charts you add, and their images. Nothing else. Your data is stored on Supabase servers and is readable only by your own account; nobody else can access it, including Aura Vibin. It is never sold, shared, or used for advertising. You can export a copy or permanently delete everything at any time using the buttons here. Birth data you enter about other people should only be added with their knowledge.</p>
+      </details>
+    </div>
+
+    <div id="acct-logged-in" style="display:none;">
+      <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem;">Signed in</div>
+      <div id="acct-who" style="font-size:14px;color:var(--text-primary);margin-bottom:0.8rem;"></div>
+      <p style="font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.7rem;">Save from the device with your newest work, then load on the other one.</p>
+      <div class="backup-row">
+        <button class="btn btn-sm btn-ghost" onclick="pushSync()">☁ Save to cloud</button>
+        <button class="btn btn-sm btn-ghost" onclick="pullSync()">⬇ Load from cloud</button>
+        <button class="btn btn-sm btn-ghost" onclick="acctSignOut()">Sign out</button>
+      </div>
+      <div class="msg" id="sync-msg"></div>
+      <div style="margin-top:0.9rem;padding-top:0.9rem;border-top:1px solid var(--border);">
+        <button class="btn btn-sm btn-reject" onclick="acctDeleteData()">Delete my cloud data</button>
+      </div>
+    </div>
+  </div>
 
   <div class="subtabs">
     <div class="subtab active" data-sub="saved" onclick="showSub('saved')">Saved Terms</div>
@@ -1048,6 +1094,11 @@
   <div class="tab" data-tab="submit" onclick="showTab('submit')"><span class="tab-icon">💌</span><span class="tab-label">Submit</span></div>
   <div class="tab" data-tab="mynotes" onclick="showTab('mynotes')"><span class="tab-icon">⭐</span><span class="tab-label">Notes</span></div>
 </nav>
+
+<div id="lightbox" onclick="closeLightbox()">
+  <span id="lightbox-close">×</span>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()">
+</div>
 <footer style="display:none;"></footer>
 <script>
 const SB_URL = 'https://ifzzkrbizxwzwhkquuob.supabase.co';
@@ -1154,6 +1205,117 @@ function renderGloss() {
 
 const BACKUP_KEYS = ['avr-bookmarks', 'avr-mynotes', 'avr-practice', 'avr-questions', 'avr-charts'];
 
+function acctMsg(txt, ok) {
+  const m = document.getElementById('acct-msg');
+  m.className = 'msg ' + (ok ? 'ok' : 'err');
+  m.textContent = txt;
+}
+
+async function acctSignUp() {
+  const email = document.getElementById('acct-email').value.trim();
+  const pass = document.getElementById('acct-pass').value;
+  if (!email || !pass) return acctMsg('Email and password are both needed.');
+  if (pass.length < 8) return acctMsg('Password needs to be at least 8 characters.');
+  if (!document.getElementById('acct-consent').checked) return acctMsg('Please tick the consent box to create an account.');
+  const { error } = await db.auth.signUp({ email, password: pass });
+  if (error) return acctMsg(error.message);
+  acctMsg('Account created ✦ You can now save your notes to the cloud.', true);
+  refreshAccountUI();
+}
+
+async function acctSignIn() {
+  const email = document.getElementById('acct-email').value.trim();
+  const pass = document.getElementById('acct-pass').value;
+  if (!email || !pass) return acctMsg('Email and password are both needed.');
+  const { error } = await db.auth.signInWithPassword({ email, password: pass });
+  if (error) return acctMsg('Sign in failed — check your email and password.');
+  acctMsg('Signed in ✦', true);
+  refreshAccountUI();
+}
+
+async function acctReset() {
+  const email = document.getElementById('acct-email').value.trim();
+  if (!email) return acctMsg('Enter your email first, then tap Forgot password.');
+  const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin });
+  if (error) return acctMsg(error.message);
+  acctMsg('If that email has an account, a reset link is on its way.', true);
+}
+
+async function acctSignOut() {
+  await db.auth.signOut();
+  refreshAccountUI();
+  const at = document.getElementById('admin-tab');
+  if (at) at.classList.remove('show');
+}
+
+async function acctDeleteData() {
+  if (!confirm('This permanently deletes everything you have saved in the cloud. Your notes on this device stay. Continue?')) return;
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) return;
+  await db.from('user_data').delete().eq('user_id', session.user.id);
+  const m = document.getElementById('sync-msg');
+  m.className = 'msg ok';
+  m.textContent = 'Cloud data deleted ✦ Nothing of yours is stored on the server.';
+}
+
+async function refreshAccountUI() {
+  const { data: { session } } = await db.auth.getSession();
+  const out = document.getElementById('acct-logged-out');
+  const inn = document.getElementById('acct-logged-in');
+  if (!out || !inn) return;
+  if (session) {
+    out.style.display = 'none';
+    inn.style.display = 'block';
+    document.getElementById('acct-who').textContent = session.user.email;
+    const { data: adminRow } = await db.from('admins').select('user_id').eq('user_id', session.user.id).maybeSingle();
+    IS_ADMIN = !!adminRow;
+    if (IS_ADMIN) {
+      const at = document.getElementById('admin-tab');
+      if (at) at.classList.add('show');
+    }
+  } else {
+    out.style.display = 'block';
+    inn.style.display = 'none';
+    IS_ADMIN = false;
+  }
+}
+
+let IS_ADMIN = false;
+
+async function pushSync() {
+  const msg = document.getElementById('sync-msg');
+  msg.className = 'msg';
+  msg.textContent = 'Saving...';
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { msg.className = 'msg err'; msg.textContent = 'Not signed in.'; return; }
+  const payload = {};
+  BACKUP_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) payload[k] = v; });
+  const { error } = await db.from('user_data').upsert({
+    user_id: session.user.id,
+    data: payload,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'user_id' });
+  if (error) { msg.className = 'msg err'; msg.textContent = 'Save failed — check the user_data table exists.'; return; }
+  msg.className = 'msg ok';
+  msg.textContent = 'Saved to cloud ✦ ' + new Date().toLocaleString();
+}
+
+async function pullSync() {
+  const msg = document.getElementById('sync-msg');
+  msg.className = 'msg';
+  msg.textContent = 'Loading...';
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) { msg.className = 'msg err'; msg.textContent = 'Not signed in.'; return; }
+  const { data, error } = await db.from('user_data').select('*').eq('user_id', session.user.id).maybeSingle();
+  if (error || !data) { msg.className = 'msg err'; msg.textContent = 'Nothing saved in the cloud yet.'; return; }
+  if (!confirm('This will REPLACE the notes and charts on this device with the cloud version. Continue?')) { msg.textContent = ''; return; }
+  BACKUP_KEYS.forEach(k => { if (data.data && data.data[k]) localStorage.setItem(k, data.data[k]); });
+  CHARTS = JSON.parse(localStorage.getItem('avr-charts') || '[]');
+  renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
+  msg.className = 'msg ok';
+  msg.textContent = 'Loaded ✦ last saved ' + new Date(data.updated_at).toLocaleString();
+}
+
 function exportNotes() {
   const msg = document.getElementById('backup-msg');
   const payload = { app: 'aura-vibin-astro-research', version: 1, exported: new Date().toISOString(), data: {} };
@@ -1224,7 +1386,7 @@ function openChartForm(id) {
   document.getElementById('ch-time').value = c && c.time ? c.time : '';
   document.getElementById('ch-loc').value = c && c.loc ? c.loc : '';
   document.getElementById('ch-notes').value = c && c.notes ? c.notes : '';
-  document.getElementById('ch-photo-preview').innerHTML = c && c.photo ? '<img class="chart-thumb" src="' + c.photo + '" alt="">' : '';
+  document.getElementById('ch-photo-preview').innerHTML = c && c.photo ? '<img class="chart-thumb" src="' + c.photo + '" alt="" onclick="openLightbox(this.src)">' : '';
   if (c && c.photo) pendingPhoto = c.photo;
   f.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
@@ -1255,7 +1417,7 @@ function previewChartPhoto(ev) {
       cv.width = w; cv.height = h;
       cv.getContext('2d').drawImage(img, 0, 0, w, h);
       pendingPhoto = cv.toDataURL('image/jpeg', 0.72);
-      document.getElementById('ch-photo-preview').innerHTML = '<img class="chart-thumb" src="' + pendingPhoto + '" alt="">';
+      document.getElementById('ch-photo-preview').innerHTML = '<img class="chart-thumb" src="' + pendingPhoto + '" alt="" onclick="openLightbox(this.src)">';
       msg.className = 'msg ok';
       msg.textContent = 'Image ready (' + Math.round(pendingPhoto.length / 1400) + ' KB)';
     };
@@ -1314,6 +1476,21 @@ function removeChartEvent(id, idx) {
   renderCharts();
 }
 
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = src;
+  img.classList.remove('zoomed');
+  lb.classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const img = document.getElementById('lightbox-img');
+  if (img) img.addEventListener('click', () => img.classList.toggle('zoomed'));
+});
+
 function renderCharts() {
   const cats = ['All', ...new Set(CHARTS.map(c => c.cat))];
   document.getElementById('chart-cats').innerHTML = cats.map(c =>
@@ -1329,7 +1506,7 @@ function renderCharts() {
       <h4>${esc(c.name)}</h4>
       <span class="pill">${esc(c.cat)}</span>
       ${c.date || c.time || c.loc ? `<div class="sub-meta">${c.date ? new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'date unknown'}${c.time ? ' · ' + c.time : ''}${c.loc ? ' · ' + esc(c.loc) : ''}</div>` : ''}
-      ${c.photo ? `<img class="chart-thumb" src="${c.photo}" alt="${esc(c.name)}'s chart">` : ''}
+      ${c.photo ? `<img class="chart-thumb" src="${c.photo}" alt="${esc(c.name)}'s chart" onclick="openLightbox(this.src)">` : ''}
       ${c.notes ? `<div class="sub-story">${esc(c.notes)}</div>` : ''}
       <div style="margin-top:0.9rem;">
         <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem;">Life events</div>
@@ -1569,10 +1746,23 @@ async function adminLogin() {
     password: document.getElementById('adm-pass').value
   });
   if (error) { msg.className = 'msg err'; msg.textContent = 'Login failed — check your credentials.'; return; }
+  const { data: { session } } = await db.auth.getSession();
+  const { data: adminRow } = await db.from('admins').select('user_id').eq('user_id', session.user.id).maybeSingle();
+  if (!adminRow) {
+    msg.className = 'msg err';
+    msg.textContent = 'This account does not have admin access.';
+    IS_ADMIN = false;
+    refreshAccountUI();
+    return;
+  }
+  IS_ADMIN = true;
   showAdminPanel();
+  refreshAccountUI();
 }
 async function adminLogout() {
   await db.auth.signOut();
+  IS_ADMIN = false;
+  refreshAccountUI();
   document.getElementById('admin-panel').style.display = 'none';
   document.getElementById('admin-login').style.display = 'block';
 }
