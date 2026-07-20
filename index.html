@@ -66,8 +66,9 @@
   .logo span { color: var(--accent); font-style: italic; }
   .header-actions { display: flex; align-items: center; gap: 0.6rem; }
   .theme-toggle { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border-strong); background: var(--bg-card); cursor: pointer; font-size: 16px; }
-  .admin-link { display: none; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); cursor: pointer; }
-  .admin-link.show { display: block; }
+  .header-link { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); cursor: pointer; }
+  .admin-link { display: none !important; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); cursor: pointer; }
+  .admin-link.show { display: block !important; }
   main { max-width: 1100px; margin: 0 auto; padding: 1.25rem 1.25rem 7.5rem; }
   .section { display: none; }
   .section.active { display: block; animation: fade 0.25s ease; }
@@ -175,13 +176,24 @@
   #lightbox-img.zoomed { transform: scale(2.2); cursor: zoom-out; max-height: none; }
   #lightbox-close { position: fixed; top: 1rem; right: 1.3rem; font-size: 34px; color: #fff; cursor: pointer; line-height: 1; z-index: 10000; opacity: 0.85; }
   .chart-thumb { cursor: zoom-in; }
+  .chart-item { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 18px; margin-bottom: 0.6rem; overflow: hidden; }
+  .chart-head { display: flex; align-items: center; gap: 0.6rem; padding: 0.85rem 1.1rem; cursor: pointer; }
+  .chart-head-main { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; min-width: 0; }
+  .chart-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
+  .chart-sub { font-size: 11.5px; color: var(--text-muted); font-weight: 300; letter-spacing: 0.02em; }
+  .chart-arrow { color: var(--accent); font-size: 14px; flex: 0 0 auto; }
+  .chart-body { display: none; padding: 0 1.1rem 1.1rem; }
+  .chart-body.open { display: block; }
   .chart-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 20px; padding: 1.1rem 1.2rem; margin-bottom: 0.85rem; }
   .chart-card h4 { font-family: 'Cormorant Garamond', serif; font-size: 21px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.15rem; }
   .chart-thumb { width: 100%; max-width: 300px; border-radius: 14px; border: 1.5px solid var(--border); margin: 0.6rem 0; display: block; }
   .event-row { display: flex; gap: 0.5rem; align-items: flex-start; font-size: 13.5px; padding: 0.35rem 0; border-bottom: 1px solid var(--border); }
   .event-date { color: var(--accent); font-weight: 500; white-space: nowrap; font-size: 12.5px; padding-top: 0.1rem; }
   .event-x { margin-left: auto; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
-  .backup-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+  .btn-quiet { background: none; border: none; padding: 0; font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 400; letter-spacing: 0.04em; color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; transition: color 0.2s; }
+  .btn-quiet:hover { color: var(--accent); }
+  .quiet-sep { color: var(--border-strong); font-size: 12px; }
+  .backup-row { display: flex; gap: 0.55rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
   .rising-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem; }
   .rising-grid img { width: 100%; border-radius: 14px; border: 1.5px solid var(--border); }
   .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 0.9rem; }
@@ -207,6 +219,7 @@
   <div class="header-top">
     <div class="logo" onclick="logoTap()">Astro <span>Research</span></div>
     <div class="header-actions">
+      <div class="header-link tab" data-tab="account" id="account-tab" onclick="showTab('account')">Sign in</div>
       <div class="admin-link tab" data-tab="admin" id="admin-tab" onclick="showTab('admin')">Admin</div>
       <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
     </div>
@@ -860,55 +873,20 @@
   <p class="section-sub">Your private corner of the site. Everything here lives only in your browser on this device — it never gets sent anywhere. Nobody else can see it, including Aura Vibin. It's yours alone.</p>
   <div class="hl" style="margin-bottom:1.5rem;"><strong>Keep a copy of anything precious</strong>Because your notes live only on this device and nowhere else, they can disappear if you clear your browser data, delete and reinstall the app, or switch to a new phone. Nothing here is backed up to a server — that's what makes it truly private, and also what makes it fragile. Use the backup buttons below before switching phones or reinstalling.</div>
   <div class="backup-row">
-    <button class="btn btn-sm btn-ghost" onclick="exportNotes()">⬇ Export my notes</button>
-    <button class="btn btn-sm btn-ghost" onclick="document.getElementById('import-file').click()">⬆ Import a backup</button>
+    <button class="btn-quiet" onclick="exportNotes()">Export a backup file</button>
+    <span class="quiet-sep">·</span>
+    <button class="btn-quiet" onclick="document.getElementById('import-file').click()">Import a backup</button>
+    <span class="quiet-sep">·</span>
+    <button class="btn-quiet" onclick="showTab('account')">Sync across devices</button>
     <input type="file" id="import-file" accept=".json,application/json" style="display:none;" onchange="importNotes(event)">
   </div>
   <div class="msg" id="backup-msg"></div>
 
-  <div id="account-box" style="background:var(--bg-card-deep);border-radius:18px;padding:1.1rem 1.2rem;margin-bottom:1.25rem;">
-    <div id="acct-logged-out">
-      <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem;">Sync across devices — optional</div>
-      <p style="font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.8rem;">You don't need an account to use anything here. Create one only if you want your notes and charts on more than one device, or backed up in case you lose your phone.</p>
-      <label>Email</label>
-      <input type="email" id="acct-email" autocomplete="email">
-      <label>Password <span class="optional-tag">— at least 8 characters</span></label>
-      <input type="password" id="acct-pass" autocomplete="current-password">
-      <label style="display:flex;align-items:flex-start;gap:0.5rem;font-size:12.5px;font-weight:300;color:var(--text-muted);line-height:1.5;margin-top:0.7rem;cursor:pointer;">
-        <input type="checkbox" id="acct-consent" style="width:auto;margin:0.2rem 0 0 0;flex:0 0 auto;">
-        <span>I agree to my notes being stored so they can sync between my devices. I can delete everything at any time.</span>
-      </label>
-      <div class="backup-row" style="margin-top:0.8rem;">
-        <button class="btn btn-sm btn-ghost" onclick="acctSignUp()">Create account</button>
-        <button class="btn btn-sm btn-ghost" onclick="acctSignIn()">Sign in</button>
-        <button class="btn btn-sm btn-ghost" onclick="acctReset()">Forgot password</button>
-      </div>
-      <div class="msg" id="acct-msg"></div>
-      <details style="margin-top:0.9rem;">
-        <summary style="font-size:12px;color:var(--text-muted);cursor:pointer;">What gets stored, and your rights</summary>
-        <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.6;margin-top:0.5rem;">Only your email address and whatever you choose to save in this Notes tab — study notes, saved terms, charts you add, and their images. Nothing else. Your data is stored on Supabase servers and is readable only by your own account; nobody else can access it, including Aura Vibin. It is never sold, shared, or used for advertising. You can export a copy or permanently delete everything at any time using the buttons here. Birth data you enter about other people should only be added with their knowledge.</p>
-      </details>
-    </div>
-
-    <div id="acct-logged-in" style="display:none;">
-      <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem;">Signed in</div>
-      <div id="acct-who" style="font-size:14px;color:var(--text-primary);margin-bottom:0.8rem;"></div>
-      <p style="font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.7rem;">Save from the device with your newest work, then load on the other one.</p>
-      <div class="backup-row">
-        <button class="btn btn-sm btn-ghost" onclick="pushSync()">☁ Save to cloud</button>
-        <button class="btn btn-sm btn-ghost" onclick="pullSync()">⬇ Load from cloud</button>
-        <button class="btn btn-sm btn-ghost" onclick="acctSignOut()">Sign out</button>
-      </div>
-      <div class="msg" id="sync-msg"></div>
-      <div style="margin-top:0.9rem;padding-top:0.9rem;border-top:1px solid var(--border);">
-        <button class="btn btn-sm btn-reject" onclick="acctDeleteData()">Delete my cloud data</button>
-      </div>
-    </div>
-  </div>
+  
 
   <div class="subtabs">
-    <div class="subtab active" data-sub="saved" onclick="showSub('saved')">Saved Terms</div>
-    <div class="subtab" data-sub="charts" onclick="showSub('charts')">Charts</div>
+    <div class="subtab active" data-sub="charts" onclick="showSub('charts')">Charts</div>
+    <div class="subtab" data-sub="saved" onclick="showSub('saved')">Saved Terms</div>
     <div class="subtab" data-sub="notes" onclick="showSub('notes')">Study Notes</div>
     <div class="subtab" data-sub="flash" onclick="showSub('flash')">Flashcards</div>
     <div class="subtab" data-sub="practice" onclick="showSub('practice')">Chart Practice Log</div>
@@ -916,11 +894,11 @@
     <div class="subtab" data-sub="aura" onclick="showSub('aura')">From Aura</div>
   </div>
 
-  <div class="subsection active" id="sub-saved">
+  <div class="subsection" id="sub-saved">
     <div id="saved-terms"><p class="empty">Nothing saved yet — star glossary terms to collect them here.</p></div>
   </div>
 
-  <div class="subsection" id="sub-charts">
+  <div class="subsection active" id="sub-charts">
     <p class="section-sub" style="margin-bottom:0.9rem;">Your private chart archive. Save the birth data of everyone in your life, attach their chart image, and log the events that actually happened to them. This is how pattern recognition is built.</p>
 
     <div class="filter-row" id="chart-cats"></div>
@@ -933,7 +911,7 @@
         <input type="text" id="ch-name" placeholder="Their name, or a nickname">
         <label>Relationship</label>
         <select id="ch-cat">
-          <option>Family</option><option>Friend</option><option>Romantic</option>
+          <option>Me</option><option>Family</option><option>Friend</option><option>Romantic</option>
           <option>Acquaintance</option><option>Client</option><option>Public figure</option><option>Other</option>
         </select>
         <label>Birth date</label>
@@ -1029,6 +1007,51 @@
 
   <div class="acc-head" onclick="acc(this)"><h3>The Moon &amp; the lunar goddesses</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body">The Moon wears three faces across mythology, matching her phases: the maiden (waxing), the mother (full), the crone (waning) — Artemis the huntress, Selene the full-moon lover, Hecate the goddess of the dark moon, crossroads, and magic. This triple goddess is why the Moon governs cycles, instinct, the body's rhythms, and the shifting emotional tides. Where your Moon sits is which face of her you most naturally wear — and the house shows the terrain where your inner life seeks its safety and its feeling.</div>
+</div>
+
+<div class="section" id="section-account">
+  <div class="section-eyebrow">Account</div>
+  <h1 class="section-title">Sync across <span style="color:var(--accent);font-style:italic;">devices</span></h1>
+  <p class="section-sub">Optional. Everything on this site works without an account — this is only if you'd like your notes and charts on more than one device, or safely backed up.</p>
+  <div id="account-box" style="background:var(--bg-card-deep);border-radius:18px;padding:1.1rem 1.2rem;margin-bottom:1.25rem;">
+    <div id="acct-logged-out">
+      <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.5rem;">Sync across devices — optional</div>
+      <p style="font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.8rem;">You don't need an account to use anything here. Create one only if you want your notes and charts on more than one device, or backed up in case you lose your phone.</p>
+      <label>Email</label>
+      <input type="email" id="acct-email" autocomplete="email">
+      <label>Password <span class="optional-tag">— at least 8 characters</span></label>
+      <input type="password" id="acct-pass" autocomplete="current-password">
+      <label style="display:flex;align-items:flex-start;gap:0.5rem;font-size:12.5px;font-weight:300;color:var(--text-muted);line-height:1.5;margin-top:0.7rem;cursor:pointer;">
+        <input type="checkbox" id="acct-consent" style="width:auto;margin:0.2rem 0 0 0;flex:0 0 auto;">
+        <span>I agree to my notes being stored so they can sync between my devices. I can delete everything at any time.</span>
+      </label>
+      <div class="backup-row" style="margin-top:0.8rem;">
+        <button class="btn btn-sm btn-ghost" onclick="acctSignUp()">Create account</button>
+        <button class="btn btn-sm btn-ghost" onclick="acctSignIn()">Sign in</button>
+        <button class="btn btn-sm btn-ghost" onclick="acctReset()">Forgot password</button>
+      </div>
+      <div class="msg" id="acct-msg"></div>
+      <details style="margin-top:0.9rem;">
+        <summary style="font-size:12px;color:var(--text-muted);cursor:pointer;">What gets stored, and your rights</summary>
+        <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.6;margin-top:0.5rem;">Only your email address and whatever you choose to save in this Notes tab — study notes, saved terms, charts you add, and their images. Nothing else. Your data is stored on Supabase servers and is readable only by your own account; nobody else can access it, including Aura Vibin. It is never sold, shared, or used for advertising. You can export a copy or permanently delete everything at any time using the buttons here. Birth data you enter about other people should only be added with their knowledge.</p>
+      </details>
+    </div>
+
+    <div id="acct-logged-in" style="display:none;">
+      <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem;">Signed in</div>
+      <div id="acct-who" style="font-size:14px;color:var(--text-primary);margin-bottom:0.8rem;"></div>
+      <p style="font-size:13px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.7rem;">Save from the device with your newest work, then load on the other one.</p>
+      <div class="backup-row">
+        <button class="btn btn-sm btn-ghost" onclick="pushSync()">☁ Save to cloud</button>
+        <button class="btn btn-sm btn-ghost" onclick="pullSync()">⬇ Load from cloud</button>
+        <button class="btn btn-sm btn-ghost" onclick="acctSignOut()">Sign out</button>
+      </div>
+      <div class="msg" id="sync-msg"></div>
+      <div style="margin-top:0.9rem;padding-top:0.9rem;border-top:1px solid var(--border);">
+        <button class="btn btn-sm btn-reject" onclick="acctDeleteData()">Delete my cloud data</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="section" id="section-admin">
@@ -1127,6 +1150,7 @@ async function loadGlossaryFromDB() {
 }
 
 function showTab(id) {
+  if (id === 'admin' && !IS_ADMIN && !ADMIN_REVEALED) return;
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.getElementById('section-' + id).classList.add('active');
@@ -1267,15 +1291,19 @@ async function refreshAccountUI() {
     out.style.display = 'none';
     inn.style.display = 'block';
     document.getElementById('acct-who').textContent = session.user.email;
+    const t = document.getElementById('account-tab');
+    if (t) t.textContent = 'Account';
     const { data: adminRow } = await db.from('admins').select('user_id').eq('user_id', session.user.id).maybeSingle();
     IS_ADMIN = !!adminRow;
-    if (IS_ADMIN) {
-      const at = document.getElementById('admin-tab');
-      if (at) at.classList.add('show');
-    }
+    const at = document.getElementById('admin-tab');
+    if (at) at.classList.toggle('show', IS_ADMIN);
   } else {
     out.style.display = 'block';
     inn.style.display = 'none';
+    const t = document.getElementById('account-tab');
+    if (t) t.textContent = 'Sign in';
+    const at2 = document.getElementById('admin-tab');
+    if (at2) at2.classList.remove('show');
     IS_ADMIN = false;
   }
 }
@@ -1381,7 +1409,7 @@ function openChartForm(id) {
   document.getElementById('ch-photo').value = '';
   const c = id ? CHARTS.find(x => x.id === id) : null;
   document.getElementById('ch-name').value = c ? c.name : '';
-  document.getElementById('ch-cat').value = c ? c.cat : 'Family';
+  document.getElementById('ch-cat').value = c ? c.cat : 'Me';
   document.getElementById('ch-date').value = c && c.date ? c.date : '';
   document.getElementById('ch-time').value = c && c.time ? c.time : '';
   document.getElementById('ch-loc').value = c && c.loc ? c.loc : '';
@@ -1501,32 +1529,47 @@ function renderCharts() {
     (chartCat === 'All' || c.cat === chartCat) &&
     ((c.name || '') + (c.notes || '') + (c.loc || '') + (c.events || []).map(e => e.what).join(' ')).toLowerCase().includes(q));
 
-  document.getElementById('charts-list').innerHTML = list.length ? list.map(c => `
-    <div class="chart-card">
-      <h4>${esc(c.name)}</h4>
-      <span class="pill">${esc(c.cat)}</span>
-      ${c.date || c.time || c.loc ? `<div class="sub-meta">${c.date ? new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'date unknown'}${c.time ? ' · ' + c.time : ''}${c.loc ? ' · ' + esc(c.loc) : ''}</div>` : ''}
-      ${c.photo ? `<img class="chart-thumb" src="${c.photo}" alt="${esc(c.name)}'s chart" onclick="openLightbox(this.src)">` : ''}
-      ${c.notes ? `<div class="sub-story">${esc(c.notes)}</div>` : ''}
-      <div style="margin-top:0.9rem;">
-        <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem;">Life events</div>
-        ${(c.events || []).length ? c.events.map((e, i) => `
-          <div class="event-row">
-            <span class="event-date">${e.when ? new Date(e.when + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—'}</span>
-            <span>${esc(e.what)}</span>
-            <span class="event-x" onclick="removeChartEvent('${c.id}',${i})">×</span>
-          </div>`).join('') : '<p class="empty" style="padding:0.4rem 0;">No events logged yet.</p>'}
-        <div style="display:flex;gap:0.4rem;margin-top:0.6rem;flex-wrap:wrap;">
-          <input type="date" id="ev-date-${c.id}" style="flex:0 0 auto;width:auto;margin:0;">
-          <input type="text" id="ev-what-${c.id}" placeholder="What happened..." style="flex:1;min-width:140px;margin:0;">
-          <button class="btn btn-sm btn-ghost" onclick="addChartEvent('${c.id}')" style="margin:0;">Add</button>
+  document.getElementById('charts-list').innerHTML = list.length ? list.map(c => {
+    const open = OPEN_CHARTS.has(c.id);
+    return `
+    <div class="chart-item">
+      <div class="chart-head" onclick="toggleChart('${c.id}')">
+        <div class="chart-head-main">
+          <span class="chart-name">${esc(c.name)}</span>
+          <span class="chart-sub">${esc(c.cat)}${c.date ? ' · ' + new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}${c.photo ? ' · 📷' : ''}</span>
+        </div>
+        <span class="chart-arrow">${open ? '↑' : '↓'}</span>
+      </div>
+      <div class="chart-body ${open ? 'open' : ''}">
+        ${c.time || c.loc ? `<div class="sub-meta">${c.time ? 'Born ' + c.time : ''}${c.loc ? (c.time ? ' · ' : '') + esc(c.loc) : ''}</div>` : ''}
+        ${c.photo ? `<img class="chart-thumb" src="${c.photo}" alt="${esc(c.name)}'s chart" onclick="event.stopPropagation();openLightbox(this.src)">` : ''}
+        ${c.notes ? `<div class="sub-story">${esc(c.notes)}</div>` : ''}
+        <div style="margin-top:0.9rem;">
+          <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.4rem;">Life events</div>
+          ${(c.events || []).length ? c.events.map((e, i) => `
+            <div class="event-row">
+              <span class="event-date">${e.when ? new Date(e.when + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—'}</span>
+              <span>${esc(e.what)}</span>
+              <span class="event-x" onclick="removeChartEvent('${c.id}',${i})">×</span>
+            </div>`).join('') : '<p class="empty" style="padding:0.4rem 0;">No events logged yet.</p>'}
+          <div style="display:flex;gap:0.4rem;margin-top:0.6rem;flex-wrap:wrap;">
+            <input type="date" id="ev-date-${c.id}" style="flex:0 0 auto;width:auto;margin:0;">
+            <input type="text" id="ev-what-${c.id}" placeholder="What happened..." style="flex:1;min-width:140px;margin:0;">
+            <button class="btn btn-sm btn-ghost" onclick="addChartEvent('${c.id}')" style="margin:0;">Add</button>
+          </div>
+        </div>
+        <div style="margin-top:0.9rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+          <button class="btn btn-sm btn-ghost" onclick="openChartForm('${c.id}')">Edit</button>
+          <button class="btn btn-sm btn-reject" onclick="deleteChart('${c.id}')">Delete</button>
         </div>
       </div>
-      <div style="margin-top:0.9rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
-        <button class="btn btn-sm btn-ghost" onclick="openChartForm('${c.id}')">Edit</button>
-        <button class="btn btn-sm btn-reject" onclick="deleteChart('${c.id}')">Delete</button>
-      </div>
-    </div>`).join('') : '<p class="empty">No charts yet — tap “Add a chart” to start your archive.</p>';
+    </div>`; }).join('') : '<p class="empty">No charts yet — tap “Add a chart” to start your archive.</p>';
+}
+
+const OPEN_CHARTS = new Set();
+function toggleChart(id) {
+  if (OPEN_CHARTS.has(id)) OPEN_CHARTS.delete(id); else OPEN_CHARTS.add(id);
+  renderCharts();
 }
 
 function renderSavedTerms() {
@@ -1913,12 +1956,13 @@ async function addTerm() {
   loadGlossaryFromDB();
 }
 
+let ADMIN_REVEALED = false;
 let logoTaps = 0, logoTimer = null;
 function logoTap() {
   logoTaps++;
   clearTimeout(logoTimer);
   logoTimer = setTimeout(() => logoTaps = 0, 1500);
-  if (logoTaps >= 5) { logoTaps = 0; revealAdmin(); }
+  if (logoTaps >= 5) { logoTaps = 0; ADMIN_REVEALED = true; revealAdmin(); }
 }
 
 (async () => {
