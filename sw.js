@@ -1,11 +1,7 @@
-const CACHE = 'avr-v1';
+const CACHE = 'seshat-v2';
 
-// Install immediately, don't wait for old tabs to close
-self.addEventListener('install', e => {
-  self.skipWaiting();
-});
+self.addEventListener('install', e => { self.skipWaiting(); });
 
-// Take control of open pages right away and clear old caches
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys()
@@ -16,17 +12,24 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const req = e.request;
+
+  // Never touch anything that isn't a plain GET.
   if (req.method !== 'GET') return;
 
   const url = new URL(req.url);
+
+  // CRITICAL: never intercept requests to other origins.
+  // Supabase, fonts, CDNs all handle their own caching and must
+  // reach the network directly. Caching them broke the database calls.
+  if (url.origin !== self.location.origin) return;
+
   const isHTML = req.mode === 'navigate' ||
                  req.destination === 'document' ||
                  url.pathname === '/' ||
                  url.pathname.endsWith('.html');
 
   if (isHTML) {
-    // NETWORK FIRST for the page itself — always get the newest version,
-    // fall back to cache only when genuinely offline
+    // Network first, so updates always reach installed apps.
     e.respondWith(
       fetch(req)
         .then(res => {
@@ -39,8 +42,7 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // CACHE FIRST for images and everything else — they rarely change
-  // and this keeps the app fast and usable offline
+  // Cache first for our own images and assets only.
   e.respondWith(
     caches.match(req).then(cached => {
       if (cached) return cached;
