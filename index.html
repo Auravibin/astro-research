@@ -203,6 +203,13 @@
   .btn-quiet { background: none; border: none; padding: 0; font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 400; letter-spacing: 0.04em; color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; transition: color 0.2s; }
   .btn-quiet:hover { color: var(--accent); }
   .quiet-sep { color: var(--border-strong); font-size: 12px; }
+  .dim-block { margin-bottom: 0.75rem; }
+  .dim-label { font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.3rem; }
+  .filter-chip em { font-style: normal; opacity: 0.55; font-size: 10px; margin-left: 2px; }
+  .filter-chip.chip-empty { opacity: 0.3; cursor: default; pointer-events: none; }
+  .lib-count { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin: 0.4rem 0 1rem; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.5rem 0; }
+  .tag-pill { font-size: 10.5px; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border-strong); color: var(--text-muted); }
   .step-bar { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 1.6rem; }
   .step-dot { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 0 0 auto; }
   .step-dot span { width: 27px; height: 27px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-muted); background: var(--bg-card); transition: all 0.25s; }
@@ -2155,23 +2162,88 @@ async function loadLibrary() {
   renderFilters();
   renderLibrary();
 }
-function renderFilters() {
-  const present = ['All', ...new Set(approvedCache.map(s => s.event_category))];
-  document.getElementById('lib-filters').innerHTML = present.map(c =>
-    `<div class="filter-chip ${c === activeFilter ? 'active' : ''}" onclick="activeFilter='${c.replace(/'/g, "\\'")}';renderFilters();renderLibrary();">${c}</div>`).join('');
+let tagFilter = { planets: [], houses: [], aspects: [], context: [] };
+
+function toggleTagFilter(dim, val) {
+  const list = tagFilter[dim];
+  const i = list.indexOf(val);
+  if (i >= 0) list.splice(i, 1); else list.push(val);
+  renderFilters(); renderLibrary();
 }
+function clearTagFilters() {
+  tagFilter = { planets: [], houses: [], aspects: [], context: [] };
+  activeFilter = 'All';
+  renderFilters(); renderLibrary();
+}
+function matchesTags(s) {
+  const t = s.tags || {};
+  return Object.keys(tagFilter).every(dim =>
+    tagFilter[dim].length === 0 || tagFilter[dim].every(v => (t[dim] || []).includes(v)));
+}
+function matchesCat(s) { return activeFilter === 'All' || s.event_category === activeFilter; }
+
+function countWith(dim, val) {
+  const probe = {};
+  Object.keys(tagFilter).forEach(d => probe[d] = tagFilter[d].slice());
+  if (!probe[dim].includes(val)) probe[dim].push(val);
+  return approvedCache.filter(s => {
+    const t = s.tags || {};
+    return matchesCat(s) && Object.keys(probe).every(d =>
+      probe[d].length === 0 || probe[d].every(v => (t[d] || []).includes(v)));
+  }).length;
+}
+
+function renderFilters() {
+  const cats = ['All'].concat(Array.from(new Set(approvedCache.map(s => s.event_category))));
+  const catHTML = cats.map(c => {
+    const n = c === 'All' ? approvedCache.filter(matchesTags).length
+                          : approvedCache.filter(s => s.event_category === c && matchesTags(s)).length;
+    const dead = n === 0 && c !== 'All' && c !== activeFilter;
+    return '<div class="filter-chip ' + (c === activeFilter ? 'active ' : '') + (dead ? 'chip-empty' : '') + '"' +
+      (dead ? '' : ' onclick="activeFilter=' + JSON.stringify(c).replace(/"/g, '&quot;') + ';renderFilters();renderLibrary();"') +
+      '>' + esc(c) + ' <em>' + n + '</em></div>';
+  }).join('');
+
+  const dims = Object.keys(TAG_SETS).map(function(dim) {
+    const chips = TAG_SETS[dim].map(function(v) {
+      const on = tagFilter[dim].indexOf(v) >= 0;
+      const n = countWith(dim, v);
+      if (n === 0 && !on) return '<div class="filter-chip chip-empty">' + v + ' <em>0</em></div>';
+      return '<div class="filter-chip ' + (on ? 'active' : '') + '" onclick="toggleTagFilter(\'' + dim + '\',\'' + v + '\')">' + v + ' <em>' + n + '</em></div>';
+    }).join('');
+    return '<div class="dim-block"><div class="dim-label">' + TAG_LABELS[dim] + '</div><div class="filter-row">' + chips + '</div></div>';
+  }).join('');
+
+  const anyActive = activeFilter !== 'All' || Object.keys(tagFilter).some(function(d) { return tagFilter[d].length > 0; });
+  document.getElementById('lib-filters').innerHTML =
+    '<div class="dim-block"><div class="dim-label">What happened</div><div class="filter-row">' + catHTML + '</div></div>' +
+    dims +
+    (anyActive ? '<button class="btn-quiet" onclick="clearTagFilters()" style="margin-top:0.6rem;">Clear all filters</button>' : '');
+}
+
 function renderLibrary() {
   const q = (document.getElementById('lib-search').value || '').toLowerCase();
-  const list = approvedCache.filter(s =>
-    (activeFilter === 'All' || s.event_category === activeFilter) &&
-    ((s.story || '') + (s.placements || '') + (s.event_category || '') + (s.event_other || '')).toLowerCase().includes(q));
-  document.getElementById('lib-list').innerHTML = list.length ? list.map(s => `
-    <div class="sub-card">
-      <span class="pill">${esc(s.event_category)}${s.event_other ? ' — ' + esc(s.event_other) : ''}</span>
-      <div class="sub-meta">${s.show_name && s.display_name ? 'Shared by ' + esc(s.display_name) : 'Anonymous'}${s.event_date ? ' · ' + new Date(s.event_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) + (s.event_date_end ? ' – ' + new Date(s.event_date_end + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '') : ''}</div>
-      ${s.placements ? '<div class="sub-placements">' + esc(s.placements) + '</div>' : ''}
-      <div class="sub-story">${esc(s.story)}</div>
-    </div>`).join('') : '<p class="empty">No entries yet in this category — be the first to submit.</p>';
+  const list = approvedCache.filter(function(s) {
+    return matchesCat(s) && matchesTags(s) &&
+      ((s.story || '') + (s.placements || '') + (s.event_category || '') + (s.event_other || '')).toLowerCase().indexOf(q) >= 0;
+  });
+
+  const cnt = document.getElementById('lib-count');
+  if (cnt) cnt.textContent = approvedCache.length ? list.length + ' of ' + approvedCache.length + (approvedCache.length === 1 ? ' entry' : ' entries') : '';
+
+  document.getElementById('lib-list').innerHTML = list.length ? list.map(function(s) {
+    const t = s.tags || {};
+    const all = [].concat(t.planets || [], t.aspects || [], (t.houses || []).map(function(h) { return h + ' house'; }), t.context || []);
+    return '<div class="sub-card">' +
+      '<span class="pill">' + esc(s.event_category) + (s.event_other ? ' — ' + esc(s.event_other) : '') + '</span>' +
+      '<div class="sub-meta">' + (s.show_name && s.display_name ? 'Shared by ' + esc(s.display_name) : 'Anonymous') +
+        (s.event_date ? ' · ' + new Date(s.event_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) +
+          (s.event_date_end ? ' – ' + new Date(s.event_date_end + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '') : '') + '</div>' +
+      (all.length ? '<div class="tag-row">' + all.map(function(x) { return '<span class="tag-pill">' + esc(x) + '</span>'; }).join('') + '</div>' : '') +
+      (s.placements ? '<div class="sub-placements">' + esc(s.placements) + '</div>' : '') +
+      '<div class="sub-story">' + esc(s.story) + '</div>' +
+      '</div>';
+  }).join('') : '<p class="empty">Nothing matches this combination yet. Try loosening a filter — the archive is still growing.</p>';
 }
 function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
@@ -2221,6 +2293,39 @@ async function showAdminPanel() {
   loadAdminData();
   loadAdminNotes();
 }
+const TAG_SETS = {
+  planets: ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','North Node','South Node','Chiron','Lilith'],
+  houses: ['1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th'],
+  aspects: ['Conjunction','Square','Opposition','Trine','Sextile','Quincunx'],
+  context: ['Natal','Transit','Synastry','Progression','Return']
+};
+const TAG_LABELS = { planets: 'Planets', houses: 'Houses', aspects: 'Aspects', context: 'Context' };
+
+function tagEditor(id, tags) {
+  tags = tags || {};
+  return Object.keys(TAG_SETS).map(dim => `
+    <div style="margin-top:0.7rem;">
+      <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.35rem;">${TAG_LABELS[dim]}</div>
+      <div class="filter-row">
+        ${TAG_SETS[dim].map(t => `<div class="filter-chip ${(tags[dim] || []).includes(t) ? 'active' : ''}" onclick="toggleTag('${id}','${dim}','${t}')">${t}</div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+async function toggleTag(id, dim, value) {
+  const s = admAll.find(x => x.id === id);
+  if (!s) return;
+  const tags = Object.assign({}, s.tags || {});
+  const list = (tags[dim] || []).slice();
+  const i = list.indexOf(value);
+  if (i >= 0) list.splice(i, 1); else list.push(value);
+  tags[dim] = list;
+  s.tags = tags;
+  renderAdminList();
+  const { error } = await db.from('research_submissions').update({ tags }).eq('id', id);
+  if (error) console.error('tag save failed', error);
+}
+
 let admAll = [];
 let admView = 'pending';
 let admCat = 'All';
@@ -2259,7 +2364,12 @@ function renderAdminList() {
       ${s.birth_date ? '<div class="sub-meta">Born ' + s.birth_date + (s.birth_time ? ' at ' + s.birth_time : '') + (s.birth_location ? ' in ' + esc(s.birth_location) : '') + '</div>' : ''}
       ${s.related_charts && s.related_charts.length ? '<div class="sub-meta">Related charts: ' + s.related_charts.map(c => esc(c.who || '?') + (c.birth_date ? ' (' + c.birth_date + (c.birth_time ? ' ' + c.birth_time : '') + (c.birth_location ? ', ' + esc(c.birth_location) : '') + ')' : '')).join(' · ') + '</div>' : ''}
       <div class="sub-story">${esc(s.story)}</div>
-      <div style="margin-top:0.8rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
+      ${s.submission_type === 'question' ? '' : `<div style="margin-top:0.9rem;padding-top:0.8rem;border-top:1px solid var(--border);">
+        <div style="font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);margin-bottom:0.2rem;">Research tags</div>
+        <p style="font-size:11.5px;color:var(--text-muted);font-weight:300;margin-bottom:0.3rem;">Tap to tag. Saves as you go.</p>
+        ${tagEditor(s.id, s.tags)}
+      </div>`}
+      <div style="margin-top:0.9rem;display:flex;gap:0.5rem;flex-wrap:wrap;">
         ${s.status !== 'approved' ? `<button class="btn btn-sm btn-approve" onclick="setStatus('${s.id}','approved')">Approve</button>` : ''}
         ${s.status !== 'rejected' ? `<button class="btn btn-sm btn-reject" onclick="setStatus('${s.id}','rejected')">Reject</button>` : ''}
         ${s.status !== 'pending' ? `<button class="btn btn-sm btn-ghost" onclick="setStatus('${s.id}','pending')">Back to pending</button>` : ''}
