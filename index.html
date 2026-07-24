@@ -177,9 +177,9 @@
   .card table td:first-child { font-weight: 500; color: var(--text-primary); }
   .brand-img { display: block; width: 100%; max-width: 640px; margin: 0.9rem auto; border-radius: 20px; border: 1.5px solid var(--border); }
   .img-caption { text-align: center; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin: -0.3rem 0 0.9rem; font-weight: 500; }
-  .chart-row { background: var(--bg-card-deep); border-radius: 18px; padding: 1rem 1.1rem 1.2rem; margin-top: 0.7rem; position: relative; }
-  .chart-row label { margin-top: 0.7rem; }
-  .chart-row label:first-of-type { margin-top: 0; }
+  .chart-form-box, .chart-row { background: var(--bg-card-deep); border-radius: 18px; padding: 1rem 1.1rem 1.2rem; margin-top: 0.7rem; position: relative; }
+  .chart-form-box label, .chart-row label { margin-top: 0.7rem; }
+  .chart-form-box label:first-of-type, .chart-row label:first-of-type { margin-top: 0; }
   #lightbox { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(20,10,18,0.94); align-items: center; justify-content: center; padding: 1rem; overflow: auto; }
   #lightbox.open { display: flex; }
   #lightbox-img { max-width: 100%; max-height: 92vh; border-radius: 12px; touch-action: pinch-zoom; cursor: zoom-in; transition: transform 0.25s ease; }
@@ -1071,7 +1071,7 @@
     <button class="btn" onclick="openChartForm()">＋ Add a chart</button>
 
     <div id="chart-form" style="display:none;margin-top:1rem;">
-      <div class="chart-row">
+      <div class="chart-form-box">
         <label>Name</label>
         <input type="text" id="ch-name" placeholder="Their name, or a nickname">
         <label>Relationship</label>
@@ -1241,6 +1241,8 @@
         <button class="btn btn-sm btn-ghost" onclick="acctReset()">Forgot password</button>
       </div>
       <div class="msg" id="acct-msg"></div>
+      <button class="btn-quiet" onclick="runDiagnostics()" style="margin-top:0.8rem;">Run connection test</button>
+      <div class="msg" id="diag-msg"></div>
       <details style="margin-top:0.9rem;">
         <summary style="font-size:12px;color:var(--text-muted);cursor:pointer;">What gets stored, and your rights</summary>
         <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.6;margin-top:0.5rem;">Only your email address and whatever you choose to save in this Notes tab — study notes, saved terms, charts you add, and their images. Nothing else. Your data is stored on Supabase servers and is readable only by your own account; nobody else can access it, including Aura Vibin. It is never sold, shared, or used for advertising. You can export a copy or permanently delete everything at any time using the buttons here. Birth data you enter about other people should only be added with their knowledge.</p>
@@ -1259,6 +1261,8 @@
       <div class="msg" id="sync-msg"></div>
       <div style="margin-top:0.9rem;padding-top:0.9rem;border-top:1px solid var(--border);">
         <button class="btn btn-sm btn-reject" onclick="acctDeleteData()">Delete my cloud data</button>
+        <button class="btn-quiet" onclick="runDiagnostics()" style="margin-left:0.8rem;">Run connection test</button>
+        <div class="msg" id="diag-msg2"></div>
       </div>
     </div>
   </div>
@@ -1439,6 +1443,29 @@ function renderGloss() {
 }
 
 const BACKUP_KEYS = ['avr-bookmarks', 'avr-mynotes', 'avr-practice', 'avr-questions', 'avr-charts'];
+
+async function runDiagnostics() {
+  const d = document.getElementById('diag-msg2') && document.getElementById('diag-msg2').offsetParent !== null ? document.getElementById('diag-msg2') : (document.getElementById('diag-msg') || document.getElementById('diag-msg2'));
+  d.className = 'msg';
+  d.textContent = 'Testing...';
+  const lines = [];
+  const race = (p, label) => Promise.race([p, new Promise((_, r) => setTimeout(() => r(new Error(label + ' timed out')), 12000))]);
+  try {
+    await race(db.from('research_glossary').select('term').limit(1), 'read');
+    lines.push('Read: OK');
+  } catch (e) { lines.push('Read: FAILED — ' + (e.message || e)); }
+  try {
+    const { error } = await race(db.from('research_submissions').select('id').limit(1), 'submissions read');
+    lines.push('Submissions table: ' + (error ? 'ERROR — ' + error.message : 'OK'));
+  } catch (e) { lines.push('Submissions table: FAILED — ' + (e.message || e)); }
+  try {
+    const { error } = await race(db.from('research_submissions').insert({ event_category: 'Other', event_other: 'connection test', story: 'Automated connection test — safe to delete.', status: 'pending' }), 'insert');
+    lines.push('Write: ' + (error ? 'BLOCKED — ' + error.message : 'OK, a test row was created'));
+  } catch (e) { lines.push('Write: FAILED — ' + (e.message || e)); }
+  lines.push('Service worker: ' + (navigator.serviceWorker && navigator.serviceWorker.controller ? 'active' : 'none'));
+  d.className = 'msg ok';
+  d.innerHTML = lines.join('<br>');
+}
 
 function acctMsg(txt, ok) {
   const m = document.getElementById('acct-msg');
@@ -1957,12 +1984,20 @@ function addChartRow() {
   document.getElementById('charts-wrap').appendChild(div);
 }
 function collectCharts() {
-  return Array.from(document.querySelectorAll('.chart-row')).map(r => ({
-    who: r.querySelector('.cr-who').value.trim(),
-    birth_date: r.querySelector('.cr-date').value || null,
-    birth_time: r.querySelector('.cr-time').value || null,
-    birth_location: r.querySelector('.cr-loc').value.trim() || null
-  })).filter(c => c.who || c.birth_date);
+  const wrap = document.getElementById('charts-wrap');
+  if (!wrap) return [];
+  const val = (row, sel) => { const el = row.querySelector(sel); return el && el.value ? el.value.trim() : ''; };
+  try {
+    return Array.from(wrap.querySelectorAll('.chart-row')).map(r => ({
+      who: val(r, '.cr-who'),
+      birth_date: val(r, '.cr-date') || null,
+      birth_time: val(r, '.cr-time') || null,
+      birth_location: val(r, '.cr-loc') || null
+    })).filter(c => c.who || c.birth_date);
+  } catch (e) {
+    console.error('collectCharts failed', e);
+    return [];
+  }
 }
 
 let lastSubmit = 0;
@@ -2034,6 +2069,7 @@ async function submitEntry() {
 
   btn.disabled = true;
   btn.textContent = 'Sending...';
+  try {
   msg.className = 'msg';
   msg.textContent = '';
 
@@ -2055,8 +2091,8 @@ async function submitEntry() {
     status: 'pending'
   };
 
-  try {
-    const { error } = await db.from('research_submissions').insert(row);
+  const timeout = new Promise((_, rej) => setTimeout(() => rej(new Error('Timed out after 20 seconds.')), 20000));
+    const { error } = await Promise.race([db.from('research_submissions').insert(row), timeout]);
     btn.disabled = false;
     btn.textContent = 'Submit to the record';
     if (error) {
@@ -2086,14 +2122,15 @@ async function submitQuestion() {
   const text = document.getElementById('q-text').value.trim();
   if (!text) { msg.className = 'msg err'; msg.textContent = 'Please write your question first.'; return; }
   if (Date.now() - lastSubmit < 20000) { msg.className = 'msg err'; msg.textContent = 'Just a moment before sending again.'; return; }
+  const qTimeout = new Promise((_, rej) => setTimeout(() => rej(new Error('Timed out after 20 seconds.')), 20000));
   try {
-    const { error } = await db.from('research_submissions').insert({
+    const { error } = await Promise.race([db.from('research_submissions').insert({
       submission_type: 'question',
       event_category: 'Question',
       story: text,
       contact_email: document.getElementById('q-email').value.trim() || null,
       status: 'pending'
-    });
+    }), qTimeout]);
     if (error) {
       msg.className = 'msg err';
       msg.textContent = 'It did not send: ' + (error.message || 'unknown error');
