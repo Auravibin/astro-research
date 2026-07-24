@@ -203,6 +203,17 @@
   .btn-quiet { background: none; border: none; padding: 0; font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 400; letter-spacing: 0.04em; color: var(--text-muted); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; transition: color 0.2s; }
   .btn-quiet:hover { color: var(--accent); }
   .quiet-sep { color: var(--border-strong); font-size: 12px; }
+  .step-bar { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 1.6rem; }
+  .step-dot { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 0 0 auto; }
+  .step-dot span { width: 27px; height: 27px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-muted); background: var(--bg-card); transition: all 0.25s; }
+  .step-dot em { font-style: normal; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+  .step-dot.active span { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .step-dot.active em { color: var(--accent); }
+  .step-dot.done span { border-color: var(--accent); color: var(--accent); }
+  .step-line { flex: 1; height: 1.5px; background: var(--border-strong); margin-bottom: 14px; }
+  .step-nav { display: flex; gap: 0.6rem; margin-top: 1.4rem; flex-wrap: wrap; }
+  .done-card { text-align: center; padding: 2rem 1.4rem; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 22px; }
+  .done-mark { font-size: 34px; color: var(--accent); margin-bottom: 0.5rem; }
   .backup-row { display: flex; gap: 0.55rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
   .rising-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 0.8rem; }
   .rising-grid img { width: 100%; border-radius: 14px; border: 1.5px solid var(--border); }
@@ -881,93 +892,121 @@
 
 <div class="section" id="section-submit">
   <div class="section-eyebrow">Contribute</div>
-  <h1 class="section-title">Submit Your Research</h1>
-  <p class="section-sub">Your placements plus your lived experience = real astrological data. Everything except the event and your story is optional — share exactly as much as feels right. Submissions are anonymous unless you choose otherwise, and reviewed before appearing in the Pattern Library.</p>
+  <h1 class="section-title">Add to the <span style="color:var(--accent);font-style:italic;">record</span></h1>
+  <p class="section-sub">Every chart that gets shared makes the pattern clearer for the next person. Nothing is published without review, and your name is never attached unless you ask for it.</p>
 
-  <div class="card">
-    <label>Event / Theme *</label>
-    <select id="sub-category">
-      <option value="">Select one...</option>
-      <optgroup label="Love & Union">
-        <option>Got engaged / proposed to</option>
-        <option>Met life partner / soulmate</option>
-        <option>Marriage 20+ years</option>
-        <option>Divorce</option>
-        <option>Domestic violence</option>
-      </optgroup>
-      <optgroup label="Family & Fertility">
-        <option>Had a baby</option>
-        <option>Twin pregnancy / multiples</option>
-        <option>Adoption</option>
-        <option>Miscarriage / pregnancy loss</option>
-      </optgroup>
-      <optgroup label="Career & Money">
-        <option>Major career peak</option>
-        <option>Dream job / big promotion</option>
-        <option>Launched a business</option>
-        <option>Financial windfall</option>
-        <option>Viral moment / sudden fame</option>
-        <option>Job loss</option>
-        <option>Bankruptcy / financial ruin</option>
-      </optgroup>
-      <optgroup label="Health & Healing">
-        <option>Recovery / healing breakthrough</option>
-        <option>Sobriety milestone</option>
-        <option>Sudden illness / diagnosis</option>
-        <option>Accident / trauma</option>
-        <option>Addiction</option>
-      </optgroup>
-      <optgroup label="Life Path">
-        <option>Spiritual awakening</option>
-        <option>Big move / immigration</option>
-        <option>Graduation / education milestone</option>
-        <option>Sexuality / coming out</option>
-        <option>Incarceration</option>
-        <option>Death of loved one</option>
-        <option>Other</option>
-      </optgroup>
-    </select>
-    <div id="other-wrap" style="display:none;"><label>Describe the event</label><input type="text" id="sub-other" placeholder="e.g. won the lottery, immigrated, adopted..."></div>
+  <div class="subtabs" style="margin-bottom:1.2rem;">
+    <div class="subtab active" id="mode-pattern" onclick="setSubMode('pattern')">Share a pattern</div>
+    <div class="subtab" id="mode-question" onclick="setSubMode('question')">Ask a question</div>
+  </div>
 
-    <label>Your Story *</label>
-    <textarea id="sub-story" placeholder="What happened? Include any astrology you noticed — e.g. 'this happened when transiting Mars was conjunct my natal Saturn'..."></textarea>
+  <!-- ===== QUESTION MODE ===== -->
+  <div id="q-form" style="display:none;">
+    <p class="section-sub" style="margin-bottom:1rem;">Stuck on something? Ask it here. Questions that come up often get written into the Learn section so everyone benefits.</p>
+    <label>Your question *</label>
+    <textarea id="q-text" placeholder="e.g. How do I tell which planet is the almuten of my Ascendant degree?"></textarea>
+    <label>Email <span class="optional-tag">— optional, only if you'd like a reply</span></label>
+    <input type="email" id="q-email" autocomplete="email">
+    <input type="text" id="q-website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+    <button class="btn" onclick="submitQuestion()">Send question</button>
+    <div class="msg" id="q-msg"></div>
+  </div>
 
-    <label>When did it happen? <span class="optional-tag">— optional</span></label>
-    <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.5;margin-bottom:0.4rem;">A single date, or a span if it unfolded over time. Leave the end date blank if it happened on one day.</p>
-    <input type="date" id="sub-edate" style="width:100%;">
-    <label style="margin-top:0.5rem;">Through <span class="optional-tag">— optional, if it spanned a period</span></label>
-    <input type="date" id="sub-edate-end" style="width:100%;">
-
-    <label>Key Placements <span class="optional-tag">— optional</span></label>
-    <input type="text" id="sub-placements" placeholder="e.g. Mars conjunct Saturn in 7th, Moon square Pluto...">
-
-    <label>Birth Date <span class="optional-tag">— optional</span></label>
-    <input type="date" id="sub-bdate">
-    <label>Birth Time <span class="optional-tag">— optional</span></label>
-    <input type="time" id="sub-btime">
-    <label>Birth Location <span class="optional-tag">— optional</span></label>
-    <input type="text" id="sub-bloc" placeholder="City, Country">
-
-    <label>Other people's charts <span class="optional-tag">— optional, add as many as you like</span></label>
-    <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.4rem;">If your story involves other people — a partner, parent, sibling, child — you can include their birth data too. Synastry data is gold for the research.</p>
-    <div id="charts-wrap"></div>
-    <button class="btn btn-ghost btn-sm" onclick="addChartRow()" style="margin-top:0.6rem;">＋ Add a chart</button>
-
-    <label>Email <span class="optional-tag">— optional, never shown publicly</span></label>
-    <input type="email" id="sub-email" placeholder="Only if you're open to follow-up questions about your story">
-
-    <div class="toggle-row">
-      <input type="checkbox" id="sub-showname">
-      <span>I consent to my name being shown publicly with this entry</span>
+  <!-- ===== PATTERN MODE — STEPPED ===== -->
+  <div id="p-form">
+    <div class="step-bar">
+      <div class="step-dot active" data-step="1"><span>1</span><em>Event</em></div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="2"><span>2</span><em>Story</em></div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="3"><span>3</span><em>Charts</em></div>
+      <div class="step-line"></div>
+      <div class="step-dot" data-step="4"><span>4</span><em>You</em></div>
     </div>
-    <div id="name-wrap" style="display:none;"><label>Name or initials to display</label><input type="text" id="sub-name" placeholder="e.g. Sarah M."></div>
 
-    <input type="text" id="sub-website" style="position:absolute;left:-9999px;" tabindex="-1" autocomplete="off">
+    <div class="step" id="step-1">
+      <h2 class="subhead" style="margin-top:0;">What happened?</h2>
+      <label>Choose the closest category *</label>
+      <select id="sub-category" onchange="onCatChange()">
+        <option value="">Select one...</option>
+        <optgroup label="Love &amp; Union">
+          <option>Got engaged / proposed to</option><option>Met life partner / soulmate</option>
+          <option>Marriage 20+ years</option><option>Divorce</option><option>Domestic violence</option>
+        </optgroup>
+        <optgroup label="Family &amp; Fertility">
+          <option>Had a baby</option><option>Twin pregnancy / multiples</option>
+          <option>Adoption</option><option>Miscarriage / pregnancy loss</option>
+        </optgroup>
+        <optgroup label="Career &amp; Money">
+          <option>Major career peak</option><option>Dream job / big promotion</option>
+          <option>Launched a business</option><option>Financial windfall</option>
+          <option>Viral moment / sudden fame</option><option>Job loss</option><option>Bankruptcy / financial ruin</option>
+        </optgroup>
+        <optgroup label="Health &amp; Healing">
+          <option>Recovery / healing breakthrough</option><option>Sobriety milestone</option>
+          <option>Sudden illness / diagnosis</option><option>Accident / trauma</option><option>Addiction</option>
+        </optgroup>
+        <optgroup label="Life Path">
+          <option>Spiritual awakening</option><option>Big move / immigration</option>
+          <option>Graduation / education milestone</option><option>Sexuality / coming out</option>
+          <option>Incarceration</option><option>Death of loved one</option><option>Other</option>
+        </optgroup>
+      </select>
+      <div id="other-wrap" style="display:none;"><label>Describe it in a few words</label><input type="text" id="sub-other" placeholder="e.g. won the lottery, immigrated, adopted..."></div>
+      <label style="margin-top:1rem;">When? <span class="optional-tag">— optional</span></label>
+      <input type="date" id="sub-edate">
+      <label style="margin-top:0.5rem;">Through <span class="optional-tag">— only if it unfolded over time</span></label>
+      <input type="date" id="sub-edate-end">
+      <div class="step-nav"><button class="btn" onclick="goStep(2)">Continue →</button></div>
+    </div>
 
-    <button class="btn" onclick="submitEntry()">Submit for Review</button>
-    <div class="msg" id="sub-msg"></div>
+    <div class="step" id="step-2" style="display:none;">
+      <h2 class="subhead" style="margin-top:0;">Tell it in your words</h2>
+      <label>Your story *</label>
+      <textarea id="sub-story" placeholder="What happened, and how did it feel? Write as much or as little as you like."></textarea>
+      <label>Any astrology you noticed <span class="optional-tag">— optional</span></label>
+      <textarea id="sub-placements" placeholder="e.g. transiting Saturn was conjunct my natal Venus, or my Mars-Pluto square was being activated. Don't worry if you're not sure — the birth data lets this be worked out."></textarea>
+      <div class="step-nav"><button class="btn btn-ghost" onclick="goStep(1)">← Back</button><button class="btn" onclick="goStep(3)">Continue →</button></div>
+    </div>
+
+    <div class="step" id="step-3" style="display:none;">
+      <h2 class="subhead" style="margin-top:0;">The charts</h2>
+      <p class="section-sub" style="margin-bottom:1rem;">All optional — but birth data is what turns a story into research. Even a date alone helps.</p>
+      <label>Your birth date</label><input type="date" id="sub-bdate">
+      <label>Your birth time <span class="optional-tag">— if known</span></label><input type="time" id="sub-btime">
+      <label>Your birth location <span class="optional-tag">— if known</span></label><input type="text" id="sub-bloc" placeholder="City, Country">
+      <label style="margin-top:1.2rem;">Anyone else involved?</label>
+      <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.5rem;">A partner, parent, sibling, child. Synastry data is gold for this research — only add it with their knowledge.</p>
+      <div id="charts-wrap"></div>
+      <button class="btn btn-ghost btn-sm" onclick="addChartRow()">＋ Add a chart</button>
+      <div class="step-nav"><button class="btn btn-ghost" onclick="goStep(2)">← Back</button><button class="btn" onclick="goStep(4)">Continue →</button></div>
+    </div>
+
+    <div class="step" id="step-4" style="display:none;">
+      <h2 class="subhead" style="margin-top:0;">Last thing</h2>
+      <label style="display:flex;align-items:flex-start;gap:0.5rem;font-size:13px;font-weight:300;color:var(--text-muted);line-height:1.5;cursor:pointer;">
+        <input type="checkbox" id="sub-showname" onchange="document.getElementById('name-wrap').style.display=this.checked?'block':'none'" style="width:auto;margin:0.2rem 0 0 0;flex:0 0 auto;">
+        <span>You may use my name if this is published. Leave unticked to stay anonymous — anonymous is the default.</span>
+      </label>
+      <div id="name-wrap" style="display:none;"><label>Name to show</label><input type="text" id="sub-name" placeholder="First name or handle"></div>
+      <label style="margin-top:1rem;">Email <span class="optional-tag">— optional, only if you're open to follow-up questions</span></label>
+      <input type="email" id="sub-email" autocomplete="email">
+      <input type="text" id="sub-website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+      <div class="step-nav"><button class="btn btn-ghost" onclick="goStep(3)">← Back</button><button class="btn" id="sub-btn" onclick="submitEntry()">Submit to the record</button></div>
+      <div class="msg" id="sub-msg"></div>
+    </div>
+
+    <div class="step" id="step-done" style="display:none;">
+      <div class="done-card">
+        <div class="done-mark">✦</div>
+        <h2 class="subhead" style="margin-top:0;">Thank you — it's received</h2>
+        <p style="font-size:14px;color:var(--text-muted);font-weight:300;line-height:1.65;">Your entry is in the review queue. Once it's read it joins the Pattern Library, where anyone studying can learn from it. Contributions like yours are the whole reason this archive exists.</p>
+        <button class="btn btn-ghost btn-sm" onclick="resetSubmitForm()" style="margin-top:1rem;">Share another</button>
+      </div>
+    </div>
   </div>
 </div>
+
 <div class="section" id="section-mynotes">
   <div class="section-eyebrow">Yours</div>
   <h1 class="section-title">My <span style="color:var(--accent);font-style:italic;">Notes</span></h1>
@@ -1927,15 +1966,79 @@ function collectCharts() {
 }
 
 let lastSubmit = 0;
+let subMode = 'pattern';
+
+function setSubMode(m) {
+  subMode = m;
+  document.getElementById('mode-pattern').classList.toggle('active', m === 'pattern');
+  document.getElementById('mode-question').classList.toggle('active', m === 'question');
+  document.getElementById('p-form').style.display = m === 'pattern' ? 'block' : 'none';
+  document.getElementById('q-form').style.display = m === 'question' ? 'block' : 'none';
+}
+
+function onCatChange() {
+  const v = document.getElementById('sub-category').value;
+  document.getElementById('other-wrap').style.display = v === 'Other' ? 'block' : 'none';
+}
+
+function goStep(n) {
+  if (n === 2 && !document.getElementById('sub-category').value) {
+    const m = document.getElementById('sub-msg');
+    m.className = 'msg err'; m.textContent = 'Please choose a category first.';
+    setTimeout(() => { m.textContent = ''; m.className = 'msg'; }, 3000);
+    return;
+  }
+  if (n === 3 && !document.getElementById('sub-story').value.trim()) {
+    const m = document.getElementById('sub-msg');
+    m.className = 'msg err'; m.textContent = 'Please share your story before continuing.';
+    setTimeout(() => { m.textContent = ''; m.className = 'msg'; }, 3000);
+    return;
+  }
+  ['1','2','3','4','done'].forEach(id => {
+    const el = document.getElementById('step-' + id);
+    if (el) el.style.display = 'none';
+  });
+  const target = document.getElementById('step-' + n);
+  if (target) target.style.display = 'block';
+  document.querySelectorAll('.step-dot').forEach(d => {
+    const s = parseInt(d.dataset.step, 10);
+    d.classList.toggle('active', s === n);
+    d.classList.toggle('done', s < n);
+  });
+  document.getElementById('section-submit').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetSubmitForm() {
+  ['sub-story','sub-placements','sub-bloc','sub-name','sub-other','sub-email'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['sub-edate','sub-edate-end','sub-bdate','sub-btime'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  document.getElementById('sub-category').value = '';
+  document.getElementById('sub-showname').checked = false;
+  document.getElementById('name-wrap').style.display = 'none';
+  document.getElementById('other-wrap').style.display = 'none';
+  document.getElementById('charts-wrap').innerHTML = '';
+  document.getElementById('sub-msg').textContent = '';
+  document.getElementById('sub-msg').className = 'msg';
+  document.querySelector('.step-bar').style.display = 'flex';
+  goStep(1);
+}
+
 async function submitEntry() {
   const msg = document.getElementById('sub-msg');
+  const btn = document.getElementById('sub-btn');
   msg.className = 'msg';
   if (document.getElementById('sub-website').value) return;
-  if (Date.now() - lastSubmit < 30000) { msg.className = 'msg err'; msg.textContent = 'Please wait a moment before submitting again.'; return; }
+  if (Date.now() - lastSubmit < 20000) { msg.className = 'msg err'; msg.textContent = 'Just a moment before submitting again.'; return; }
   const category = document.getElementById('sub-category').value;
   const story = document.getElementById('sub-story').value.trim();
-  if (!category || !story) { msg.className = 'msg err'; msg.textContent = 'Please choose an event category and share your story.'; return; }
+  if (!category || !story) { msg.className = 'msg err'; msg.textContent = 'A category and a story are both needed.'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  msg.className = 'msg';
+  msg.textContent = '';
+
   const row = {
+    submission_type: 'pattern',
     event_category: category,
     event_other: document.getElementById('sub-other').value.trim() || null,
     story,
@@ -1951,21 +2054,66 @@ async function submitEntry() {
     display_name: document.getElementById('sub-showname').checked ? (document.getElementById('sub-name').value.trim() || null) : null,
     status: 'pending'
   };
-  const { error } = await db.from('research_submissions').insert(row);
-  if (error) { msg.className = 'msg err'; msg.textContent = 'Something went wrong — please try again.'; console.error(error); return; }
-  lastSubmit = Date.now();
-  msg.className = 'msg ok';
-  msg.textContent = 'Received. Your submission is in the review queue — thank you for contributing to the research. ✦';
-  ['sub-story','sub-placements','sub-bloc','sub-name','sub-other','sub-email'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('sub-category').value = '';
-  ['sub-edate','sub-edate-end','sub-bdate','sub-btime'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('sub-showname').checked = false;
-  document.getElementById('name-wrap').style.display = 'none';
-  document.getElementById('charts-wrap').innerHTML = '';
+
+  try {
+    const { error } = await db.from('research_submissions').insert(row);
+    btn.disabled = false;
+    btn.textContent = 'Submit to the record';
+    if (error) {
+      msg.className = 'msg err';
+      msg.textContent = 'It did not save: ' + (error.message || 'unknown error') + ' — please screenshot this.';
+      console.error('SUBMIT ERROR', error);
+      return;
+    }
+    lastSubmit = Date.now();
+    ['1','2','3','4'].forEach(id => { const el = document.getElementById('step-' + id); if (el) el.style.display = 'none'; });
+    document.querySelector('.step-bar').style.display = 'none';
+    document.getElementById('step-done').style.display = 'block';
+    document.getElementById('section-submit').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (err) {
+    btn.disabled = false;
+    btn.textContent = 'Submit to the record';
+    msg.className = 'msg err';
+    msg.textContent = 'Something broke: ' + (err.message || err) + ' — please screenshot this.';
+    console.error(err);
+  }
+}
+
+async function submitQuestion() {
+  const msg = document.getElementById('q-msg');
+  msg.className = 'msg';
+  if (document.getElementById('q-website').value) return;
+  const text = document.getElementById('q-text').value.trim();
+  if (!text) { msg.className = 'msg err'; msg.textContent = 'Please write your question first.'; return; }
+  if (Date.now() - lastSubmit < 20000) { msg.className = 'msg err'; msg.textContent = 'Just a moment before sending again.'; return; }
+  try {
+    const { error } = await db.from('research_submissions').insert({
+      submission_type: 'question',
+      event_category: 'Question',
+      story: text,
+      contact_email: document.getElementById('q-email').value.trim() || null,
+      status: 'pending'
+    });
+    if (error) {
+      msg.className = 'msg err';
+      msg.textContent = 'It did not send: ' + (error.message || 'unknown error');
+      console.error(error);
+      return;
+    }
+    lastSubmit = Date.now();
+    msg.className = 'msg ok';
+    msg.textContent = 'Question received ✦ Thank you — questions that come up often get written into Learn.';
+    document.getElementById('q-text').value = '';
+    document.getElementById('q-email').value = '';
+  } catch (err) {
+    msg.className = 'msg err';
+    msg.textContent = 'Something broke: ' + (err.message || err);
+    console.error(err);
+  }
 }
 
 async function loadLibrary() {
-  const { data } = await db.from('research_submissions').select('*').eq('status', 'approved').order('created_at', { ascending: false });
+  const { data } = await db.from('research_submissions').select('*').eq('status', 'approved').neq('submission_type', 'question').order('created_at', { ascending: false });
   approvedCache = data || [];
   renderFilters();
   renderLibrary();
@@ -2066,7 +2214,7 @@ function renderAdminList() {
     ((s.story || '') + (s.placements || '') + (s.event_category || '') + (s.event_other || '') + (s.display_name || '')).toLowerCase().includes(q));
   document.getElementById('pending-list').innerHTML = list.length ? list.map(s => `
     <div class="sub-card">
-      <span class="pill">${esc(s.event_category)}${s.event_other ? ' — ' + esc(s.event_other) : ''}</span>
+      <span class="pill"${s.submission_type === 'question' ? ' style="background:var(--diagram-gold);color:#fff;"' : ''}>${s.submission_type === 'question' ? '❓ QUESTION' : esc(s.event_category) + (s.event_other ? ' — ' + esc(s.event_other) : '')}</span>
       <span class="pill" style="background:transparent;border:1px solid var(--border-strong);color:var(--text-muted);">${esc(s.status)}</span>
       <div class="sub-meta">${s.show_name && s.display_name ? esc(s.display_name) + ' (name consented)' : 'Anonymous'}${s.contact_email ? ' · ' + esc(s.contact_email) : ''} · submitted ${new Date(s.created_at).toLocaleString()}</div>
       ${s.event_date ? '<div class="sub-meta">Event date: ' + s.event_date + (s.event_date_end ? ' through ' + s.event_date_end : '') + '</div>' : ''}
