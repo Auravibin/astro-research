@@ -65,8 +65,8 @@
   table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; max-width: 100%; }
   .diagram { max-width: 100%; height: auto; }
   img { max-width: 100%; height: auto; }
-  pre, code { white-space: pre-wrap; word-break: break-word; }
-  .section { overflow-wrap: break-word; word-break: break-word; }
+  pre, code { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .section { overflow-wrap: anywhere; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; transition: background 0.3s; }
   header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 1rem 1.25rem 0.75rem; }
   .header-top { display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
@@ -100,6 +100,8 @@
   .acc-body.open { display: block; }
   .acc-body strong { color: var(--text-primary); font-weight: 500; }
   .acc-body table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 0.7rem 0; }
+  .acc-body th, .acc-body td { overflow-wrap: normal; word-break: keep-all; hyphens: none; }
+  .acc-body th { white-space: nowrap; }
   .acc-body th { text-align: left; padding: 0.45rem 0.5rem; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); border-bottom: 1.5px solid var(--border); font-weight: 500; }
   .acc-body td { padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; }
   .acc-body td:first-child { font-weight: 500; color: var(--text-primary); }
@@ -171,6 +173,8 @@
   .tab.active .tab-icon { filter: none; transform: scale(1.08); }
   .tab.active .tab-label { color: var(--accent); font-weight: 500; }
   .card table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 0.5rem 0; }
+  .card th, .card td { overflow-wrap: normal; word-break: keep-all; }
+  .card th { white-space: nowrap; }
   .card table th { text-align: left; padding: 0.45rem 0.5rem; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); border-bottom: 1.5px solid var(--border); font-weight: 500; }
   .card table td { padding: 0.5rem; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text-secondary); font-weight: 300; line-height: 1.5; }
   .card table tr:last-child td { border-bottom: none; }
@@ -204,6 +208,7 @@
   .btn-quiet:hover { color: var(--accent); }
   .quiet-sep { color: var(--border-strong); font-size: 12px; }
   .dim-block { margin-bottom: 0.75rem; }
+  .filter-chip { white-space: nowrap; }
   .dim-label { font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.3rem; }
   .filter-chip em { font-style: normal; opacity: 0.55; font-size: 10px; margin-left: 2px; }
   .filter-chip.chip-empty { opacity: 0.3; cursor: default; pointer-events: none; }
@@ -715,35 +720,78 @@
   <tr><td>Uranus · Neptune · Pluto</td><td>Retrograde for months every year, so they're generational rather than personal. Only read as individually significant when tightly aspecting a personal planet or angle.</td></tr></table>
   <strong>The one thing to avoid</strong> — retrograde does not mean broken, weak, or cursed. It means the function runs on an internal circuit. Many people report their retrograde planets becoming their greatest strengths precisely because they had to be consciously developed rather than taken for granted.</div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Planetary signatures — known combinations</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">No single aspect causes an event — signatures create potential; the whole chart and transits decide expression.<br><br><table><tr><th>Combination</th><th>Theme</th></tr><tr><td>Jupiter opp. Pluto</td><td>Overexpansion meets destruction — a classic bankruptcy signature</td></tr><tr><td>Neptune in/opp. 2nd</td><td>Financial confusion, fraud vulnerability</td></tr><tr><td>Saturn sq. Venus</td><td>Love and money blocked or delayed</td></tr><tr><td>Mars conj. Saturn</td><td>Effort stopped — frustration, accidents</td></tr><tr><td>Pluto in 8th, hard</td><td>Forced financial transformation, inheritance battles</td></tr><tr><td>Venus–Neptune hard</td><td>Idealization, rose-colored blindness in love</td></tr><tr><td>Moon–Pluto hard</td><td>Emotional intensity, mother wound, loss</td></tr></table></div>
-</div>
+  </div>
 
-<div class="section" id="section-cheat">
+<h2 class="subhead">Books to Research</h2>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Where to begin — foundations</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">If you're starting out, start here. These build the frame everything else hangs on.<br><br>
+  <strong>The Inner Sky</strong> — Steven Forrest. The friendliest true on-ramp to reading a chart as a whole living story rather than a list of traits.<br><br>
+  <strong>Chart Interpretation Handbook</strong> — Stephen Arroyo. Clear, grounded synthesis of signs, planets, houses, aspects.<br><br>
+  <strong>You Were Born For This</strong> — Chani Nicholas. Modern, accessible, and strong on turning placements into lived practice.<br><br>
+  <strong>Astrology for the Soul</strong> — Jan Spiller. The popular entry point to the lunar nodes and soul purpose.<br><br>
+  <strong>The Twelve Houses</strong> — Howard Sasportas. The deep, definitive book on the houses as arenas of life.<br><br>
+  <strong>The Houses: Temples of the Sky</strong> — Deborah Houlding. Shorter, traditional, and brilliant on where house meanings actually came from.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Psychological &amp; depth astrology</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">For the inner, archetypal, Jungian current — where astrology meets psychology.<br><br>
+  <strong>Saturn: A New Look at an Old Devil</strong> — Liz Greene. The book that reframed Saturn from curse to teacher; her Chiron and relationship work is equally essential.<br><br>
+  <strong>The Astrology of Fate</strong> — Liz Greene. Fate, myth, and the deep structure of a life.<br><br>
+  <strong>Astrology, Psychology &amp; the Four Elements</strong> — Stephen Arroyo. A modern classic on temperament and energy.<br><br>
+  <strong>Cosmos and Psyche</strong> — Richard Tarnas. Sweeping, serious work linking outer-planet cycles to history and culture. Heavy but transformative.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Traditional &amp; Hellenistic</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">For the ancient techniques — sect, dignity, time-lords, the real backbone.<br><br>
+  <strong>Hellenistic Astrology: The Study of Fate and Fortune</strong> — Chris Brennan. The definitive modern guide to the tradition. If you buy one serious book, this is it.<br><br>
+  <strong>Astrology and the Authentic Self</strong> — Demetra George. A bridge between traditional technique and psychological meaning.<br><br>
+  <strong>Ancient Astrology in Theory and Practice</strong> — Demetra George. Deeper, two-volume, for when you're committed.<br><br>
+  <strong>Christian Astrology</strong> — William Lilly (17th c.). The horary bible — dense, old-language, and the source everyone else draws from.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Prediction &amp; timing</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>The Only Way to Learn About Tomorrow</strong> — March &amp; McEvers. Progressions, transits, and returns, taught step by step.<br><br>
+  <strong>Complete Book of Predictive Astrology</strong> — Llewellyn. A broad practical reference for forecasting techniques.<br><br>
+  <strong>Predictive Astrology: The Eagle and the Lark</strong> — Bernadette Brady. Elegant, technique-rich, especially on eclipses and fixed stars.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Relationships &amp; synastry</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>The Only Way to Learn About Relationships</strong> — March &amp; McEvers. The clearest teaching text on synastry.<br><br>
+  <strong>Planets in Composite</strong> — Robert Hand. The definitive book on the composite chart.<br><br>
+  <strong>Astrology and the Games People Play</strong> — a relational-dynamics classic.<br><br>
+  <strong>Sextrology</strong> — Starsky &amp; Cox. Playful, not technical, but a fun cultural read on sign dynamics.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Karmic, nodal &amp; specialist</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>Karmic Astrology</strong> (the node volumes) — Martin Schulman. The classic esoteric take on the lunar nodes and past-life themes.<br><br>
+  <strong>Astrology and Sexuality</strong> — Martin Schulman. Specialist, in his same intuitive style.<br><br>
+  <strong>Aspect Patterns</strong> — Glenn Mitchell. Focused study of the configurations — Yods, T-squares, and the rest.<br><br>
+  <strong>Astrology: A Cosmic Science</strong> — Isabel Hickey. A warm, spiritual mid-century classic many astrologers cut their teeth on.<br><br>
+  <strong>The Astrologer's Manual / Unexplained Zodiac / Eyewitness Companion</strong> — useful reference and visual companions to keep on the shelf.</div>
+
+  <div class="acc-body" style="margin-top:0.5rem;"><em>This list is a starting map, not the territory. New titles get added over time — if a book changed how you read charts, send it through the Submit page and it may join the shelf.</em></div>
+
+  <div class="section" id="section-cheat">
   <div class="section-eyebrow">Quick Reference</div>
   <h1 class="section-title">The <span style="color:var(--accent);font-style:italic;">Cheat Sheet</span></h1>
   <p class="section-sub">Everything at a glance — the tables and frameworks you reach for mid-reading.</p>
   <img class="brand-img" src="img/aura-cheat-sheet.jpg" alt="The Aura Vibin astro cheat sheet — elements, modalities, planets, houses, and angles on one page" loading="lazy" style="max-width:760px;">
   <div class="img-caption">The one-page version — save it to your camera roll</div>
 
-  <h2 class="subhead">Elements</h2>
-  <div class="cheat-grid">
+  <div class="acc-head" onclick="acc(this)"><h3>Elements</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><div class="cheat-grid">
     <div class="cheat-card"><h4>Fire</h4><div class="signs">Aries · Leo · Sagittarius</div><p>Passionate, leadership, inspiring. Identity, action, self-expression.</p></div>
     <div class="cheat-card"><h4>Earth</h4><div class="signs">Taurus · Virgo · Capricorn</div><p>Grounded, realistic, manifestors. Body, resources, the material world.</p></div>
     <div class="cheat-card"><h4>Air</h4><div class="signs">Gemini · Libra · Aquarius</div><p>Social, intelligent, innovative. Thought, language, connection.</p></div>
     <div class="cheat-card"><h4>Water</h4><div class="signs">Cancer · Scorpio · Pisces</div><p>Emotional, intuitive, psychic. Feeling, memory, the unconscious.</p></div>
-  </div>
+  </div></div>
 
-  <h2 class="subhead">Modalities</h2>
-  <div class="cheat-grid">
+  <div class="acc-head" onclick="acc(this)"><h3>Modalities</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><div class="cheat-grid">
     <div class="cheat-card"><h4>Cardinal</h4><div class="signs">Aries · Cancer · Libra · Capricorn</div><p>Initiative, movement, leadership. Action-oriented, assertive, independent, energetic, ambitious. Each one opens a season.</p></div>
     <div class="cheat-card"><h4>Fixed</h4><div class="signs">Taurus · Leo · Scorpio · Aquarius</div><p>Stability, reliability, stubbornness. Consistent, deep, loyal, patient, enduring, resilient. Mid-season anchors.</p></div>
     <div class="cheat-card"><h4>Mutable</h4><div class="signs">Gemini · Virgo · Sagittarius · Pisces</div><p>Communication, adaptability, change. Chameleon energy, duality, exploration. Each one closes a season.</p></div>
     <div class="cheat-card"><h4>Polarity</h4><div class="signs">Yang / Yin</div><p>Fire and air signs are yang — expressive, outward. Earth and water signs are yin — receptive, inward. Traditional texts call these masculine and feminine.</p></div>
-  </div>
+  </div></div>
 
-  <h2 class="subhead">Planets & What They Rule</h2>
-  <div class="card"><table>
+  <div class="acc-head" onclick="acc(this)"><h3>Planets & What They Rule</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><div class="card"><table>
     <tr><th>Planet</th><th>Rules</th><th>Represents</th></tr>
     <tr><td>☉ Sun</td><td>Leo</td><td>Vitality, identity, desires, conscious mind</td></tr>
     <tr><td>☽ Moon</td><td>Cancer</td><td>Intuition, emotions, cycles, subconscious mind</td></tr>
@@ -755,10 +803,10 @@
     <tr><td>♅ Uranus</td><td>Aquarius <em>(modern)</em></td><td>Innovation, rebellion, independence, the unpredictable</td></tr>
     <tr><td>♆ Neptune</td><td>Pisces <em>(modern)</em></td><td>Dreams, illusions, spirituality, psychic ability</td></tr>
     <tr><td>♇ Pluto</td><td>Scorpio <em>(modern)</em></td><td>Transformation, rebirth, power, depth, death</td></tr>
-  </table></div>
+  </table></div></div>
 
-  <h2 class="subhead">The Houses</h2>
-  <div class="card"><table>
+  <div class="acc-head" onclick="acc(this)"><h3>The Houses</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><div class="card"><table>
     <tr><th>House</th><th>Themes</th></tr>
     <tr><td>1</td><td>Identity, appearance, self-expression, beginnings, birth — the Ascendant</td></tr>
     <tr><td>2</td><td>Money, possessions, self-worth, values, income streams</td></tr>
@@ -772,25 +820,25 @@
     <tr><td>10</td><td>Career, ambition, public life, reputation, legacy — the Midheaven</td></tr>
     <tr><td>11</td><td>Friendships, networks, collective goals, dreams & wishes, the future</td></tr>
     <tr><td>12</td><td>Subconscious, isolation, spirituality, karma, hidden things, the womb</td></tr>
-  </table></div>
+  </table></div></div>
 
-  <h2 class="subhead">The Four Angles</h2>
-  <div class="cheat-grid">
+  <div class="acc-head" onclick="acc(this)"><h3>The Four Angles</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><div class="cheat-grid">
     <div class="cheat-card"><h4>Ascendant</h4><div class="signs">1st house cusp</div><p>Your perspective of the world. Persona, outer self, appearance, first impression — and its ruler is your chart ruler, setting up the life path.</p></div>
     <div class="cheat-card"><h4>Descendant</h4><div class="signs">7th house cusp</div><p>Partnerships, how you project onto others, qualities you secretly admire, marriage, collaboration, contracts.</p></div>
     <div class="cheat-card"><h4>Midheaven</h4><div class="signs">10th house cusp</div><p>Your heaven on earth — ideal way of living. Career pinnacle, public image, reputation, aspirations, authority.</p></div>
     <div class="cheat-card"><h4>Imum Coeli</h4><div class="signs">4th house cusp</div><p>What you need to feel safe. Private life, family roots, heritage, emotional healing, hermit mode, what feels like home.</p></div>
-  </div>
+  </div></div>
 
-  <h2 class="subhead">Nodes & Chiron</h2>
-  <div class="cheat-grid">
+  <div class="acc-head" onclick="acc(this)"><h3>Nodes & Chiron</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><div class="cheat-grid">
     <div class="cheat-card"><h4>☊ North Node</h4><div class="signs">The direction</div><p>Life purpose, growth, destiny, evolution — the uncomfortable, unfamiliar forward direction of the soul's journey.</p></div>
     <div class="cheat-card"><h4>☋ South Node</h4><div class="signs">The inheritance</div><p>Karma, past patterns, comfort zone, innate talents, soul-tribe connections, over-reliance, ingrained habits.</p></div>
     <div class="cheat-card" style="grid-column: 1 / -1;"><h4>⚷ Chiron</h4><div class="signs">The wounded healer</div><p>Where you are deeply wounded, experience inner pain, and seek to integrate your shadow — so you can help others heal the same wound.</p></div>
-  </div>
+  </div></div>
 
-  <h2 class="subhead">Essential Dignities</h2>
-  <div class="card"><table>
+  <div class="acc-head" onclick="acc(this)"><h3>Essential Dignities</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><img class="brand-img" src="img/aura-essential-dignities.jpg" alt="Essential dignities — domicile, exaltation, detriment, and fall for every planet" loading="lazy" style="max-width:640px;"><div class="img-caption">Domicile · exaltation · detriment · fall — the full table</div><div class="card"><table>
     <tr><th>Planet</th><th>Domicile</th><th>Exalted</th><th>Detriment</th><th>Fall</th></tr>
     <tr><td>Sun</td><td>Leo</td><td>Aries</td><td>Aquarius</td><td>Libra</td></tr>
     <tr><td>Moon</td><td>Cancer</td><td>Taurus</td><td>Capricorn</td><td>Scorpio</td></tr>
@@ -800,10 +848,10 @@
     <tr><td>Jupiter</td><td>Sagittarius, Pisces</td><td>Cancer</td><td>Gemini, Virgo</td><td>Capricorn</td></tr>
     <tr><td>Saturn</td><td>Capricorn, Aquarius</td><td>Libra</td><td>Cancer, Leo</td><td>Aries</td></tr>
   </table>
-  <p style="font-size:12px;color:var(--text-muted);margin-top:0.5rem;font-weight:300;">Domicile = at home, full strength. Exalted = honored guest, elevated. Detriment = opposite its home, compensating. Fall = opposite its exaltation, working uphill. Modern rulers: Uranus in Aquarius, Neptune in Pisces, Pluto in Scorpio (detriments: Leo, Virgo, Taurus).</p></div>
+  <p style="font-size:12px;color:var(--text-muted);margin-top:0.5rem;font-weight:300;">Domicile = at home, full strength. Exalted = honored guest, elevated. Detriment = opposite its home, compensating. Fall = opposite its exaltation, working uphill. Modern rulers: Uranus in Aquarius, Neptune in Pisces, Pluto in Scorpio (detriments: Leo, Virgo, Taurus).</p></div></div>
 
-  <h2 class="subhead">Degree Meanings</h2>
-  <div class="card"><p style="font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.65;margin-bottom:0.5rem;">Every degree within any sign carries the flavor of one of the twelve signs — the sequence repeats every 12 degrees.</p><table>
+  <div class="acc-head" onclick="acc(this)"><h3>Degree Meanings</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><div class="card"><p style="font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.65;margin-bottom:0.5rem;">Every degree within any sign carries the flavor of one of the twelve signs — the sequence repeats every 12 degrees.</p><table>
     <tr><th>Degrees</th><th>Sign energy</th><th>Flavor</th></tr>
     <tr><td>1, 13, 25</td><td>Aries — Mars</td><td>Assertiveness, independence, courage, pioneering</td></tr>
     <tr><td>2, 14, 26</td><td>Taurus — Venus</td><td>Stability, practicality, material wealth, sensuality</td></tr>
@@ -825,23 +873,23 @@
     <tr><td>8–9, 21–22</td><td>Fixed — Taurus, Leo, Scorpio, Aquarius</td><td>Where you under-exert yourself</td></tr>
     <tr><td>4, 17</td><td>Mutable — Gemini, Virgo, Sagittarius, Pisces</td><td>Flexibility toward action</td></tr>
     <tr><td>29 — anaretic</td><td>Any sign</td><td>Urgency, mastery, or crisis around that sign's themes</td></tr>
-  </table></div>
+  </table></div></div>
 
-  <h2 class="subhead">The Four Quadrants</h2>
-  <img class="brand-img" src="img/aura-quadrants-wheel.jpg" alt="The four quadrants of the chart — awareness of self, integration with environment, awareness of others, integration with society" loading="lazy" style="max-width:560px;">
+  <div class="acc-head" onclick="acc(this)"><h3>The Four Quadrants</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><img class="brand-img" src="img/aura-quadrants-wheel.jpg" alt="The four quadrants of the chart — awareness of self, integration with environment, awareness of others, integration with society" loading="lazy" style="max-width:560px;">
   <div class="cheat-grid">
     <div class="cheat-card"><h4>Q1 — Houses 1–3</h4><div class="signs">Awareness of Self</div><p>Birth, identity, resources, voice. Learning who you are.</p></div>
     <div class="cheat-card"><h4>Q2 — Houses 4–6</h4><div class="signs">Integration of Self with Environment</div><p>Home, creativity, daily life. Rooting the self into the world around you.</p></div>
     <div class="cheat-card"><h4>Q3 — Houses 7–9</h4><div class="signs">Awareness of Others</div><p>Partnership, intimacy, belief. Meeting what is not you.</p></div>
     <div class="cheat-card"><h4>Q4 — Houses 10–12</h4><div class="signs">Integration of Self with Society</div><p>Career, community, transcendence. Giving the self back to the collective.</p></div>
-  </div>
+  </div></div>
 
-  <h2 class="subhead">To Be · To Have · To Know</h2>
-  <div class="cheat-grid">
+  <div class="acc-head" onclick="acc(this)"><h3>To Be · To Have · To Know</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><div class="cheat-grid">
     <div class="cheat-card" style="grid-column: 1 / -1;"><h4>Angular Houses — To Be</h4><div class="signs">1 · 4 · 7 · 10</div><p>Forward-moving, action-based catalysts for change — your basic needs and foundations. Planets here make you driven and self-motivated.<br><br><strong style="color:var(--text-primary);">1st</strong> to be independent · <strong style="color:var(--text-primary);">4th</strong> to be dependable to family · <strong style="color:var(--text-primary);">7th</strong> to be dependent on your partner · <strong style="color:var(--text-primary);">10th</strong> to be dependable to society</p><img class="brand-img" src="img/aura-angular-wheel.jpg" alt="Angular houses wheel — to be" loading="lazy" style="max-width:420px;"></div>
     <div class="cheat-card" style="grid-column: 1 / -1;"><h4>Succedent Houses — To Have</h4><div class="signs">2 · 5 · 8 · 11</div><p>Fixed angles — pausing, getting comfortable with your values and self-worth, building wealth and community. Planets here can take a while to get moving, but once they do, they're VERY confident.<br><br><strong style="color:var(--text-primary);">2nd</strong> to have for self · <strong style="color:var(--text-primary);">5th</strong> to have fun for creative expression · <strong style="color:var(--text-primary);">8th</strong> to have connections for resources · <strong style="color:var(--text-primary);">11th</strong> to have social networks for impact</p><img class="brand-img" src="img/aura-succedent-wheel.jpg" alt="Succedent houses wheel — to have" loading="lazy" style="max-width:420px;"></div>
     <div class="cheat-card" style="grid-column: 1 / -1;"><h4>Cadent Houses — To Know</h4><div class="signs">3 · 6 · 9 · 12</div><p>From the Latin <em>cado</em>, to decline — falling away from the strength of the angles. Planets here bring many changes and transformations, since these houses are ruled by mutable signs.<br><br><strong style="color:var(--text-primary);">3rd</strong> to know thyself · <strong style="color:var(--text-primary);">6th</strong> to know the body and serve physically · <strong style="color:var(--text-primary);">9th</strong> to know philosophies and connect the world · <strong style="color:var(--text-primary);">12th</strong> to know others and serve spiritually</p><img class="brand-img" src="img/aura-cadent-wheel.jpg" alt="Cadent houses wheel — to know" loading="lazy" style="max-width:420px;"></div>
-  </div>
+  </div></div>
 
   <h2 class="subhead">The Cheat Sheet <em>Library</em></h2>
   <p class="section-sub" style="margin-bottom:1rem;">The full Aura Vibin graphic collection — tap any topic to open its sheet.</p>
@@ -1180,6 +1228,13 @@
 
   <div class="acc-head" onclick="acc(this)"><h3>Jupiter — Zeus, king of expansion</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body">Zeus (Roman Jupiter, Norse Thor — Thursday, jeudi, "Jove's day") overthrew Saturn and became king of the gods: the sky-father, wielder of the thunderbolt, dispenser of justice and abundance. His appetite was as vast as his generosity — endless affairs, endless offspring, endless expansion. That's Jupiter exactly: growth, faith, luck, optimism, opportunity — and the shadow of excess, overreach, and too-much-of-a-good-thing. Thor's hammer, meanwhile, gives the thunder-god's protective force. Jupiter in your chart is where life wants to get BIGGER — for better and sometimes for too much.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Why mythology matters — and where to begin</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">If astrology has ever felt like a Frankenstein — a pile of disconnected pieces, Saturn here, a Greek name there, no thread tying them — this is the section that stitches it together. Here is the honest truth of it: <strong>the myths are not decoration bolted onto the planets. The myths came first, and the meanings grew out of them.</strong><br><br>
+  When an astrologer says Saturn is about limitation, endurance, and the fear of being surpassed, they are not reciting a list someone invented. They are describing Kronos — the god who swallowed his children to keep his throne. The planet means what it means <em>because of the story</em>. Learn the story and you never have to memorise the keywords again; they fall out of the myth on their own.<br><br>
+  <strong>Why this is worth researching, not just reading.</strong> These stories are among the oldest surviving records of how human beings made sense of existence — birth, death, love, betrayal, power, transformation. They encode patterns that recur in every life, which is exactly why they map onto a chart at all. Sitting with them doesn't just make you a better astrologer; it connects you to the people who watched the same sky for thousands of years and felt the same things you feel. That's not a small thing. It's a way of belonging to something much larger than one lifetime.<br><br>
+  <div class="hl"><strong>Where to actually start — a path, not a pile</strong>1. Begin with the <strong>seven visible bodies</strong> in the order the ancients knew them: Sun, Moon, then Mercury, Venus, Mars, Jupiter, Saturn. Read each planet's myth here before touching anything else. This is the whole foundation.<br><br>2. Then the <strong>three outer planets</strong> — Uranus, Neptune, Pluto — and why they carry forces bigger than a single life.<br><br>3. Then the <strong>nodes</strong> (Rahu &amp; Ketu) and <strong>Chiron</strong> — the karmic and healing layer.<br><br>4. Then step back into the <strong>source cultures</strong>: Egypt first (where the decans, the sky-goddess, and the Hermetic lineage begin), then Greece and Rome, then the Vedic thread. Each entry below is written to be read in this order.<br><br>Don't try to hold it all at once. Read one myth, sit with it, watch where it shows up in a chart you know. The connections build themselves once you stop rushing.</div>
+  <strong>The one mindset that helps.</strong> You will never finish. There is no bottom to this — no single book, no final authority, no day you'll have "learned mythology." That's not failure, it's the nature of it. Pick a doorway, walk through it, and trust that every story connects to every other one eventually. This whole archive exists so that you always have a next door to open.</div>
 
   <div class="acc-head" onclick="acc(this)"><h3>Rahu &amp; Ketu — the dragon that swallows the lights</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body">The gods and the demons churned the cosmic ocean together to produce <em>amrita</em>, the nectar of immortality. When it finally appeared, the gods tried to keep it for themselves — but one demon, Svarbhanu, slipped into their line disguised and drank.<br><br>
