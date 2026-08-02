@@ -196,6 +196,10 @@
   .chart-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
   .chart-sub { font-size: 11.5px; color: var(--text-muted); font-weight: 300; letter-spacing: 0.02em; }
   .chart-arrow { color: var(--accent); font-size: 14px; flex: 0 0 auto; cursor: pointer; }
+  .drag-handle { color: var(--text-muted); font-size: 16px; cursor: grab; line-height: 1; padding: 0 6px 0 0; user-select: none; touch-action: none; }
+  .drag-handle:active { cursor: grabbing; }
+  .img-drag { transition: box-shadow 0.15s, transform 0.1s; }
+  .img-drag.drag-over { box-shadow: 0 -3px 0 var(--accent); }
   .chart-reorder { color: var(--text-muted); font-size: 17px; cursor: pointer; line-height: 1; padding: 0 2px; user-select: none; }
   .chart-reorder:hover { color: var(--accent); }
   .chart-body { display: none; padding: 0 1.1rem 1.1rem; }
@@ -722,7 +726,34 @@
   <tr><td>Uranus · Neptune · Pluto</td><td>Retrograde for months every year, so they're generational rather than personal. Only read as individually significant when tightly aspecting a personal planet or angle.</td></tr></table>
   <strong>The one thing to avoid</strong> — retrograde does not mean broken, weak, or cursed. It means the function runs on an internal circuit. Many people report their retrograde planets becoming their greatest strengths precisely because they had to be consciously developed rather than taken for granted.</div>
 
-<h2 class="subhead">Books to Research</h2>
+<div class="acc-head" onclick="acc(this)"><h3>The Planetary Joys</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">
+  <img class="brand-img" src="img/aura-planetary-joys.jpg" alt="Anatomy of the Planetary Joys — each planet in the house where it rejoices" loading="lazy" onclick="openLightbox(this.src)">
+  <div class="img-caption">Each planet has one house where it quietly does its best work</div>
+
+  Long before the modern chart, the Hellenistic astrologers noticed that certain planets simply <em>worked better</em> in certain houses — regardless of sign, regardless of dignity. They called it the planet's <strong>joy</strong>: the house where a planet rejoices, feels at home in its function, and expresses its nature most cleanly. Each of the seven traditional planets has exactly one.<br><br>
+  <strong>The seven joys</strong><br><br>
+  <table><tr><th>Planet</th><th>Joy</th><th>House name</th></tr>
+  <tr><td>Mercury</td><td>1st</td><td>Helm / Life</td></tr>
+  <tr><td>Moon</td><td>3rd</td><td>Goddess</td></tr>
+  <tr><td>Venus</td><td>5th</td><td>Good Fortune</td></tr>
+  <tr><td>Mars</td><td>6th</td><td>Bad Fortune</td></tr>
+  <tr><td>Sun</td><td>9th</td><td>God</td></tr>
+  <tr><td>Jupiter</td><td>11th</td><td>Good Spirit</td></tr>
+  <tr><td>Saturn</td><td>12th</td><td>Bad Spirit</td></tr></table>
+
+  <strong>Why each one — the logic is gorgeous once you see it</strong><br><br>
+  <strong>Mercury in the 1st.</strong> The first house is the point of the rising sign, the body, the self stepping into the world — the most active, awake, "here I am" house. Mercury is the planet of alertness, perception, and the mind engaging its surroundings. The messenger rejoices where the chart is most awake.<br><br>
+  <strong>Moon in the 3rd.</strong> The third is the house of daily rhythms, siblings, neighbours, short journeys, the ordinary comings and goings of life. The Moon moves faster than any body, changing sign every two to three days — she rejoices in the house of constant small motion and everyday care.<br><br>
+  <strong>Venus in the 5th.</strong> The fifth is pleasure, children, love affairs, creativity, play — everything Venus <em>is</em>. This is the most straightforward joy: the planet of delight in the house of delight. It's even called Good Fortune.<br><br>
+  <strong>Mars in the 6th.</strong> Here's where it gets subtle. The sixth is illness, labour, toil, conflict — hard, unglamorous houses. Mars rejoices here not because it's pleasant, but because the sixth is where Mars's aggression has a <em>job to do</em>. Contained in the house of work and struggle, Mars's fighting energy is put to use rather than let loose to wreck the more delicate areas of life. A difficult planet is happiest where difficulty is expected.<br><br>
+  <strong>Sun in the 9th.</strong> The ninth is the house of God, higher knowledge, philosophy, the divine, the long journey toward meaning. The Sun is the light of consciousness and spirit. It rejoices in the house that looks upward — literally called God.<br><br>
+  <strong>Jupiter in the 11th.</strong> The eleventh is friends, alliances, hopes, good fortune arriving through community — the house of Good Spirit. Jupiter is benevolence, expansion, blessing. The great benefic rejoices in the house of collective good will.<br><br>
+  <strong>Saturn in the 12th.</strong> The twelfth is solitude, loss, confinement, the hidden, the undoing — the house of Bad Spirit. Saturn is the planet of limitation, isolation, and endings. Like Mars in the sixth, Saturn rejoices here because its heavy nature <em>belongs</em> to the house of retreat and dissolution. The planet of solitude is at home in the house of solitude.<br><br>
+  <div class="hl"><strong>The hidden pattern — the benefic/malefic mirror</strong>Look at the sect logic and it becomes breathtaking. The <strong>day</strong> planets rejoice in the <strong>top half</strong> (Sun in the 9th, Jupiter in the 11th, and the day malefic set apart) while the <strong>night</strong> planets take the <strong>bottom half</strong> (Moon in the 3rd, Venus in the 5th). And the two malefics — Mars and Saturn — rejoice in the two "bad" houses (6th, Bad Fortune; 12th, Bad Spirit), while the two benefics — Venus and Jupiter — rejoice in the two "good" houses (5th, Good Fortune; 11th, Good Spirit). The whole system is a mirror: good planets in good houses, hard planets in hard houses, each doing the work that house was made for.</div>
+  <strong>How to use it.</strong> When you find a planet in its house of joy, give it a quiet bonus — it's working from a comfortable seat even if its sign is difficult. A peregrine or debilitated planet sitting in its joy still has somewhere to stand. It's a subtle dignity, easy to overlook, and it deepens a reading immediately once you start checking for it.</div>
+
+  <h2 class="subhead">Books to Research</h2>
 
   <div class="acc-head" onclick="acc(this)"><h3>Where to begin — foundations</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body">If you're starting out, start here. These build the frame everything else hangs on.<br><br>
@@ -1235,6 +1266,17 @@
   <strong>Her emblem is an unsolved mystery.</strong> Seshat is always shown wearing a seven-pointed star or rosette beneath what looks like an inverted set of horns or a bow. Nobody knows for certain what it depicts — it remains one of the genuinely open questions in Egyptology, a symbol whose meaning her own archive did not preserve.<br><br>
   <div class="hl"><strong>Why this site carries her name</strong>What you're reading is a library of records, measurements, and star knowledge, kept so that anyone can find their own alignment. Definitions, degrees, dignities, patterns submitted by strangers and preserved for the next person. That is Seshat's entire portfolio: writing things down, measuring carefully, and using the sky to know where something ought to stand.</div></div>
 
+  <div class="acc-head" onclick="acc(this)"><h3>Why mythology matters — and where to begin</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">If astrology has ever felt like a Frankenstein — a pile of disconnected pieces, Saturn here, a Greek name there, no thread tying them — this is the section that stitches it together. Here is the honest truth of it: <strong>the myths are not decoration bolted onto the planets. The myths came first, and the meanings grew out of them.</strong><br><br>
+  When an astrologer says Saturn is about limitation, endurance, and the fear of being surpassed, they are not reciting a list someone invented. They are describing Kronos — the god who swallowed his children to keep his throne. The planet means what it means <em>because of the story</em>. Learn the story and you never have to memorise the keywords again; they fall out of the myth on their own.<br><br>
+  <strong>Why this is worth researching, not just reading.</strong> These stories are among the oldest surviving records of how human beings made sense of existence — birth, death, love, betrayal, power, transformation. They encode patterns that recur in every life, which is exactly why they map onto a chart at all. Sitting with them doesn't just make you a better astrologer; it connects you to the people who watched the same sky for thousands of years and felt the same things you feel. That's not a small thing. It's a way of belonging to something much larger than one lifetime.<br><br>
+  <div class="hl"><strong>Where to actually start — a path, not a pile</strong>1. Begin with the <strong>seven visible bodies</strong> in the order the ancients knew them: Sun, Moon, then Mercury, Venus, Mars, Jupiter, Saturn. Read each planet's myth here before touching anything else. This is the whole foundation.<br><br>2. Then the <strong>three outer planets</strong> — Uranus, Neptune, Pluto — and why they carry forces bigger than a single life.<br><br>3. Then the <strong>nodes</strong> (Rahu &amp; Ketu) and <strong>Chiron</strong> — the karmic and healing layer.<br><br>4. Then step back into the <strong>source cultures</strong> — the civilisations these stories actually came from, in the order they shaped astrology:<br><br>
+  &nbsp;&nbsp;• <strong>Egypt first.</strong> This is where the decans (the 36 star-groups that became the 10° faces), the sky-goddess Nut, and the god Thoth all begin — and Thoth later became Hermes Trismegistus, whose name is on the Hermetic lots you'll use in charts. Start with the Egypt entries below, then if you want to go deeper, look into <em>The Egyptian Book of the Dead</em> (any annotated edition) and the myth cycle of Isis and Osiris — Plutarch's <em>On Isis and Osiris</em> is the classic ancient source.<br><br>
+  &nbsp;&nbsp;• <strong>Then Greece and Rome.</strong> This is where the planet-gods you already use get their fullest personalities — Kronos/Saturn, Ares/Mars, Aphrodite/Venus. The two most accessible doorways are Hesiod's <em>Theogony</em> (the origin of the gods, including Kronos swallowing his children) and Ovid's <em>Metamorphoses</em> (the great storehouse of the transformation myths). For a modern retelling, Stephen Fry's <em>Mythos</em> is the gentlest entry, and Edith Hamilton's <em>Mythology</em> is the classic student's companion.<br><br>
+  &nbsp;&nbsp;• <strong>Then the Vedic thread.</strong> "Vedic" means the astrology and mythology of ancient India — <em>Jyotisha</em>, the sister system to Western astrology. This is where Rahu and Ketu (the dragon's head and tail, the eclipse points) come from. The stories live in the <em>Mahabharata</em> and the <em>Puranas</em>; the churning-of-the-ocean myth in the Ketu entry below is the doorway. You don't need to practise Vedic astrology to let its myths deepen how you read the nodes.<br><br>
+  Each entry below is written to be read in roughly this order — but there's no wrong door. If a particular god pulls at you, start there.<br><br>Don't try to hold it all at once. Read one myth, sit with it, watch where it shows up in a chart you know. The connections build themselves once you stop rushing.</div>
+  <strong>The one mindset that helps.</strong> You will never finish. There is no bottom to this — no single book, no final authority, no day you'll have "learned mythology." That's not failure, it's the nature of it. Pick a doorway, walk through it, and trust that every story connects to every other one eventually. This whole archive exists so that you always have a next door to open.</div>
+
   <div class="acc-head" onclick="acc(this)"><h3>Saturn — Kronos, the god who ate time</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body">Kronos (Roman Saturn) castrated his father Uranus to end his tyranny, then — warned that his own child would overthrow him — swallowed each of his children at birth. His wife hid the baby Zeus, who returned to free his siblings and depose him. Saturn is the father who fears his own succession: time, limitation, authority, the fear of being surpassed. But Kronos also ruled the Golden Age — a time of order and abundance. That's Saturn's gift beneath the fear: structure that, once accepted, becomes mastery. The planet asks what you'll swallow to stay in control, and what you could build if you stopped.</div>
 
@@ -1252,17 +1294,6 @@
 
   <div class="acc-head" onclick="acc(this)"><h3>Jupiter — Zeus, king of expansion</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body">Zeus (Roman Jupiter, Norse Thor — Thursday, jeudi, "Jove's day") overthrew Saturn and became king of the gods: the sky-father, wielder of the thunderbolt, dispenser of justice and abundance. His appetite was as vast as his generosity — endless affairs, endless offspring, endless expansion. That's Jupiter exactly: growth, faith, luck, optimism, opportunity — and the shadow of excess, overreach, and too-much-of-a-good-thing. Thor's hammer, meanwhile, gives the thunder-god's protective force. Jupiter in your chart is where life wants to get BIGGER — for better and sometimes for too much.</div>
-
-  <div class="acc-head" onclick="acc(this)"><h3>Why mythology matters — and where to begin</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">If astrology has ever felt like a Frankenstein — a pile of disconnected pieces, Saturn here, a Greek name there, no thread tying them — this is the section that stitches it together. Here is the honest truth of it: <strong>the myths are not decoration bolted onto the planets. The myths came first, and the meanings grew out of them.</strong><br><br>
-  When an astrologer says Saturn is about limitation, endurance, and the fear of being surpassed, they are not reciting a list someone invented. They are describing Kronos — the god who swallowed his children to keep his throne. The planet means what it means <em>because of the story</em>. Learn the story and you never have to memorise the keywords again; they fall out of the myth on their own.<br><br>
-  <strong>Why this is worth researching, not just reading.</strong> These stories are among the oldest surviving records of how human beings made sense of existence — birth, death, love, betrayal, power, transformation. They encode patterns that recur in every life, which is exactly why they map onto a chart at all. Sitting with them doesn't just make you a better astrologer; it connects you to the people who watched the same sky for thousands of years and felt the same things you feel. That's not a small thing. It's a way of belonging to something much larger than one lifetime.<br><br>
-  <div class="hl"><strong>Where to actually start — a path, not a pile</strong>1. Begin with the <strong>seven visible bodies</strong> in the order the ancients knew them: Sun, Moon, then Mercury, Venus, Mars, Jupiter, Saturn. Read each planet's myth here before touching anything else. This is the whole foundation.<br><br>2. Then the <strong>three outer planets</strong> — Uranus, Neptune, Pluto — and why they carry forces bigger than a single life.<br><br>3. Then the <strong>nodes</strong> (Rahu &amp; Ketu) and <strong>Chiron</strong> — the karmic and healing layer.<br><br>4. Then step back into the <strong>source cultures</strong> — the civilisations these stories actually came from, in the order they shaped astrology:<br><br>
-  &nbsp;&nbsp;• <strong>Egypt first.</strong> This is where the decans (the 36 star-groups that became the 10° faces), the sky-goddess Nut, and the god Thoth all begin — and Thoth later became Hermes Trismegistus, whose name is on the Hermetic lots you'll use in charts. Start with the Egypt entries below, then if you want to go deeper, look into <em>The Egyptian Book of the Dead</em> (any annotated edition) and the myth cycle of Isis and Osiris — Plutarch's <em>On Isis and Osiris</em> is the classic ancient source.<br><br>
-  &nbsp;&nbsp;• <strong>Then Greece and Rome.</strong> This is where the planet-gods you already use get their fullest personalities — Kronos/Saturn, Ares/Mars, Aphrodite/Venus. The two most accessible doorways are Hesiod's <em>Theogony</em> (the origin of the gods, including Kronos swallowing his children) and Ovid's <em>Metamorphoses</em> (the great storehouse of the transformation myths). For a modern retelling, Stephen Fry's <em>Mythos</em> is the gentlest entry, and Edith Hamilton's <em>Mythology</em> is the classic student's companion.<br><br>
-  &nbsp;&nbsp;• <strong>Then the Vedic thread.</strong> "Vedic" means the astrology and mythology of ancient India — <em>Jyotisha</em>, the sister system to Western astrology. This is where Rahu and Ketu (the dragon's head and tail, the eclipse points) come from. The stories live in the <em>Mahabharata</em> and the <em>Puranas</em>; the churning-of-the-ocean myth in the Ketu entry below is the doorway. You don't need to practise Vedic astrology to let its myths deepen how you read the nodes.<br><br>
-  Each entry below is written to be read in roughly this order — but there's no wrong door. If a particular god pulls at you, start there.<br><br>Don't try to hold it all at once. Read one myth, sit with it, watch where it shows up in a chart you know. The connections build themselves once you stop rushing.</div>
-  <strong>The one mindset that helps.</strong> You will never finish. There is no bottom to this — no single book, no final authority, no day you'll have "learned mythology." That's not failure, it's the nature of it. Pick a doorway, walk through it, and trust that every story connects to every other one eventually. This whole archive exists so that you always have a next door to open.</div>
 
   <div class="acc-head" onclick="acc(this)"><h3>Rahu &amp; Ketu — the dragon that swallows the lights</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body">The gods and the demons churned the cosmic ocean together to produce <em>amrita</em>, the nectar of immortality. When it finally appeared, the gods tried to keep it for themselves — but one demon, Svarbhanu, slipped into their line disguised and drank.<br><br>
@@ -2025,6 +2056,23 @@ function moveLibImage(id, dir) {
   renderImages();
 }
 
+let dragId = null;
+function imgDragStart(e, id) { dragId = id; e.dataTransfer.effectAllowed = 'move'; e.currentTarget.style.opacity = '0.4'; }
+function imgDragEnd(e) { e.currentTarget.style.opacity = ''; document.querySelectorAll('.img-drag').forEach(el => el.classList.remove('drag-over')); }
+function imgDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; const t = e.currentTarget; document.querySelectorAll('.img-drag').forEach(el => el.classList.remove('drag-over')); t.classList.add('drag-over'); }
+function imgDrop(e, targetId) {
+  e.preventDefault();
+  if (!dragId || dragId === targetId) return;
+  const from = IMAGES.findIndex(x => x.id === dragId);
+  const to = IMAGES.findIndex(x => x.id === targetId);
+  if (from < 0 || to < 0) return;
+  const [moved] = IMAGES.splice(from, 1);
+  IMAGES.splice(to, 0, moved);
+  localStorage.setItem('avr-images', JSON.stringify(IMAGES));
+  markLocalChange();
+  renderImages();
+}
+
 function renderImages() {
   const listEl = document.getElementById('img-list');
   if (!listEl) return;
@@ -2036,15 +2084,13 @@ function renderImages() {
 
   const list = IMAGES.filter(x => imgCat === 'All' || x.cat === imgCat);
   listEl.innerHTML = list.length ? list.map(x => `
-    <div class="chart-item">
+    <div class="chart-item img-drag" draggable="true" data-id="${x.id}"
+      ondragstart="imgDragStart(event,'${x.id}')" ondragover="imgDragOver(event)" ondrop="imgDrop(event,'${x.id}')" ondragend="imgDragEnd(event)">
       <div class="chart-head">
+        <span class="drag-handle" title="Drag to reorder">⠿</span>
         <div class="chart-head-main">
           <span class="chart-name">${esc(x.title)}</span>
           <span class="chart-sub">${esc(x.cat)}</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:0.5rem;flex:0 0 auto;">
-          <span class="chart-reorder" onclick="moveLibImage('${x.id}',-1)">⌃</span>
-          <span class="chart-reorder" onclick="moveLibImage('${x.id}',1)">⌄</span>
         </div>
       </div>
       <div class="chart-body open">
