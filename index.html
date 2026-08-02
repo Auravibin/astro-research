@@ -1120,7 +1120,6 @@
     <div class="subtab" data-sub="flash" onclick="showSub('flash')">Flashcards</div>
     <div class="subtab" data-sub="practice" onclick="showSub('practice')">Chart Practice Log</div>
     <div class="subtab" data-sub="questions" onclick="showSub('questions')">Questions to Research</div>
-    <div class="subtab" data-sub="aura" onclick="showSub('aura')">From Aura</div>
   </div>
 
   <div class="subsection" id="sub-calendar">
@@ -1238,11 +1237,6 @@
     <textarea id="prac-learned" style="min-height:70px;" placeholder="What I'd read differently next time..."></textarea>
     <button class="btn" onclick="savePractice()">Log This Chart</button>
     <div style="margin-top:1.25rem;" id="practice-list"></div>
-  </div>
-
-  <div class="subsection" id="sub-aura">
-    <p class="section-sub" style="margin-bottom:1rem;">Research syntheses and findings published by Aura Vibin.</p>
-    <div id="notes-list"><p class="empty">Loading notes...</p></div>
   </div>
 
   <div class="subsection" id="sub-questions">
@@ -1493,7 +1487,7 @@ function showTab(id) {
   window.scrollTo(0, 0);
   if (id === 'library') loadLibrary();
   
-  if (id === 'mynotes') { renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); loadNotes(); }
+  if (id === 'mynotes') { renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); }
 }
 
 function showSub(id) {
@@ -2632,6 +2626,7 @@ function renderLibrary() {
 function esc(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 
 async function loadNotes() {
+  if (!document.getElementById('notes-list')) return;
   const { data } = await db.from('research_notes').select('*').eq('published', true).order('created_at', { ascending: false });
   document.getElementById('notes-list').innerHTML = (data && data.length) ? data.map(n => `
     <div class="note-entry"><h3>${esc(n.title)}</h3><div class="note-date">${new Date(n.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div><div class="note-body">${esc(n.body)}</div></div>`).join('') : '<p class="empty">Research notes coming soon.</p>';
