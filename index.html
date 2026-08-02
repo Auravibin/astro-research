@@ -220,6 +220,10 @@
   .filter-chip.chip-empty { opacity: 0.3; cursor: default; pointer-events: none; }
   .lib-count { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); margin: 0.4rem 0 1rem; }
   .tag-row { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.5rem 0; }
+  .conf-pill { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 9px; border-radius: 20px; margin-left: 0.4rem; font-weight: 500; vertical-align: middle; }
+  .conf-single { background: rgba(150,150,150,0.15); color: var(--text-muted); }
+  .conf-emerging { background: rgba(224,26,134,0.12); color: var(--accent); }
+  .conf-recurring { background: var(--accent); color: #fff; }
   .tag-pill { font-size: 10.5px; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border-strong); color: var(--text-muted); }
   .step-bar { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 1.6rem; }
   .step-dot { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 0 0 auto; }
@@ -2541,6 +2545,7 @@ async function loadLibrary() {
   renderLibrary();
 }
 let tagFilter = { planets: [], houses: [], aspects: [], context: [] };
+let confFilter = '';
 
 function toggleTagFilter(dim, val) {
   const list = tagFilter[dim];
@@ -2550,11 +2555,13 @@ function toggleTagFilter(dim, val) {
 }
 function clearTagFilters() {
   tagFilter = { planets: [], houses: [], aspects: [], context: [] };
+  confFilter = '';
   activeFilter = 'All';
   renderFilters(); renderLibrary();
 }
 function matchesTags(s) {
   const t = s.tags || {};
+  if (confFilter && (t.confidence || '') !== confFilter) return false;
   return Object.keys(tagFilter).every(dim =>
     tagFilter[dim].length === 0 || tagFilter[dim].every(v => (t[dim] || []).includes(v)));
 }
@@ -2592,9 +2599,13 @@ function renderFilters() {
     return '<div class="dim-block"><div class="dim-label">' + TAG_LABELS[dim] + '</div><div class="filter-row">' + chips + '</div></div>';
   }).join('');
 
-  const anyActive = activeFilter !== 'All' || Object.keys(tagFilter).some(function(d) { return tagFilter[d].length > 0; });
+  const anyActive = activeFilter !== 'All' || confFilter || Object.keys(tagFilter).some(function(d) { return tagFilter[d].length > 0; });
+  const confChips = ['Single', 'Emerging', 'Recurring'].map(function(c) {
+    return '<div class="filter-chip ' + (confFilter === c ? 'active' : '') + '" onclick="confFilter = confFilter===\'' + c + '\' ? \'\' : \'' + c + '\'; renderFilters(); renderLibrary();">' + c + '</div>';
+  }).join('');
   document.getElementById('lib-filters').innerHTML =
     '<div class="dim-block"><div class="dim-label">What happened</div><div class="filter-row">' + catHTML + '</div></div>' +
+    '<div class="dim-block"><div class="dim-label">Strength of evidence</div><div class="filter-row">' + confChips + '</div></div>' +
     dims +
     (anyActive ? '<button class="btn-quiet" onclick="clearTagFilters()" style="margin-top:0.6rem;">Clear all filters</button>' : '');
 }
@@ -2612,8 +2623,11 @@ function renderLibrary() {
   document.getElementById('lib-list').innerHTML = list.length ? list.map(function(s) {
     const t = s.tags || {};
     const all = [].concat(t.planets || [], t.aspects || [], (t.houses || []).map(function(h) { return h + ' house'; }), t.context || []);
+    const conf = t.confidence || '';
+    const confClass = conf === 'Recurring' ? 'conf-recurring' : conf === 'Emerging' ? 'conf-emerging' : 'conf-single';
     return '<div class="sub-card">' +
       '<span class="pill">' + esc(s.event_category) + (s.event_other ? ' — ' + esc(s.event_other) : '') + '</span>' +
+      (conf ? '<span class="conf-pill ' + confClass + '">' + conf + '</span>' : '') +
       '<div class="sub-meta">' + (s.show_name && s.display_name ? 'Shared by ' + esc(s.display_name) : 'Anonymous') +
         (s.event_date ? ' · ' + new Date(s.event_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) +
           (s.event_date_end ? ' – ' + new Date(s.event_date_end + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '') : '') + '</div>' +
@@ -2680,15 +2694,35 @@ const TAG_SETS = {
 };
 const TAG_LABELS = { planets: 'Planets', houses: 'Houses', aspects: 'Aspects', context: 'Context' };
 
+const CONF_LEVELS = ['Single', 'Emerging', 'Recurring'];
 function tagEditor(id, tags) {
   tags = tags || {};
-  return Object.keys(TAG_SETS).map(dim => `
+  const conf = tags.confidence || '';
+  const confRow = `
+    <div style="margin-top:0.7rem;">
+      <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.35rem;">Strength of evidence</div>
+      <div class="filter-row">
+        ${CONF_LEVELS.map(c => `<div class="filter-chip ${conf === c ? 'active' : ''}" onclick="setConfidence('${id}','${c}')">${c}</div>`).join('')}
+      </div>
+    </div>`;
+  return confRow + Object.keys(TAG_SETS).map(dim => `
     <div style="margin-top:0.7rem;">
       <div style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-muted);margin-bottom:0.35rem;">${TAG_LABELS[dim]}</div>
       <div class="filter-row">
         ${TAG_SETS[dim].map(t => `<div class="filter-chip ${(tags[dim] || []).includes(t) ? 'active' : ''}" onclick="toggleTag('${id}','${dim}','${t}')">${t}</div>`).join('')}
       </div>
     </div>`).join('');
+}
+
+async function setConfidence(id, level) {
+  const s = admAll.find(x => x.id === id);
+  if (!s) return;
+  const tags = Object.assign({}, s.tags || {});
+  tags.confidence = (tags.confidence === level) ? '' : level;
+  s.tags = tags;
+  renderAdminList();
+  const { error } = await db.from('research_submissions').update({ tags }).eq('id', id);
+  if (error) console.error('confidence save failed', error);
 }
 
 async function toggleTag(id, dim, value) {
