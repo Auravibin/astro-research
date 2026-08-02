@@ -1,6 +1,10 @@
-const CACHE = 'seshat-v2';
+const CACHE = 'seshat-v3';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
+
+self.addEventListener('message', e => {
+  if (e.data === 'skip-waiting') self.skipWaiting();
+});
 
 self.addEventListener('activate', e => {
   e.waitUntil(
@@ -12,15 +16,10 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const req = e.request;
-
-  // Never touch anything that isn't a plain GET.
   if (req.method !== 'GET') return;
-
   const url = new URL(req.url);
 
-  // CRITICAL: never intercept requests to other origins.
-  // Supabase, fonts, CDNs all handle their own caching and must
-  // reach the network directly. Caching them broke the database calls.
+  // Never intercept other origins (Supabase, fonts, CDNs).
   if (url.origin !== self.location.origin) return;
 
   const isHTML = req.mode === 'navigate' ||
@@ -29,7 +28,8 @@ self.addEventListener('fetch', e => {
                  url.pathname.endsWith('.html');
 
   if (isHTML) {
-    // Network first, so updates always reach installed apps.
+    // NETWORK FIRST: always try to fetch the newest page. This is what
+    // makes home-screen apps update themselves without a reinstall.
     e.respondWith(
       fetch(req)
         .then(res => {
@@ -42,7 +42,7 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Cache first for our own images and assets only.
+  // Cache first for our own static assets only (images, etc).
   e.respondWith(
     caches.match(req).then(cached => {
       if (cached) return cached;
