@@ -195,7 +195,9 @@
   .chart-head-main { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; min-width: 0; }
   .chart-name { font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; color: var(--text-primary); line-height: 1.2; }
   .chart-sub { font-size: 11.5px; color: var(--text-muted); font-weight: 300; letter-spacing: 0.02em; }
-  .chart-arrow { color: var(--accent); font-size: 14px; flex: 0 0 auto; }
+  .chart-arrow { color: var(--accent); font-size: 14px; flex: 0 0 auto; cursor: pointer; }
+  .chart-reorder { color: var(--text-muted); font-size: 17px; cursor: pointer; line-height: 1; padding: 0 2px; user-select: none; }
+  .chart-reorder:hover { color: var(--accent); }
   .chart-body { display: none; padding: 0 1.1rem 1.1rem; }
   .chart-body.open { display: block; }
   .chart-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 20px; padding: 1.1rem 1.2rem; margin-bottom: 0.85rem; }
@@ -1081,6 +1083,7 @@
   <div class="subtabs">
     <div class="subtab active" data-sub="charts" onclick="showSub('charts')">Charts</div>
     <div class="subtab" data-sub="calendar" onclick="showSub('calendar')">2026 Calendar</div>
+    <div class="subtab" data-sub="images" onclick="showSub('images')">Images</div>
     <div class="subtab" data-sub="saved" onclick="showSub('saved')">Saved Terms</div>
     <div class="subtab" data-sub="notes" onclick="showSub('notes')">Study Notes</div>
     <div class="subtab" data-sub="flash" onclick="showSub('flash')">Flashcards</div>
@@ -1111,6 +1114,28 @@
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-12.jpg" alt="December 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
 
     <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-top:1.2rem;">Times shown are Eastern. Adjust for your own zone — the Moon moves roughly half a degree an hour, so ingress times shift but the day's overall pattern holds.</p>
+  </div>
+
+  <div class="subsection" id="sub-images">
+    <p class="section-sub" style="margin-bottom:1rem;">A private space for any images you want to keep — screenshots, chart wheels, diagrams, anything. Give each a title and an optional category. Tap an image to zoom.</p>
+
+    <div style="background:var(--bg-card-deep);border-radius:16px;padding:1rem 1.1rem;margin-bottom:1.2rem;">
+      <label>Title</label>
+      <input type="text" id="img-title" placeholder="e.g. My solar return wheel">
+      <label>Category <span class="optional-tag">— optional</span></label>
+      <input type="text" id="img-cat" placeholder="e.g. Transits, Screenshots, Study" list="img-cat-list">
+      <datalist id="img-cat-list"></datalist>
+      <label>Note <span class="optional-tag">— optional</span></label>
+      <input type="text" id="img-note" placeholder="Anything you want to remember about it">
+      <label>Image</label>
+      <input type="file" id="img-file" accept="image/*" onchange="previewLibImage(event)">
+      <div id="img-preview" style="margin-top:0.6rem;"></div>
+      <div class="msg" id="img-msg"></div>
+      <button class="btn btn-sm" onclick="saveLibImage()" style="margin-top:0.6rem;">Save image</button>
+    </div>
+
+    <div id="img-cats" class="filter-row" style="margin-bottom:0.8rem;"></div>
+    <div id="img-list"></div>
   </div>
 
   <div class="subsection" id="sub-saved">
@@ -1507,7 +1532,7 @@ function renderGloss() {
     : '<p class="empty">No matching terms.</p>';
 }
 
-const BACKUP_KEYS = ['avr-bookmarks', 'avr-mynotes', 'avr-practice', 'avr-questions', 'avr-charts'];
+const BACKUP_KEYS = ['avr-bookmarks', 'avr-mynotes', 'avr-practice', 'avr-questions', 'avr-charts', 'avr-images'];
 
 async function runDiagnostics() {
   const d = document.getElementById('diag-msg2') && document.getElementById('diag-msg2').offsetParent !== null ? document.getElementById('diag-msg2') : (document.getElementById('diag-msg') || document.getElementById('diag-msg2'));
@@ -1636,7 +1661,8 @@ async function autoSync() {
     BACKUP_KEYS.forEach(k => { if (data.data && data.data[k]) localStorage.setItem(k, data.data[k]); });
     localStorage.setItem('avr-lastchange', cloudTime);
     CHARTS = JSON.parse(localStorage.getItem('avr-charts') || '[]');
-    renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
+    IMAGES = JSON.parse(localStorage.getItem('avr-images') || '[]');
+    renderSavedTerms(); renderCharts(); renderImages(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
     setSyncStatus('Up to date — loaded from cloud');
   } else if (localTime) {
     SYNC_READY = true;
@@ -1659,15 +1685,29 @@ async function pushSync(silent) {
   if (!session) { if (!silent) { msg.className = 'msg err'; msg.textContent = 'Not signed in.'; } return; }
   const payload = {};
   BACKUP_KEYS.forEach(k => { const v = localStorage.getItem(k); if (v) payload[k] = v; });
+
+  // Size guard — the cloud row has a practical ceiling around 5 MB.
+  const sizeMB = (JSON.stringify(payload).length / (1024 * 1024));
+  if (sizeMB > 4.5) {
+    msg.className = 'msg err';
+    msg.textContent = 'Too large to sync (' + sizeMB.toFixed(1) + ' MB). Chart photos are the usual cause — try removing or re-adding a photo, or keep large image charts on one device and use Export backup instead.';
+    return;
+  }
+
   const stamp = new Date().toISOString();
   const { error } = await db.from('user_data').upsert({
     user_id: session.user.id,
     data: payload,
     updated_at: stamp
   }, { onConflict: 'user_id' });
-  if (error) { msg.className = 'msg err'; msg.textContent = 'Save failed — check your connection.'; return; }
+  if (error) {
+    msg.className = 'msg err';
+    msg.textContent = 'Save failed: ' + (error.message || 'unknown') + (sizeMB > 1 ? ' — your data is ' + sizeMB.toFixed(1) + ' MB, photos may be too large.' : '');
+    console.error('sync error', error);
+    return;
+  }
   localStorage.setItem('avr-lastchange', stamp);
-  setSyncStatus('Synced ✦ ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }));
+  setSyncStatus('Synced ✦ ' + new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + (sizeMB > 0.1 ? ' · ' + sizeMB.toFixed(1) + ' MB' : ''));
 }
 
 async function pullSync() {
@@ -1682,7 +1722,8 @@ async function pullSync() {
   BACKUP_KEYS.forEach(k => { if (data.data && data.data[k]) localStorage.setItem(k, data.data[k]); });
   localStorage.setItem('avr-lastchange', data.updated_at || new Date().toISOString());
   CHARTS = JSON.parse(localStorage.getItem('avr-charts') || '[]');
-  renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
+  IMAGES = JSON.parse(localStorage.getItem('avr-images') || '[]');
+  renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary(); renderImages();
   msg.className = 'msg ok';
   msg.textContent = 'Loaded ✦ last saved ' + new Date(data.updated_at).toLocaleString();
 }
@@ -1769,33 +1810,73 @@ function closeChartForm() {
   pendingPhoto = null;
 }
 
-function previewChartPhoto(ev) {
+async function previewChartPhoto(ev) {
   const file = ev.target.files && ev.target.files[0];
   if (!file) return;
   const msg = document.getElementById('chart-msg');
   msg.className = 'msg';
-  msg.textContent = 'Compressing image...';
-  const reader = new FileReader();
-  reader.onload = () => {
+  msg.textContent = 'Processing image...';
+
+  const decode = (dataUrl) => new Promise((resolve, reject) => {
     const img = new Image();
-    img.onload = () => {
-      const max = 900;
-      let w = img.width, h = img.height;
-      if (w > max || h > max) {
-        if (w > h) { h = Math.round(h * max / w); w = max; }
-        else { w = Math.round(w * max / h); h = max; }
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('decode failed'));
+    img.src = dataUrl;
+  });
+
+  const readAsDataURL = (f) => new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = () => reject(new Error('read failed'));
+    r.readAsDataURL(f);
+  });
+
+  try {
+    let img;
+    // First try: decode directly (works for JPEG, PNG, WEBP, GIF).
+    try {
+      const dataUrl = await readAsDataURL(file);
+      img = await decode(dataUrl);
+    } catch (e1) {
+      // Fallback for HEIC/HEIF and other formats the <img> tag can't read:
+      // use createImageBitmap, which many browsers CAN decode.
+      if (typeof createImageBitmap === 'function') {
+        try {
+          img = await createImageBitmap(file);
+        } catch (e2) {
+          throw new Error('format');
+        }
+      } else {
+        throw new Error('format');
       }
-      const cv = document.createElement('canvas');
-      cv.width = w; cv.height = h;
-      cv.getContext('2d').drawImage(img, 0, 0, w, h);
-      pendingPhoto = cv.toDataURL('image/jpeg', 0.72);
-      document.getElementById('ch-photo-preview').innerHTML = '<img class="chart-thumb" src="' + pendingPhoto + '" alt="" onclick="openLightbox(this.src)">';
-      msg.className = 'msg ok';
-      msg.textContent = 'Image ready (' + Math.round(pendingPhoto.length / 1400) + ' KB)';
-    };
-    img.src = reader.result;
-  };
-  reader.readAsDataURL(file);
+    }
+
+    const max = 720;
+    let w = img.width, h = img.height;
+    if (!w || !h) throw new Error('format');
+    if (w > max || h > max) {
+      if (w > h) { h = Math.round(h * max / w); w = max; }
+      else { w = Math.round(w * max / h); h = max; }
+    }
+    const cv = document.createElement('canvas');
+    cv.width = w; cv.height = h;
+    cv.getContext('2d').drawImage(img, 0, 0, w, h);
+    pendingPhoto = cv.toDataURL('image/jpeg', 0.6);
+    if (!pendingPhoto || pendingPhoto.length < 200) throw new Error('empty');
+    document.getElementById('ch-photo-preview').innerHTML = '<img class="chart-thumb" src="' + pendingPhoto + '" alt="" onclick="openLightbox(this.src)">';
+    msg.className = 'msg ok';
+    msg.textContent = 'Image ready (' + Math.round(pendingPhoto.length / 1400) + ' KB)';
+  } catch (err) {
+    pendingPhoto = null;
+    document.getElementById('ch-photo-preview').innerHTML = '';
+    msg.className = 'msg err';
+    if (err.message === 'format') {
+      msg.textContent = 'This image format could not be read (often HEIC from an iPhone). On iPhone: Settings → Camera → Formats → Most Compatible, then re-take or re-export as JPEG. Or screenshot the photo and upload the screenshot.';
+    } else {
+      msg.textContent = 'Could not process that image — try a different photo or a screenshot of it.';
+    }
+    console.error('photo error', err);
+  }
 }
 
 function saveChart() {
@@ -1863,6 +1944,119 @@ document.addEventListener('DOMContentLoaded', () => {
   if (img) img.addEventListener('click', () => img.classList.toggle('zoomed'));
 });
 
+let IMAGES = JSON.parse(localStorage.getItem('avr-images') || '[]');
+let imgCat = 'All';
+let pendingLibImage = null;
+
+async function previewLibImage(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const msg = document.getElementById('img-msg');
+  msg.className = 'msg'; msg.textContent = 'Processing image...';
+  const decode = (u) => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('decode')); i.src = u; });
+  const readF = (f) => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(new Error('read')); r.readAsDataURL(f); });
+  try {
+    let img;
+    try { img = await decode(await readF(file)); }
+    catch (e) { if (typeof createImageBitmap === 'function') { img = await createImageBitmap(file); } else throw new Error('format'); }
+    const max = 720;
+    let w = img.width, h = img.height;
+    if (!w || !h) throw new Error('format');
+    if (w > max || h > max) { if (w > h) { h = Math.round(h * max / w); w = max; } else { w = Math.round(w * max / h); h = max; } }
+    const cv = document.createElement('canvas');
+    cv.width = w; cv.height = h;
+    cv.getContext('2d').drawImage(img, 0, 0, w, h);
+    pendingLibImage = cv.toDataURL('image/jpeg', 0.6);
+    if (!pendingLibImage || pendingLibImage.length < 200) throw new Error('empty');
+    document.getElementById('img-preview').innerHTML = '<img class="chart-thumb" src="' + pendingLibImage + '" alt="" onclick="openLightbox(this.src)">';
+    msg.className = 'msg ok'; msg.textContent = 'Image ready (' + Math.round(pendingLibImage.length / 1400) + ' KB)';
+  } catch (err) {
+    pendingLibImage = null;
+    document.getElementById('img-preview').innerHTML = '';
+    msg.className = 'msg err';
+    msg.textContent = err.message === 'format'
+      ? 'This format could not be read (often HEIC from an iPhone). Screenshot it and upload the screenshot, or switch Settings → Camera → Formats → Most Compatible.'
+      : 'Could not process that image — try a screenshot of it.';
+  }
+}
+
+function saveLibImage() {
+  const title = document.getElementById('img-title').value.trim();
+  const msg = document.getElementById('img-msg');
+  if (!title) { msg.className = 'msg err'; msg.textContent = 'Give it a title first.'; return; }
+  if (!pendingLibImage) { msg.className = 'msg err'; msg.textContent = 'Choose an image first.'; return; }
+  IMAGES.unshift({
+    id: 'img' + Date.now(),
+    title,
+    cat: document.getElementById('img-cat').value.trim() || 'Uncategorized',
+    note: document.getElementById('img-note').value.trim() || '',
+    photo: pendingLibImage
+  });
+  localStorage.setItem('avr-images', JSON.stringify(IMAGES));
+  markLocalChange();
+  pendingLibImage = null;
+  document.getElementById('img-title').value = '';
+  document.getElementById('img-cat').value = '';
+  document.getElementById('img-note').value = '';
+  document.getElementById('img-preview').innerHTML = '';
+  msg.className = 'msg ok'; msg.textContent = 'Saved ✦';
+  renderImages();
+}
+
+function deleteLibImage(id) {
+  if (!confirm('Delete this image?')) return;
+  IMAGES = IMAGES.filter(x => x.id !== id);
+  localStorage.setItem('avr-images', JSON.stringify(IMAGES));
+  markLocalChange();
+  renderImages();
+}
+
+function moveLibImage(id, dir) {
+  const cur = IMAGES.find(x => x.id === id);
+  if (!cur) return;
+  const same = IMAGES.filter(x => x.cat === cur.cat);
+  const pos = same.findIndex(x => x.id === id);
+  const swap = same[pos + dir];
+  if (!swap) return;
+  const a = IMAGES.indexOf(cur), b = IMAGES.indexOf(swap);
+  IMAGES[a] = swap; IMAGES[b] = cur;
+  localStorage.setItem('avr-images', JSON.stringify(IMAGES));
+  markLocalChange();
+  renderImages();
+}
+
+function renderImages() {
+  const listEl = document.getElementById('img-list');
+  if (!listEl) return;
+  const cats = ['All', ...new Set(IMAGES.map(x => x.cat))];
+  document.getElementById('img-cats').innerHTML = IMAGES.length ? cats.map(c =>
+    `<div class="filter-chip ${c === imgCat ? 'active' : ''}" onclick="imgCat='${c.replace(/'/g, "\\'")}';renderImages();">${esc(c)}${c !== 'All' ? ' (' + IMAGES.filter(x => x.cat === c).length + ')' : ''}</div>`).join('') : '';
+  const dl = document.getElementById('img-cat-list');
+  if (dl) dl.innerHTML = [...new Set(IMAGES.map(x => x.cat))].map(c => `<option value="${esc(c)}">`).join('');
+
+  const list = IMAGES.filter(x => imgCat === 'All' || x.cat === imgCat);
+  listEl.innerHTML = list.length ? list.map(x => `
+    <div class="chart-item">
+      <div class="chart-head">
+        <div class="chart-head-main">
+          <span class="chart-name">${esc(x.title)}</span>
+          <span class="chart-sub">${esc(x.cat)}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.5rem;flex:0 0 auto;">
+          <span class="chart-reorder" onclick="moveLibImage('${x.id}',-1)">⌃</span>
+          <span class="chart-reorder" onclick="moveLibImage('${x.id}',1)">⌄</span>
+        </div>
+      </div>
+      <div class="chart-body open">
+        <img class="chart-thumb" src="${x.photo}" alt="${esc(x.title)}" onclick="openLightbox(this.src)">
+        ${x.note ? '<div class="sub-story">' + esc(x.note) + '</div>' : ''}
+        <div style="margin-top:0.7rem;">
+          <button class="btn btn-sm btn-reject" onclick="deleteLibImage('${x.id}')">Delete</button>
+        </div>
+      </div>
+    </div>`).join('') : '<p class="empty">No images yet — add one above.</p>';
+}
+
 function renderCharts() {
   const cats = ['All', ...new Set(CHARTS.map(c => c.cat))];
   document.getElementById('chart-cats').innerHTML = cats.map(c =>
@@ -1882,7 +2076,11 @@ function renderCharts() {
           <span class="chart-name">${esc(c.name)}</span>
           <span class="chart-sub">${esc(c.cat)}${c.date ? ' · ' + new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}${c.photo ? ' · 📷' : ''}</span>
         </div>
-        <span class="chart-arrow">${open ? '↑' : '↓'}</span>
+        <div style="display:flex;align-items:center;gap:0.5rem;flex:0 0 auto;" onclick="event.stopPropagation();">
+          <span class="chart-reorder" onclick="moveChart('${c.id}',-1)" title="Move up">⌃</span>
+          <span class="chart-reorder" onclick="moveChart('${c.id}',1)" title="Move down">⌄</span>
+          <span class="chart-arrow" onclick="toggleChart('${c.id}')">${open ? '↑' : '↓'}</span>
+        </div>
       </div>
       <div class="chart-body ${open ? 'open' : ''}">
         ${c.time || c.loc ? `<div class="sub-meta">${c.time ? 'Born ' + c.time : ''}${c.loc ? (c.time ? ' · ' : '') + esc(c.loc) : ''}</div>` : ''}
@@ -1908,6 +2106,22 @@ function renderCharts() {
         </div>
       </div>
     </div>`; }).join('') : '<p class="empty">No charts yet — tap “Add a chart” to start your archive.</p>';
+}
+
+function moveChart(id, dir) {
+  const cur = CHARTS.find(c => c.id === id);
+  if (!cur) return;
+  // reorder only within the same category, using the on-screen order
+  const sameCat = CHARTS.filter(c => c.cat === cur.cat);
+  const pos = sameCat.findIndex(c => c.id === id);
+  const swapWith = sameCat[pos + dir];
+  if (!swapWith) return;
+  const iA = CHARTS.indexOf(cur);
+  const iB = CHARTS.indexOf(swapWith);
+  CHARTS[iA] = swapWith; CHARTS[iB] = cur;
+  localStorage.setItem('avr-charts', JSON.stringify(CHARTS));
+  markLocalChange();
+  renderCharts();
 }
 
 const OPEN_CHARTS = new Set();
@@ -2553,7 +2767,31 @@ function logoTap() {
 </script>
 <script>
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/sw.js");
+    navigator.serviceWorker.register("/sw.js").then(reg => {
+      // Check for a new version every time the app opens or regains focus.
+      reg.update();
+      setInterval(() => reg.update(), 60 * 60 * 1000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) reg.update(); });
+
+      // When a new worker takes over, reload once so the app shows the latest version.
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (refreshing) return;
+        refreshing = true;
+        window.location.reload();
+      });
+
+      // If an update is found, tell the new worker to activate immediately.
+      reg.addEventListener('updatefound', () => {
+        const nw = reg.installing;
+        if (!nw) return;
+        nw.addEventListener('statechange', () => {
+          if (nw.state === 'installed' && navigator.serviceWorker.controller) {
+            nw.postMessage && nw.postMessage('skip-waiting');
+          }
+        });
+      });
+    }).catch(() => {});
   }
 </script>
 </body>
