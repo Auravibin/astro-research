@@ -198,8 +198,8 @@
   .chart-arrow { color: var(--accent); font-size: 14px; flex: 0 0 auto; cursor: pointer; }
   .drag-handle { color: var(--text-muted); font-size: 16px; cursor: grab; line-height: 1; padding: 0 6px 0 0; user-select: none; touch-action: none; }
   .drag-handle:active { cursor: grabbing; }
-  .img-drag { transition: box-shadow 0.15s, transform 0.1s; }
-  .img-drag.drag-over { box-shadow: 0 -3px 0 var(--accent); }
+  .img-drag, .chart-drag { transition: box-shadow 0.15s, transform 0.1s; }
+  .img-drag.drag-over, .chart-drag.drag-over { box-shadow: 0 -3px 0 var(--accent); }
   .chart-reorder { color: var(--text-muted); font-size: 17px; cursor: pointer; line-height: 1; padding: 0 2px; user-select: none; }
   .chart-reorder:hover { color: var(--accent); }
   .chart-body { display: none; padding: 0 1.1rem 1.1rem; }
@@ -2116,17 +2116,15 @@ function renderCharts() {
   document.getElementById('charts-list').innerHTML = list.length ? list.map(c => {
     const open = OPEN_CHARTS.has(c.id);
     return `
-    <div class="chart-item">
-      <div class="chart-head" onclick="toggleChart('${c.id}')">
-        <div class="chart-head-main">
+    <div class="chart-item chart-drag" draggable="true" data-id="${c.id}"
+      ondragstart="chartDragStart(event,'${c.id}')" ondragover="chartDragOver(event)" ondrop="chartDrop(event,'${c.id}')" ondragend="chartDragEnd(event)">
+      <div class="chart-head">
+        <span class="drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">⠿</span>
+        <div class="chart-head-main" onclick="toggleChart('${c.id}')">
           <span class="chart-name">${esc(c.name)}</span>
           <span class="chart-sub">${esc(c.cat)}${c.date ? ' · ' + new Date(c.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}${c.photo ? ' · 📷' : ''}</span>
         </div>
-        <div style="display:flex;align-items:center;gap:0.5rem;flex:0 0 auto;" onclick="event.stopPropagation();">
-          <span class="chart-reorder" onclick="moveChart('${c.id}',-1)" title="Move up">⌃</span>
-          <span class="chart-reorder" onclick="moveChart('${c.id}',1)" title="Move down">⌄</span>
-          <span class="chart-arrow" onclick="toggleChart('${c.id}')">${open ? '↑' : '↓'}</span>
-        </div>
+        <span class="chart-arrow" onclick="toggleChart('${c.id}')">${open ? '↑' : '↓'}</span>
       </div>
       <div class="chart-body ${open ? 'open' : ''}">
         ${c.time || c.loc ? `<div class="sub-meta">${c.time ? 'Born ' + c.time : ''}${c.loc ? (c.time ? ' · ' : '') + esc(c.loc) : ''}</div>` : ''}
@@ -2154,17 +2152,18 @@ function renderCharts() {
     </div>`; }).join('') : '<p class="empty">No charts yet — tap “Add a chart” to start your archive.</p>';
 }
 
-function moveChart(id, dir) {
-  const cur = CHARTS.find(c => c.id === id);
-  if (!cur) return;
-  // reorder only within the same category, using the on-screen order
-  const sameCat = CHARTS.filter(c => c.cat === cur.cat);
-  const pos = sameCat.findIndex(c => c.id === id);
-  const swapWith = sameCat[pos + dir];
-  if (!swapWith) return;
-  const iA = CHARTS.indexOf(cur);
-  const iB = CHARTS.indexOf(swapWith);
-  CHARTS[iA] = swapWith; CHARTS[iB] = cur;
+let chartDragId = null;
+function chartDragStart(e, id) { chartDragId = id; e.dataTransfer.effectAllowed = 'move'; e.currentTarget.style.opacity = '0.4'; }
+function chartDragEnd(e) { e.currentTarget.style.opacity = ''; document.querySelectorAll('.chart-drag').forEach(el => el.classList.remove('drag-over')); }
+function chartDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; document.querySelectorAll('.chart-drag').forEach(el => el.classList.remove('drag-over')); e.currentTarget.classList.add('drag-over'); }
+function chartDrop(e, targetId) {
+  e.preventDefault();
+  if (!chartDragId || chartDragId === targetId) return;
+  const from = CHARTS.findIndex(c => c.id === chartDragId);
+  const to = CHARTS.findIndex(c => c.id === targetId);
+  if (from < 0 || to < 0) return;
+  const [moved] = CHARTS.splice(from, 1);
+  CHARTS.splice(to, 0, moved);
   localStorage.setItem('avr-charts', JSON.stringify(CHARTS));
   markLocalChange();
   renderCharts();
