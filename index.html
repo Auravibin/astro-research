@@ -975,10 +975,11 @@
 <div class="section" id="section-library">
   <div class="section-eyebrow">Community Research</div>
   <h1 class="section-title">Pattern Library</h1>
-  <p class="section-sub">Real placements, real life events, submitted by the community and reviewed before publishing. Names appear only when the contributor chose to share them.</p>
-  <input class="search-bar" id="lib-search" placeholder="Search stories, placements, events..." oninput="renderLibrary()">
+  <p class="section-sub">A growing archive of real placements matched to real life events — submitted by the community, reviewed before publishing, and tagged so you can research by whatever you're curious about. Filter by planet, house, aspect, or strength of evidence to find the patterns that matter to you.</p>
+  <input class="search-bar" id="lib-search" placeholder="Search a planet, aspect, or life event..." oninput="renderLibrary()">
   <div class="filter-row" id="lib-filters"></div>
-  <div id="lib-list"><p class="empty">Loading submissions...</p></div>
+  <div id="lib-count" class="lib-count"></div>
+  <div id="lib-list"><p class="empty">Loading...</p></div>
 </div>
 
 <div class="section" id="section-submit">
@@ -2628,7 +2629,7 @@ function renderLibrary() {
     return '<div class="sub-card">' +
       '<span class="pill">' + esc(s.event_category) + (s.event_other ? ' — ' + esc(s.event_other) : '') + '</span>' +
       (conf ? '<span class="conf-pill ' + confClass + '">' + conf + '</span>' : '') +
-      '<div class="sub-meta">' + (s.show_name && s.display_name ? 'Shared by ' + esc(s.display_name) : 'Anonymous') +
+      '<div class="sub-meta">' + (s.show_name && s.display_name ? ((s.tags && s.tags.observed ? 'Observed by ' : 'Shared by ') + esc(s.display_name)) : 'Anonymous') +
         (s.event_date ? ' · ' + new Date(s.event_date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) +
           (s.event_date_end ? ' – ' + new Date(s.event_date_end + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '') : '') + '</div>' +
       (all.length ? '<div class="tag-row">' + all.map(function(x) { return '<span class="tag-pill">' + esc(x) + '</span>'; }).join('') + '</div>' : '') +
