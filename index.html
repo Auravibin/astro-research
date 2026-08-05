@@ -225,6 +225,75 @@
   .conf-emerging { background: rgba(224,26,134,0.12); color: var(--accent); }
   .conf-recurring { background: var(--accent); color: #fff; }
   .tag-pill { font-size: 10.5px; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 20px; border: 1px solid var(--border-strong); color: var(--text-muted); }
+
+
+  .natal-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; }
+  .natal-label { flex: 0 0 92px; font-size: 12.5px; color: var(--text-secondary); }
+  .natal-sign { flex: 1; margin: 0 !important; padding: 0.4rem 0.5rem !important; }
+  .natal-deg { flex: 0 0 56px; margin: 0 !important; padding: 0.4rem 0.4rem !important; text-align: center; }
+  .flow-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+  .cal-dow { text-align: center; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 4px; }
+  .cal-day { position: relative; aspect-ratio: 1; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; padding: 2px; }
+  .cal-day:active { transform: scale(0.94); }
+  .cal-today { border-color: var(--accent); border-width: 2px; }
+  .cal-future { opacity: 0.4; cursor: default; }
+  .cal-num { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+  .cal-moon { font-size: 11px; line-height: 1; }
+  .cal-energy { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+  .cal-period { position: absolute; top: 5px; right: 5px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+  .flow-cal-legend { display: flex; justify-content: center; gap: 1.2rem; margin-top: 1rem; font-size: 11px; color: var(--text-muted); }
+  .flow-cal-legend span { display: flex; align-items: center; gap: 0.3rem; }
+  .dot-energy { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); display: inline-block; }
+
+  .flow-sky-card { background: linear-gradient(135deg, #2a2340, #1a1530); color: #f0e9f5; border-radius: 20px; padding: 1.3rem 1.4rem; margin-bottom: 1.4rem; }
+  .flow-sky-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.7rem; }
+  .flow-sky-main { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.8rem; }
+  .flow-moon-emoji { font-size: 40px; line-height: 1; }
+  .flow-phase-name { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; }
+  .flow-phase-sub { font-size: 12px; opacity: 0.8; letter-spacing: 0.03em; margin-top: 2px; }
+  .flow-sky-poem { font-size: 13px; line-height: 1.6; font-style: italic; opacity: 0.9; margin-top: 0.5rem; }
+  .glow-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
+  .glow-tabs .subtab { white-space: nowrap; flex: 0 0 auto; }
+  .glow-note-card { background: linear-gradient(135deg, var(--bg-card), var(--bg-card-deep)); border: 1.5px solid var(--border); border-radius: 20px; padding: 1.3rem 1.4rem; margin-bottom: 1.4rem; }
+  .glow-note-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+  .glow-note-moon { font-size: 13px; color: var(--text-muted); margin-bottom: 0.7rem; }
+  .glow-note-body { font-size: 15px; line-height: 1.7; color: var(--text-primary); font-weight: 300; }
+  .sky-block { margin-bottom: 1.5rem; }
+  .sky-block-head { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.6rem; }
+  .sky-row { padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+  .sky-date { font-size: 12px; color: var(--accent); font-weight: 500; letter-spacing: 0.03em; }
+  .sky-event { font-size: 14px; color: var(--text-primary); margin-left: 0.6rem; }
+  .sky-note { font-size: 13px; color: var(--text-secondary); font-weight: 300; line-height: 1.55; margin-top: 0.3rem; }
+  .sky-empty { font-size: 13px; color: var(--text-muted); font-style: italic; padding: 0.5rem 0; }
+  .flow-transits-box { margin-bottom: 1.4rem; }
+  .transit-head { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
+  .transit-row { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 14px; padding: 0.7rem 0.9rem; margin-bottom: 0.5rem; }
+  .transit-row.transit-exact { border-color: var(--accent); }
+  .transit-line { font-size: 14px; color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+  .transit-sym { color: var(--accent); font-size: 15px; }
+  .transit-aspect { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); margin-left: auto; }
+  .transit-read { font-size: 13px; color: var(--text-secondary); line-height: 1.6; font-weight: 300; margin-top: 0.4rem; }
+  .transit-empty { font-size: 13px; color: var(--text-muted); font-style: italic; font-weight: 300; text-align: center; padding: 0.8rem; }
+  .flow-log-box { background: var(--bg-card-deep); border-radius: 18px; padding: 1.2rem 1.3rem; margin-bottom: 1.6rem; }
+  .flow-date-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+  #flow-date-label { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--text-primary); }
+  .energy-row { display: flex; gap: 0.4rem; }
+  .energy-dot { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; padding: 0.6rem 0.2rem; border: 1.5px solid var(--border); border-radius: 14px; cursor: pointer; transition: all 0.15s; background: var(--bg-card); }
+  .energy-dot span { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--text-muted); }
+  .energy-dot em { font-style: normal; font-size: 8.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-muted); text-align: center; }
+  .energy-dot.active { border-color: var(--accent); background: var(--accent); }
+  .energy-dot.active span, .energy-dot.active em { color: #fff; }
+  .mood-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .mood-chip { font-size: 12px; padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--border); color: var(--text-muted); cursor: pointer; transition: all 0.15s; }
+  .mood-chip.active { border-color: var(--accent); background: var(--accent); color: #fff; }
+  .flow-history-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 0.8rem; }
+  .flow-entry { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 16px; padding: 0.9rem 1.1rem; margin-bottom: 0.6rem; }
+  .flow-entry-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.4rem; }
+  .flow-entry-date { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: var(--text-primary); flex: 1; }
+  .flow-entry-moon { font-size: 12px; color: var(--text-muted); }
+  .flow-entry-x { color: var(--text-muted); cursor: pointer; font-size: 18px; padding: 0 4px; }
+  .flow-entry-energy { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.3rem; }
+
   .step-bar { display: flex; align-items: center; gap: 0.35rem; margin-bottom: 1.6rem; }
   .step-dot { display: flex; flex-direction: column; align-items: center; gap: 0.25rem; flex: 0 0 auto; }
   .step-dot span { width: 27px; height: 27px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-muted); background: var(--bg-card); transition: all 0.25s; }
@@ -708,9 +777,9 @@
   Why the domicile rulerships are ordered as they are · why Cancer and Leo (Moon and Sun) sit at the top of the chart's natural hierarchy · why the aspects mean what they mean — a square is hard because from Cancer, the squaring signs are the ones that share nothing with it · why Saturn opposes the lights (it's placed opposite Cancer and Leo). It's not a chart to interpret — it's the Rosetta Stone that decodes why every other chart is read the way it is.</div>
 
   <div class="acc-head" onclick="acc(this)"><h3>Who to study — the lineage</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body"><strong>The ancients</strong> — <em>Ptolemy</em> (2nd c., the <em>Tetrabiblos</em>, the closest thing to a foundational textbook), <em>Vettius Valens</em> (2nd c., the <em>Anthology</em> — real charts, real technique, zodiacal releasing), <em>Dorotheus of Sidon</em> (1st c., the source of much electional and horary), <em>Firmicus Maternus</em>, and the Persian and Medieval inheritors <em>Abu Ma'shar</em> and later <em>William Lilly</em> (17th c., <em>Christian Astrology</em> — the horary bible).<br><br>
+  <div class="acc-body"><strong>The ancients</strong> — <em>Ptolemy</em> (2nd c., the <em>Tetrabiblos</em>, the closest thing to a foundational textbook), <em>Vettius Valens</em> (2nd c., the <em>Anthology</em> — real charts, real technique, zodiacal releasing), <em>Dorotheus of Sidon</em> (1st c., the source of much electional and horary), <em>Firmicus Maternus</em>, and the Persian and Medieval inheritors <em>Abu Ma'shar</em>.<br><br>
   <strong>The astronomer-astrologers</strong> — <em>Johannes Kepler</em>, who cast charts professionally while revolutionizing astronomy, refined the minor aspects, and sought a mathematical-harmonic basis for astrology; <em>Tycho Brahe</em> and even <em>Galileo</em> practiced it. The split between astronomy and astrology is only a few centuries old.<br><br>
-  <strong>The modern voices</strong> — <em>Alan Leo</em> and <em>Dane Rudhyar</em> (founders of psychological/humanistic astrology), <em>Liz Greene</em> (astrology meets Jungian depth psychology), <em>Robert Hand</em> and <em>Project Hindsight</em> (who recovered the lost Hellenistic material), <em>Chris Brennan</em> (<em>Hellenistic Astrology</em> and The Astrology Podcast — the best modern on-ramp to traditional technique), and popular-practice authors like <em>Jan Spiller</em> (nodes and soul purpose) and <em>Steven Forrest</em> (evolutionary astrology).<br><br>
+  <strong>The modern voices</strong> — <em>Alan Leo</em> and <em>Dane Rudhyar</em> (founders of psychological/humanistic astrology), <em>Liz Greene</em> (astrology meets Jungian depth psychology), <em>Robert Hand</em> and <em>Project Hindsight</em> (who recovered the lost Hellenistic material), <em>Chris Brennan</em> (<em>Hellenistic Astrology</em> and The Astrology Podcast — the best modern on-ramp to traditional technique), and popular-practice authors like <em>Jan Spiller</em> (nodes and soul purpose).<br><br>
   A path that works: Brennan's podcast and book to understand the traditional skeleton, Forrest or Greene for psychological depth, then Valens and Lilly once you want to drink from the source.</div>
 
   <div class="acc-head" onclick="acc(this)"><h3>The standout planets — elevated, leading &amp; retrograde</h3><span class="acc-arrow">↓</span></div>
@@ -757,11 +826,108 @@
   <div class="hl"><strong>The hidden pattern — the benefic/malefic mirror</strong>Look at the sect logic and it becomes breathtaking. The <strong>day</strong> planets rejoice in the <strong>top half</strong> (Sun in the 9th, Jupiter in the 11th, and the day malefic set apart) while the <strong>night</strong> planets take the <strong>bottom half</strong> (Moon in the 3rd, Venus in the 5th). And the two malefics — Mars and Saturn — rejoice in the two "bad" houses (6th, Bad Fortune; 12th, Bad Spirit), while the two benefics — Venus and Jupiter — rejoice in the two "good" houses (5th, Good Fortune; 11th, Good Spirit). The whole system is a mirror: good planets in good houses, hard planets in hard houses, each doing the work that house was made for.</div>
   <strong>How to use it.</strong> When you find a planet in its house of joy, give it a quiet bonus — it's working from a comfortable seat even if its sign is difficult. A peregrine or debilitated planet sitting in its joy still has somewhere to stand. It's a subtle dignity, easy to overlook, and it deepens a reading immediately once you start checking for it.</div>
 
-  <h2 class="subhead">Books to Research</h2>
+  <h2 class="subhead">Mythology</h2>
+  <p class="section-sub" style="margin-bottom:1rem;">The stories the meanings grew out of. Learn the myth and the astrology stops being a list to memorize.</p>
+  <div class="acc-head" onclick="acc(this)"><h3>Why Seshat?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Seshat is the ancient Egyptian goddess of writing, measurement, mathematics, architecture, and astronomy. Her name means roughly <em>she who scribes</em> — and she is very likely the oldest recorded deity of literacy anywhere.<br><br>
+  <strong>Keeper of the House of Books.</strong> The <em>per ankh</em>, the sacred library attached to temples, was hers. She kept the records: the years of each pharaoh's reign inscribed on the leaves of the persea tree, the inventories, the measurements, the accumulated knowledge of a civilisation. She was the archive.<br><br>
+  <strong>She aligned buildings to the stars.</strong> At the founding of every temple, a ceremony called the <em>pedj shes</em> — the stretching of the cord — was performed. The pharaoh and Seshat together pulled a measuring cord taut between stakes while sighting along it to a chosen star or constellation, fixing the building's orientation to the sky. Egyptian temples are astronomically aligned because of a ritual carried out in her name. She is, quite literally, the goddess who used the stars to determine where things belong.<br><br>
+  <strong>Her emblem is an unsolved mystery.</strong> Seshat is always shown wearing a seven-pointed star or rosette beneath what looks like an inverted set of horns or a bow. Nobody knows for certain what it depicts — it remains one of the genuinely open questions in Egyptology, a symbol whose meaning her own archive did not preserve.<br><br>
+  <div class="hl"><strong>Why this site carries her name</strong>What you're reading is a library of records, measurements, and star knowledge, kept so that anyone can find their own alignment. Definitions, degrees, dignities, patterns submitted by strangers and preserved for the next person. That is Seshat's entire portfolio: writing things down, measuring carefully, and using the sky to know where something ought to stand.</div></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Why mythology matters — and where to begin</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">If astrology has ever felt like a Frankenstein — a pile of disconnected pieces, Saturn here, a Greek name there, no thread tying them — this is the section that stitches it together. Here is the honest truth of it: <strong>the myths are not decoration bolted onto the planets. The myths came first, and the meanings grew out of them.</strong><br><br>
+  When an astrologer says Saturn is about limitation, endurance, and the fear of being surpassed, they are not reciting a list someone invented. They are describing Kronos — the god who swallowed his children to keep his throne. The planet means what it means <em>because of the story</em>. Learn the story and you never have to memorise the keywords again; they fall out of the myth on their own.<br><br>
+  <strong>Why this is worth researching, not just reading.</strong> These stories are among the oldest surviving records of how human beings made sense of existence — birth, death, love, betrayal, power, transformation. They encode patterns that recur in every life, which is exactly why they map onto a chart at all. Sitting with them doesn't just make you a better astrologer; it connects you to the people who watched the same sky for thousands of years and felt the same things you feel. That's not a small thing. It's a way of belonging to something much larger than one lifetime.<br><br>
+  <div class="hl"><strong>Where to actually start — a path, not a pile</strong>1. Begin with the <strong>seven visible bodies</strong> in the order the ancients knew them: Sun, Moon, then Mercury, Venus, Mars, Jupiter, Saturn. Read each planet's myth here before touching anything else. This is the whole foundation.<br><br>2. Then the <strong>three outer planets</strong> — Uranus, Neptune, Pluto — and why they carry forces bigger than a single life.<br><br>3. Then the <strong>nodes</strong> (Rahu &amp; Ketu) and <strong>Chiron</strong> — the karmic and healing layer.<br><br>4. Then step back into the <strong>source cultures</strong> — the civilisations these stories actually came from, in the order they shaped astrology:<br><br>
+  &nbsp;&nbsp;• <strong>Egypt first.</strong> This is where the decans (the 36 star-groups that became the 10° faces), the sky-goddess Nut, and the god Thoth all begin — and Thoth later became Hermes Trismegistus, whose name is on the Hermetic lots you'll use in charts. Start with the Egypt entries below, then if you want to go deeper, look into <em>The Egyptian Book of the Dead</em> (any annotated edition) and the myth cycle of Isis and Osiris — Plutarch's <em>On Isis and Osiris</em> is the classic ancient source.<br><br>
+  &nbsp;&nbsp;• <strong>Then Greece and Rome.</strong> This is where the planet-gods you already use get their fullest personalities — Kronos/Saturn, Ares/Mars, Aphrodite/Venus. The two most accessible doorways are Hesiod's <em>Theogony</em> (the origin of the gods, including Kronos swallowing his children) and Ovid's <em>Metamorphoses</em> (the great storehouse of the transformation myths). For a modern retelling, Stephen Fry's <em>Mythos</em> is the gentlest entry, and Edith Hamilton's <em>Mythology</em> is the classic student's companion.<br><br>
+  &nbsp;&nbsp;• <strong>Then the Vedic thread.</strong> "Vedic" means the astrology and mythology of ancient India — <em>Jyotisha</em>, the sister system to Western astrology. This is where Rahu and Ketu (the dragon's head and tail, the eclipse points) come from. The stories live in the <em>Mahabharata</em> and the <em>Puranas</em>; the churning-of-the-ocean myth in the Ketu entry below is the doorway. You don't need to practise Vedic astrology to let its myths deepen how you read the nodes.<br><br>
+  Each entry below is written to be read in roughly this order — but there's no wrong door. If a particular god pulls at you, start there.<br><br>Don't try to hold it all at once. Read one myth, sit with it, watch where it shows up in a chart you know. The connections build themselves once you stop rushing.</div>
+  <strong>The one mindset that helps.</strong> You will never finish. There is no bottom to this — no single book, no final authority, no day you'll have "learned mythology." That's not failure, it's the nature of it. Pick a doorway, walk through it, and trust that every story connects to every other one eventually. This whole archive exists so that you always have a next door to open.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Saturn — Kronos, the god who ate time</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Kronos (Roman Saturn) castrated his father Uranus to end his tyranny, then — warned that his own child would overthrow him — swallowed each of his children at birth. His wife hid the baby Zeus, who returned to free his siblings and depose him. Saturn is the father who fears his own succession: time, limitation, authority, the fear of being surpassed. But Kronos also ruled the Golden Age — a time of order and abundance. That's Saturn's gift beneath the fear: structure that, once accepted, becomes mastery. The planet asks what you'll swallow to stay in control, and what you could build if you stopped.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Chiron — the wounded healer</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Chiron was a centaur, but unlike his wild kin he was wise, gentle, a teacher of heroes and healers. Struck by an arrow poisoned with Hydra's blood, he suffered a wound that could never heal — yet as an immortal he couldn't die to escape it. So he lived <em>with</em> the pain, and it made him the greatest of all healers, because he understood suffering from the inside. Eventually he gave up his immortality to free Prometheus, and was placed among the stars. This is exactly the Chiron point in your chart: the wound that won't fully close, and precisely because of that, the place you can heal others.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Mars — Ares vs the Norse Tyr</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">The Greek Ares was raw, chaotic war — bloodlust, rage, the fury of battle for its own sake, disliked even by the other gods. The Roman Mars was more disciplined: a protector, an agricultural guardian as much as a warrior. And the Norse day-name for Mars, Tyr (Tuesday — Tyr's day, mardi), gives a third face: Tyr sacrificed his own right hand into the jaws of the wolf Fenrir so the gods could bind him — courage as self-sacrifice, the willingness to lose something to protect the whole. Mars in your chart carries all three: the rage, the discipline, and the brave cost.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Venus — Aphrodite &amp; Inanna's descent</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Aphrodite, born from sea-foam, is the obvious Venus: beauty, love, desire, magnetism. But the older, deeper Venus is the Sumerian Inanna, who descended through the seven gates of the underworld, surrendering a garment and a piece of her power at each, until she stood stripped bare before death itself — then rose again transformed. This is why Venus rules both love AND the cycle of Venus retrograde: the descent into the dark to reclaim what was lost, and return remade. Venus isn't only prettiness; she's the courage to be stripped and to rise.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Mercury — Hermes the boundary-crosser</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Hermes was the only god who could travel freely between all worlds — Olympus, Earth, and the underworld — the messenger, the guide of souls to the land of the dead (psychopomp), the god of merchants, travelers, thieves, and language. He was a trickster from birth, stealing Apollo's cattle on his first day alive, then charming his way out of trouble by inventing the lyre. Mercury is that boundary-crossing quicksilver mind: communication, commerce, cleverness, and the ability to move between worlds and translate one to another. Mercury retrograde is Hermes slipping into the underworld — which is why it feels like things get lost and messages go astray.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Jupiter — Zeus, king of expansion</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Zeus (Roman Jupiter, Norse Thor — Thursday, jeudi, "Jove's day") overthrew Saturn and became king of the gods: the sky-father, wielder of the thunderbolt, dispenser of justice and abundance. His appetite was as vast as his generosity — endless affairs, endless offspring, endless expansion. That's Jupiter exactly: growth, faith, luck, optimism, opportunity — and the shadow of excess, overreach, and too-much-of-a-good-thing. Thor's hammer, meanwhile, gives the thunder-god's protective force. Jupiter in your chart is where life wants to get BIGGER — for better and sometimes for too much.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Rahu &amp; Ketu — the dragon that swallows the lights</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">The gods and the demons churned the cosmic ocean together to produce <em>amrita</em>, the nectar of immortality. When it finally appeared, the gods tried to keep it for themselves — but one demon, Svarbhanu, slipped into their line disguised and drank.<br><br>
+  The Sun and the Moon saw him. They spoke. And Vishnu, hearing it, threw his discus and severed the demon's head from his body in the same instant the nectar reached his throat.<br><br>
+  It was already too late. He had swallowed. Both halves were immortal, and both halves survived — permanently separated, permanently incomplete.<br><br>
+  <strong>The head became Rahu.</strong> A mouth and a throat with no stomach beneath it: he can consume endlessly and never be filled. This is the North Node — insatiable appetite, obsession, craving, the pull toward more of something you have never had.<br><br>
+  <strong>The body became Ketu.</strong> A form with no mouth to feed it: it cannot take anything in, so it needs nothing. This is the South Node — detachment, renunciation, the mastery you already carry, and the release of wanting.<br><br>
+  <div class="hl"><strong>And the eclipses</strong>Rahu never forgave the Sun and the Moon for exposing him. He pursues them across the sky forever, and when he catches one he swallows it whole — but with no body to hold it, the light passes through his severed neck and emerges again. That is an eclipse: the swallowing and the release.<br><br>The astronomy underneath is exact. Eclipses can only occur near the lunar nodes — the very points named Rahu and Ketu. The myth is a precise description of celestial mechanics, told as a story of appetite and revenge thousands of years before anyone drew the geometry.</div></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Egypt — where the decans were born</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Long before Hellenistic Greece assembled the system we use, Egyptian priests were watching the sky with extraordinary precision — and much of what looks Greek in astrology has Egyptian bones.<br><br>
+  <strong>The 36 decans.</strong> The Egyptians divided the sky into thirty-six star groups, each rising just before dawn for roughly ten days a year. Together they formed a star clock: the night's hours were told by which decan was rising. Thirty-six decans of ten days each gave a 360-day year, with five extra days added on. When the Greeks inherited this, the decans became the 10° divisions of each zodiac sign — the same thirty-six, mapped onto a new frame. Every time you read a decan, you're using an Egyptian instrument.<br><br>
+  <strong>Nut, the sky.</strong> The sky was a goddess: Nut, arched over the earth on fingertips and toes, her body covered in stars. Each evening she swallowed the Sun; each dawn she gave birth to it again. The sky was not a place in Egyptian thought — it was a body, and celestial events were things happening to someone.<br><br>
+  <strong>Ra and the solar barque.</strong> The Sun crossed the daytime sky in a boat, then descended into the Duat — the underworld — to sail through twelve hours of night, facing the serpent Apep in the darkest hour before rising renewed. Twelve hours of visible sky, twelve of the invisible: an early ancestor of the twelvefold division, and of the day/night sect distinction that still runs through traditional astrology.<br><br>
+  <strong>Thoth, the measurer.</strong> Ibis-headed god of writing, calculation, time, and the Moon — keeper of the records and inventor of the sciences. When Greek culture met Egyptian, Thoth merged with Hermes to become <strong>Hermes Trismegistus</strong>, "Thrice-Great Hermes," the legendary author of the Hermetic texts. The Hermetic lots — Fortune, Spirit, Eros, Necessity, Courage, Victory, Nemesis — carry his name because of this fusion. Mercury's connection to writing, measurement, and hidden knowledge runs straight back to an Egyptian god of the Moon.<br><br>
+  <strong>Sirius, Sopdet, and the new year.</strong> The most important star in Egypt was Sirius — <em>Sopdet</em>, later identified with Isis. After seventy days invisible below the horizon, its heliacal rising (its first reappearance just before dawn) coincided with the annual flooding of the Nile, and marked the Egyptian new year. An entire civilization set its calendar by a single star's return. The technique of heliacal rising and setting — a planet's disappearance into the Sun's beams and its return — remains a live part of traditional astrology.<br><br>
+  <div class="hl"><strong>Why this matters for reading charts</strong>The Egyptian bounds, the decans, the heliacal phases, the twelvefold night, the Hermetic material: these aren't decorative history. They're the underlying architecture. Knowing the sky was once a goddess who swallowed the Sun each night makes the mechanics easier to hold, not harder — the tradition was built by people who experienced the sky as alive.</div></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Osiris &amp; the Duat — Orion in the night sky</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Osiris ruled Egypt well, and his brother Set envied him for it. Set tricked him into a chest, sealed it, and threw it into the Nile — then, when Isis recovered the body, tore it into pieces and scattered them across the land. Isis searched, gathered every piece, bound them together, and revived him long enough to conceive their son Horus. Osiris did not return to the living world. He became lord of the Duat and judge of the dead.<br><br>
+  <strong>And then look up.</strong> Osiris in the sky is <em>Sah</em> — the constellation we call Orion. Isis is <em>Sopdet</em> — Sirius, which rises just behind him, night after night, following. The story of the wife pursuing her husband across the world is a description of what those two stars actually do.<br><br>
+  <strong>The death and return is also literal.</strong> Sirius vanishes below the horizon for about seventy days each year before its heliacal rising brings the Nile flood — and the Egyptian mummification rite lasted about seventy days. The funeral practices of an entire civilisation were timed to a star's disappearance and return. Death, a fixed period of invisibility, then rising again: the myth, the ritual, and the sky are the same document.<br><br>
+  <strong>The Duat itself</strong> is usually translated "underworld," which misleads. It is not beneath the ground in the way we picture it — it is a region of the <em>night sky</em>, the part of the heavens the Sun passes through between setting and rising. Texts like the <em>Amduat</em> ("that which is in the Duat") and the Book of Gates map it as twelve hours with twelve gates, each with its own trial and its own guardian.<br><br>
+  <div class="hl"><strong>Your chart has a Duat</strong>Twelve divisions of the invisible sky, mirroring twelve of the visible: the resonance with the houses is hard to miss. The lower half of your chart — houses 1 through 6 — is the portion of sky that was <em>beneath the horizon</em> at the moment you were born. Planets there were in the Duat when you arrived. It's the same distinction the Egyptians drew between the sky you can see and the sky doing its work out of sight, and the same reason those houses read as private, interior, and formative.</div></div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Horus — the sky, and the moon as a healing eye</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Horus, the falcon-headed son of Isis and Osiris, is not a god who lives in the sky. He <em>is</em> the sky. His name, <em>Heru</em>, means something close to "the distant one" or "he who is above," and the image is a falcon whose outstretched wings span the heavens.<br><br>
+  <strong>His right eye is the Sun. His left eye is the Moon.</strong> Two lights in one face, which is already the entire logic of sect — the diurnal light and the nocturnal light belonging to a single sky.<br><br>
+  <strong>Then comes the injury.</strong> In the long war against Set to avenge his father, Horus's left eye — the Moon — was torn out and shattered into pieces. Thoth, god of measurement and calculation, gathered the fragments and restored it. The healed eye became the <em>wedjat</em>, the Eye of Horus, worn as protection for thousands of years.<br><br>
+  <div class="hl"><strong>That myth is the lunar cycle</strong>The Moon is wounded, diminishes to nothing, and is made whole again — every single month, forever. The Egyptians told the waxing and waning as an eye being broken and repaired, and they gave the repair to the god of mathematics. The Moon isn't restored by force in this story; it's restored by <em>measurement</em>. Which is why the parts of the wedjat were used as fractions in Egyptian arithmetic — halves, quarters, eighths — and why the restored eye is simultaneously a symbol of healing and a system of accounting.</div>
+  Horus was also every living pharaoh, while every dead pharaoh became Osiris — so the throne passing from father to son mirrored the sky handing off between the visible world and the Duat, generation after generation.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Amenti, Maat &amp; the weighing of the heart</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>Amenti</strong> — <em>Imentet</em>, "the West" — is where the Sun sets, and therefore the land of the dead. This is why Egyptian tombs and mortuary temples were built on the west bank of the Nile: the dead follow the Sun down. Amenti is not a punishment or a pit; it's a direction, and the whole civilisation oriented its architecture of death around a daily celestial event.<br><br>
+  <strong>The Hall of Two Truths</strong> is where the newly dead arrive. The heart is placed on a scale and weighed against a single ostrich feather — the feather of <strong>Maat</strong>. Thoth stands by and records the result. A heart heavier than the feather has carried too much, and is devoured; a heart in balance passes on into the field of reeds.<br><br>
+  <strong>Maat is the concept underneath everything.</strong> She is truth, balance, justice, and cosmic order — but crucially, not order imposed on the world from outside. Maat is the pattern the world <em>already runs on</em>: the Sun rising on schedule, the flood arriving on time, the stars returning to their places season after season. Her opposite is <em>isfet</em>, chaos, and the pharaoh's central duty was to uphold maat against it. Every ritual, every alignment, every measurement was a way of keeping the human world in step with the celestial one.<br><br>
+  <div class="hl"><strong>Maat is astrology's oldest premise</strong>The sky is orderly, that order is meaningful, and a life can be read against it. Four thousand years before anyone drew a birth chart, that idea already had a name and a feather.</div>
+  <strong>One accuracy note worth having.</strong> The phrase "Halls of Amenti" as it circulates today comes largely from <em>The Emerald Tablets of Thoth</em>, a text written by Maurice Doreal in the 1930s and presented as an ancient Atlantean translation. It's a modern work, not an Egyptian one. The genuine Egyptian Amenti is the western land of the dead described above — beautiful, thoroughly attested, and quite different from the version in that book. Both are worth knowing about; they're just not the same thing.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>The outer planets — Uranus, Neptune, Pluto</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body"><strong>Uranus</strong> — the primordial sky, castrated by his own son Saturn; fittingly the planet of sudden overthrow, revolution, and the shock that breaks the old order. <strong>Neptune</strong> — Poseidon, god of the sea and its dissolving, boundless depths: dreams, illusion, mysticism, the loss of edges. <strong>Pluto</strong> — Hades, lord of the underworld and its buried riches (plouton means "wealth"); the abductor of Persephone and ruler of death, power, and everything forced into transformation. The three planets invisible to the ancient eye rule the three forces bigger than any single life: revolution, dissolution, and rebirth.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>The Moon &amp; the lunar goddesses</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">The Moon wears three faces across mythology, matching her phases: the maiden (waxing), the mother (full), the crone (waning) — Artemis the huntress, Selene the full-moon lover, Hecate the goddess of the dark moon, crossroads, and magic. This triple goddess is why the Moon governs cycles, instinct, the body's rhythms, and the shifting emotional tides. Where your Moon sits is which face of her you most naturally wear — and the house shows the terrain where your inner life seeks its safety and its feeling.</div>
+
+<div class="acc-head" onclick="acc(this)"><h3>The twelve signs — where their stories come from</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Each sign is a constellation, and almost every one carries a Greek myth that explains what it means. The meaning isn't arbitrary — it grew out of the story the ancients saw written in those stars.<br><br>
+  <strong>♈ Aries — the Ram of the Golden Fleece.</strong> The winged ram with fleece of gold carried two children away from being sacrificed, flying them to safety. Its fleece became the object of Jason's quest. Aries is the rescuer's headlong courage — the one who acts first, charges in, saves the day before thinking. Ruled by Mars; the initiator.<br><br>
+  <strong>♉ Taurus — the Bull, Zeus in disguise.</strong> Zeus transformed into a magnificent white bull to win Europa, who climbed onto his back before he carried her across the sea. Taurus is the sign of the body, the senses, beauty, and steady physical presence — the bull that is gentle until moved. Ruled by Venus; the stabilizer.<br><br>
+  <strong>♊ Gemini — the Twins, Castor and Pollux.</strong> Two brothers, one mortal and one immortal, so devoted that when the mortal died, the immortal begged to share his own eternal life rather than be parted. Zeus set them both in the stars. Gemini is duality, connection, the two-in-one mind. Ruled by Mercury; the communicator.<br><br>
+  <strong>♋ Cancer — the Crab.</strong> During Heracles' battle with the Hydra, a crab crept in to pinch his foot in loyalty to Hera. It was crushed for its trouble — but Hera honored its devotion with a place in the sky. Cancer is loyalty, protection, and the tender heart that defends what it loves. Ruled by the Moon; the nurturer.<br><br>
+  <strong>♌ Leo — the Nemean Lion.</strong> The monstrous lion whose hide no weapon could pierce, slain by Heracles as his first labour. Placed in the heavens as a mark of the feat. Leo is sovereignty, radiance, the untouchable pride of the king of beasts. Ruled by the Sun; the sovereign.<br><br>
+  <strong>♍ Virgo — the Maiden, often Astraea or Demeter.</strong> Astraea, goddess of justice and innocence, was the last immortal to leave earth as humanity fell into corruption — she ascended to become the constellation, holding the scales of Libra beside her. Virgo is purity, service, discernment, the sacred harvest. Ruled by Mercury; the perfecter.<br><br>
+  <strong>♎ Libra — the Scales.</strong> The only zodiac sign that is an object, not a creature — the scales of justice held by Astraea/Themis, weighing right against wrong. Once considered the claws of the Scorpion, later set apart as balance itself. Libra is harmony, fairness, relationship, the search for equilibrium. Ruled by Venus; the harmonizer.<br><br>
+  <strong>♏ Scorpio — the Scorpion that felled Orion.</strong> The great hunter Orion boasted he could kill any beast, so the earth sent a scorpion that stung him dead. Both were placed in the sky at opposite ends — so that as Scorpio rises, Orion flees below the horizon. Scorpio is death, transformation, the sting that ends and remakes. Ruled by Mars (traditional) and Pluto (modern); the transformer.<br><br>
+  <strong>♐ Sagittarius — the Centaur archer, Chiron.</strong> The wise centaur — half man, half horse — teacher of heroes, aiming his arrow at the stars. Often identified with Chiron himself. Sagittarius is the quest for meaning, the arrow of aspiration flying toward truth and the far horizon. Ruled by Jupiter; the seeker.<br><br>
+  <strong>♑ Capricorn — the Sea-Goat.</strong> A strange hybrid — the god Pan, fleeing the monster Typhon, dove into the Nile and transformed his lower half into a fish while his upper half stayed a goat. The sea-goat climbs the highest mountain and descends the deepest water: worldly ambition rooted in hidden depths. Ruled by Saturn; the builder.<br><br>
+  <strong>♒ Aquarius — the Water-Bearer, Ganymede.</strong> A beautiful youth carried to Olympus by Zeus (as an eagle) to become cupbearer to the gods, pouring out the waters of life for all. Aquarius is the humanitarian, pouring knowledge and vision out to humanity — the future-minded gift-giver. Ruled by Saturn (traditional) and Uranus (modern); the visionary.<br><br>
+  <strong>♓ Pisces — the Two Fish.</strong> Aphrodite and her son Eros, escaping the same monster Typhon, turned into fish and tied themselves together with a cord so they would not lose each other in the water. Pisces is the two fish swimming in opposite directions, bound together — the mystic, the dreamer, the dissolver of boundaries between self and all. Ruled by Jupiter (traditional) and Neptune (modern); the mystic.<br><br>
+  <div class="hl"><strong>Notice the pattern</strong>The story always encodes the meaning. Aries rescues headlong; Scorpio stings and transforms; Libra weighs and balances; Aquarius pours out for everyone. You never have to memorize sign keywords if you know the myth — the keyword is just the story, compressed.</div></div>
+
+    <h2 class="subhead">Books to Research</h2>
 
   <div class="acc-head" onclick="acc(this)"><h3>Where to begin — foundations</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body">If you're starting out, start here. These build the frame everything else hangs on.<br><br>
-  <strong>The Inner Sky</strong> — Steven Forrest. The friendliest true on-ramp to reading a chart as a whole living story rather than a list of traits.<br><br>
   <strong>Chart Interpretation Handbook</strong> — Stephen Arroyo. Clear, grounded synthesis of signs, planets, houses, aspects.<br><br>
   <strong>You Were Born For This</strong> — Chani Nicholas. Modern, accessible, and strong on turning placements into lived practice.<br><br>
   <strong>Astrology for the Soul</strong> — Jan Spiller. The popular entry point to the lunar nodes and soul purpose.<br><br>
@@ -779,8 +945,7 @@
   <div class="acc-body">For the ancient techniques — sect, dignity, time-lords, the real backbone.<br><br>
   <strong>Hellenistic Astrology: The Study of Fate and Fortune</strong> — Chris Brennan. The definitive modern guide to the tradition. If you buy one serious book, this is it.<br><br>
   <strong>Astrology and the Authentic Self</strong> — Demetra George. A bridge between traditional technique and psychological meaning.<br><br>
-  <strong>Ancient Astrology in Theory and Practice</strong> — Demetra George. Deeper, two-volume, for when you're committed.<br><br>
-  <strong>Christian Astrology</strong> — William Lilly (17th c.). The horary bible — dense, old-language, and the source everyone else draws from.</div>
+  <strong>Ancient Astrology in Theory and Practice</strong> — Demetra George. Deeper, two-volume, for when you're committed.</div>
 
   <div class="acc-head" onclick="acc(this)"><h3>Prediction &amp; timing</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body"><strong>The Only Way to Learn About Tomorrow</strong> — March &amp; McEvers. Progressions, transits, and returns, taught step by step.<br><br>
@@ -1118,37 +1283,12 @@
 
   <div class="subtabs">
     <div class="subtab active" data-sub="charts" onclick="showSub('charts')">Charts</div>
-    <div class="subtab" data-sub="calendar" onclick="showSub('calendar')">2026 Calendar</div>
     <div class="subtab" data-sub="images" onclick="showSub('images')">Images</div>
     <div class="subtab" data-sub="saved" onclick="showSub('saved')">Saved Terms</div>
     <div class="subtab" data-sub="notes" onclick="showSub('notes')">Study Notes</div>
     <div class="subtab" data-sub="flash" onclick="showSub('flash')">Flashcards</div>
     <div class="subtab" data-sub="practice" onclick="showSub('practice')">Chart Practice Log</div>
     <div class="subtab" data-sub="questions" onclick="showSub('questions')">Questions to Research</div>
-  </div>
-
-  <div class="subsection" id="sub-calendar">
-    <p class="section-sub" style="margin-bottom:1rem;">The Glowing With The Moon 2026 calendar — moon phases, sign ingresses, retrogrades, eclipses, and daily aspects. Tap any month to open it, then tap the image to zoom.</p>
-
-    <div class="acc-head" onclick="acc(this)"><h3>2026 at a glance — eclipse portals</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body">The full year with every moon phase, and the eclipse portals marked in gold.<img class="brand-img chart-thumb" src="img/cal-2026-year.jpg" alt="Glowing With The Moon 2026 year overview with eclipse portals" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>August 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-08.jpg" alt="August 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>September 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-09.jpg" alt="September 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>October 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-10.jpg" alt="October 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>November 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-11.jpg" alt="November 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>December 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-12.jpg" alt="December 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-top:1.2rem;">Times shown are Eastern. Adjust for your own zone — the Moon moves roughly half a degree an hour, so ingress times shift but the day's overall pattern holds.</p>
   </div>
 
   <div class="subsection" id="sub-images">
@@ -1252,91 +1392,125 @@
   </div>
 </div>
 
-<div class="section" id="section-myth">
-  <div class="section-eyebrow">The Stories</div>
-  <h1 class="section-title">Mythology &amp; <span style="color:var(--accent);font-style:italic;">Meaning</span></h1>
-  <p class="section-sub">Every planet is a story before it's a symbol. The myths aren't decoration — they ARE the meaning. Understand the god and you'll never forget the planet.</p>
-  <input class="search-bar" id="myth-search" placeholder="Search the myths..." oninput="filterMyth()">
+<div class="section" id="section-flow">
+  <div class="section-eyebrow">Glow with the moon</div>
+  <h1 class="section-title">Let's help you <span style="color:var(--accent);font-style:italic;">glow</span></h1>
+  <p class="section-sub">Your daily check-in with the sky. What today holds, how the energy moves through the week and month, and space to track your own rhythm alongside it.</p>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Why Seshat?</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Seshat is the ancient Egyptian goddess of writing, measurement, mathematics, architecture, and astronomy. Her name means roughly <em>she who scribes</em> — and she is very likely the oldest recorded deity of literacy anywhere.<br><br>
-  <strong>Keeper of the House of Books.</strong> The <em>per ankh</em>, the sacred library attached to temples, was hers. She kept the records: the years of each pharaoh's reign inscribed on the leaves of the persea tree, the inventories, the measurements, the accumulated knowledge of a civilisation. She was the archive.<br><br>
-  <strong>She aligned buildings to the stars.</strong> At the founding of every temple, a ceremony called the <em>pedj shes</em> — the stretching of the cord — was performed. The pharaoh and Seshat together pulled a measuring cord taut between stakes while sighting along it to a chosen star or constellation, fixing the building's orientation to the sky. Egyptian temples are astronomically aligned because of a ritual carried out in her name. She is, quite literally, the goddess who used the stars to determine where things belong.<br><br>
-  <strong>Her emblem is an unsolved mystery.</strong> Seshat is always shown wearing a seven-pointed star or rosette beneath what looks like an inverted set of horns or a bow. Nobody knows for certain what it depicts — it remains one of the genuinely open questions in Egyptology, a symbol whose meaning her own archive did not preserve.<br><br>
-  <div class="hl"><strong>Why this site carries her name</strong>What you're reading is a library of records, measurements, and star knowledge, kept so that anyone can find their own alignment. Definitions, degrees, dignities, patterns submitted by strangers and preserved for the next person. That is Seshat's entire portfolio: writing things down, measuring carefully, and using the sky to know where something ought to stand.</div></div>
+  <div id="flow-chart-setup" class="flow-log-box" style="margin-bottom:1.4rem;">
+    <div class="chart-setup-collapsed" id="chart-setup-collapsed">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">
+        <div>
+          <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:0.2rem;">Your chart</div>
+          <div id="chart-status" style="font-size:13px;color:var(--text-muted);font-weight:300;"></div>
+        </div>
+        <button class="btn btn-sm" onclick="toggleChartSetup()" id="chart-setup-btn">Add my chart</button>
+      </div>
+    </div>
+    <div class="chart-setup-open" id="chart-setup-open" style="display:none;">
+      <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Your birth chart</div>
+      <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.9rem;">Enter your placements once. The daily sky then shows how today's transits touch <em>your</em> chart. Enter what you know — you can fill the rest later. Private to you.</p>
+      <div id="natal-inputs"></div>
+      <div style="display:flex;gap:0.5rem;margin-top:0.9rem;flex-wrap:wrap;">
+        <button class="btn btn-sm" onclick="saveNatal()">Save chart</button>
+        <button class="btn btn-sm btn-ghost" onclick="toggleChartSetup()">Close</button>
+      </div>
+      <div class="msg" id="natal-msg"></div>
+    </div>
+  </div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Why mythology matters — and where to begin</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">If astrology has ever felt like a Frankenstein — a pile of disconnected pieces, Saturn here, a Greek name there, no thread tying them — this is the section that stitches it together. Here is the honest truth of it: <strong>the myths are not decoration bolted onto the planets. The myths came first, and the meanings grew out of them.</strong><br><br>
-  When an astrologer says Saturn is about limitation, endurance, and the fear of being surpassed, they are not reciting a list someone invented. They are describing Kronos — the god who swallowed his children to keep his throne. The planet means what it means <em>because of the story</em>. Learn the story and you never have to memorise the keywords again; they fall out of the myth on their own.<br><br>
-  <strong>Why this is worth researching, not just reading.</strong> These stories are among the oldest surviving records of how human beings made sense of existence — birth, death, love, betrayal, power, transformation. They encode patterns that recur in every life, which is exactly why they map onto a chart at all. Sitting with them doesn't just make you a better astrologer; it connects you to the people who watched the same sky for thousands of years and felt the same things you feel. That's not a small thing. It's a way of belonging to something much larger than one lifetime.<br><br>
-  <div class="hl"><strong>Where to actually start — a path, not a pile</strong>1. Begin with the <strong>seven visible bodies</strong> in the order the ancients knew them: Sun, Moon, then Mercury, Venus, Mars, Jupiter, Saturn. Read each planet's myth here before touching anything else. This is the whole foundation.<br><br>2. Then the <strong>three outer planets</strong> — Uranus, Neptune, Pluto — and why they carry forces bigger than a single life.<br><br>3. Then the <strong>nodes</strong> (Rahu &amp; Ketu) and <strong>Chiron</strong> — the karmic and healing layer.<br><br>4. Then step back into the <strong>source cultures</strong> — the civilisations these stories actually came from, in the order they shaped astrology:<br><br>
-  &nbsp;&nbsp;• <strong>Egypt first.</strong> This is where the decans (the 36 star-groups that became the 10° faces), the sky-goddess Nut, and the god Thoth all begin — and Thoth later became Hermes Trismegistus, whose name is on the Hermetic lots you'll use in charts. Start with the Egypt entries below, then if you want to go deeper, look into <em>The Egyptian Book of the Dead</em> (any annotated edition) and the myth cycle of Isis and Osiris — Plutarch's <em>On Isis and Osiris</em> is the classic ancient source.<br><br>
-  &nbsp;&nbsp;• <strong>Then Greece and Rome.</strong> This is where the planet-gods you already use get their fullest personalities — Kronos/Saturn, Ares/Mars, Aphrodite/Venus. The two most accessible doorways are Hesiod's <em>Theogony</em> (the origin of the gods, including Kronos swallowing his children) and Ovid's <em>Metamorphoses</em> (the great storehouse of the transformation myths). For a modern retelling, Stephen Fry's <em>Mythos</em> is the gentlest entry, and Edith Hamilton's <em>Mythology</em> is the classic student's companion.<br><br>
-  &nbsp;&nbsp;• <strong>Then the Vedic thread.</strong> "Vedic" means the astrology and mythology of ancient India — <em>Jyotisha</em>, the sister system to Western astrology. This is where Rahu and Ketu (the dragon's head and tail, the eclipse points) come from. The stories live in the <em>Mahabharata</em> and the <em>Puranas</em>; the churning-of-the-ocean myth in the Ketu entry below is the doorway. You don't need to practise Vedic astrology to let its myths deepen how you read the nodes.<br><br>
-  Each entry below is written to be read in roughly this order — but there's no wrong door. If a particular god pulls at you, start there.<br><br>Don't try to hold it all at once. Read one myth, sit with it, watch where it shows up in a chart you know. The connections build themselves once you stop rushing.</div>
-  <strong>The one mindset that helps.</strong> You will never finish. There is no bottom to this — no single book, no final authority, no day you'll have "learned mythology." That's not failure, it's the nature of it. Pick a doorway, walk through it, and trust that every story connects to every other one eventually. This whole archive exists so that you always have a next door to open.</div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Saturn — Kronos, the god who ate time</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Kronos (Roman Saturn) castrated his father Uranus to end his tyranny, then — warned that his own child would overthrow him — swallowed each of his children at birth. His wife hid the baby Zeus, who returned to free his siblings and depose him. Saturn is the father who fears his own succession: time, limitation, authority, the fear of being surpassed. But Kronos also ruled the Golden Age — a time of order and abundance. That's Saturn's gift beneath the fear: structure that, once accepted, becomes mastery. The planet asks what you'll swallow to stay in control, and what you could build if you stopped.</div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Chiron — the wounded healer</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Chiron was a centaur, but unlike his wild kin he was wise, gentle, a teacher of heroes and healers. Struck by an arrow poisoned with Hydra's blood, he suffered a wound that could never heal — yet as an immortal he couldn't die to escape it. So he lived <em>with</em> the pain, and it made him the greatest of all healers, because he understood suffering from the inside. Eventually he gave up his immortality to free Prometheus, and was placed among the stars. This is exactly the Chiron point in your chart: the wound that won't fully close, and precisely because of that, the place you can heal others.</div>
+  <div class="subtabs glow-tabs" style="margin-bottom:1.2rem;">
+    <div class="subtab active" id="glowview-today" onclick="setGlowView('today')">Today</div>
+    <div class="subtab" id="glowview-week" onclick="setGlowView('week')">This Week</div>
+    <div class="subtab" id="glowview-month" onclick="setGlowView('month')">This Month</div>
+    <div class="subtab" id="glowview-cal" onclick="setGlowView('cal')">Calendar</div>
+    <div class="subtab" id="glowview-ref" onclick="setGlowView('ref')">Sky Data</div>
+  </div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Mars — Ares vs the Norse Tyr</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">The Greek Ares was raw, chaotic war — bloodlust, rage, the fury of battle for its own sake, disliked even by the other gods. The Roman Mars was more disciplined: a protector, an agricultural guardian as much as a warrior. And the Norse day-name for Mars, Tyr (Tuesday — Tyr's day, mardi), gives a third face: Tyr sacrificed his own right hand into the jaws of the wolf Fenrir so the gods could bind him — courage as self-sacrifice, the willingness to lose something to protect the whole. Mars in your chart carries all three: the rage, the discipline, and the brave cost.</div>
+  <div id="glow-today-view">
+    <div id="glow-energy-note" class="glow-note-card"></div>
+    <div id="flow-today" class="flow-sky-card"></div>
+    <div id="flow-transits" class="flow-transits-box"></div>
+  <div id="flow-log-view">
+    <div class="flow-log-box">
+      <div class="flow-date-row">
+        <button class="btn-quiet" onclick="flowShiftDay(-1)">‹ Prev</button>
+        <span id="flow-date-label"></span>
+        <button class="btn-quiet" onclick="flowShiftDay(1)">Next ›</button>
+      </div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Venus — Aphrodite &amp; Inanna's descent</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Aphrodite, born from sea-foam, is the obvious Venus: beauty, love, desire, magnetism. But the older, deeper Venus is the Sumerian Inanna, who descended through the seven gates of the underworld, surrendering a garment and a piece of her power at each, until she stood stripped bare before death itself — then rose again transformed. This is why Venus rules both love AND the cycle of Venus retrograde: the descent into the dark to reclaim what was lost, and return remade. Venus isn't only prettiness; she's the courage to be stripped and to rise.</div>
+      <label>💪 Movement <span class="optional-tag">— tap any</span></label>
+      <div class="mood-row" id="move-row"></div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Mercury — Hermes the boundary-crosser</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Hermes was the only god who could travel freely between all worlds — Olympus, Earth, and the underworld — the messenger, the guide of souls to the land of the dead (psychopomp), the god of merchants, travelers, thieves, and language. He was a trickster from birth, stealing Apollo's cattle on his first day alive, then charming his way out of trouble by inventing the lyre. Mercury is that boundary-crossing quicksilver mind: communication, commerce, cleverness, and the ability to move between worlds and translate one to another. Mercury retrograde is Hermes slipping into the underworld — which is why it feels like things get lost and messages go astray.</div>
+      <label style="margin-top:0.9rem;">⚡ Energy</label>
+      <div class="energy-row" id="energy-row"></div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Jupiter — Zeus, king of expansion</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Zeus (Roman Jupiter, Norse Thor — Thursday, jeudi, "Jove's day") overthrew Saturn and became king of the gods: the sky-father, wielder of the thunderbolt, dispenser of justice and abundance. His appetite was as vast as his generosity — endless affairs, endless offspring, endless expansion. That's Jupiter exactly: growth, faith, luck, optimism, opportunity — and the shadow of excess, overreach, and too-much-of-a-good-thing. Thor's hammer, meanwhile, gives the thunder-god's protective force. Jupiter in your chart is where life wants to get BIGGER — for better and sometimes for too much.</div>
+      <label style="margin-top:0.9rem;">🌙 Mood <span class="optional-tag">— tap any that fit</span></label>
+      <div class="mood-row" id="mood-row"></div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Rahu &amp; Ketu — the dragon that swallows the lights</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">The gods and the demons churned the cosmic ocean together to produce <em>amrita</em>, the nectar of immortality. When it finally appeared, the gods tried to keep it for themselves — but one demon, Svarbhanu, slipped into their line disguised and drank.<br><br>
-  The Sun and the Moon saw him. They spoke. And Vishnu, hearing it, threw his discus and severed the demon's head from his body in the same instant the nectar reached his throat.<br><br>
-  It was already too late. He had swallowed. Both halves were immortal, and both halves survived — permanently separated, permanently incomplete.<br><br>
-  <strong>The head became Rahu.</strong> A mouth and a throat with no stomach beneath it: he can consume endlessly and never be filled. This is the North Node — insatiable appetite, obsession, craving, the pull toward more of something you have never had.<br><br>
-  <strong>The body became Ketu.</strong> A form with no mouth to feed it: it cannot take anything in, so it needs nothing. This is the South Node — detachment, renunciation, the mastery you already carry, and the release of wanting.<br><br>
-  <div class="hl"><strong>And the eclipses</strong>Rahu never forgave the Sun and the Moon for exposing him. He pursues them across the sky forever, and when he catches one he swallows it whole — but with no body to hold it, the light passes through his severed neck and emerges again. That is an eclipse: the swallowing and the release.<br><br>The astronomy underneath is exact. Eclipses can only occur near the lunar nodes — the very points named Rahu and Ketu. The myth is a precise description of celestial mechanics, told as a story of appetite and revenge thousands of years before anyone drew the geometry.</div></div>
+      <div id="period-block">
+        <label style="margin-top:0.9rem;">🩸 Cycle <span class="optional-tag">— optional</span></label>
+        <div class="mood-row" id="period-row"></div>
+      </div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Egypt — where the decans were born</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Long before Hellenistic Greece assembled the system we use, Egyptian priests were watching the sky with extraordinary precision — and much of what looks Greek in astrology has Egyptian bones.<br><br>
-  <strong>The 36 decans.</strong> The Egyptians divided the sky into thirty-six star groups, each rising just before dawn for roughly ten days a year. Together they formed a star clock: the night's hours were told by which decan was rising. Thirty-six decans of ten days each gave a 360-day year, with five extra days added on. When the Greeks inherited this, the decans became the 10° divisions of each zodiac sign — the same thirty-six, mapped onto a new frame. Every time you read a decan, you're using an Egyptian instrument.<br><br>
-  <strong>Nut, the sky.</strong> The sky was a goddess: Nut, arched over the earth on fingertips and toes, her body covered in stars. Each evening she swallowed the Sun; each dawn she gave birth to it again. The sky was not a place in Egyptian thought — it was a body, and celestial events were things happening to someone.<br><br>
-  <strong>Ra and the solar barque.</strong> The Sun crossed the daytime sky in a boat, then descended into the Duat — the underworld — to sail through twelve hours of night, facing the serpent Apep in the darkest hour before rising renewed. Twelve hours of visible sky, twelve of the invisible: an early ancestor of the twelvefold division, and of the day/night sect distinction that still runs through traditional astrology.<br><br>
-  <strong>Thoth, the measurer.</strong> Ibis-headed god of writing, calculation, time, and the Moon — keeper of the records and inventor of the sciences. When Greek culture met Egyptian, Thoth merged with Hermes to become <strong>Hermes Trismegistus</strong>, "Thrice-Great Hermes," the legendary author of the Hermetic texts. The Hermetic lots — Fortune, Spirit, Eros, Necessity, Courage, Victory, Nemesis — carry his name because of this fusion. Mercury's connection to writing, measurement, and hidden knowledge runs straight back to an Egyptian god of the Moon.<br><br>
-  <strong>Sirius, Sopdet, and the new year.</strong> The most important star in Egypt was Sirius — <em>Sopdet</em>, later identified with Isis. After seventy days invisible below the horizon, its heliacal rising (its first reappearance just before dawn) coincided with the annual flooding of the Nile, and marked the Egyptian new year. An entire civilization set its calendar by a single star's return. The technique of heliacal rising and setting — a planet's disappearance into the Sun's beams and its return — remains a live part of traditional astrology.<br><br>
-  <div class="hl"><strong>Why this matters for reading charts</strong>The Egyptian bounds, the decans, the heliacal phases, the twelvefold night, the Hermetic material: these aren't decorative history. They're the underlying architecture. Knowing the sky was once a goddess who swallowed the Sun each night makes the mechanics easier to hold, not harder — the tradition was built by people who experienced the sky as alive.</div></div>
+      <label style="margin-top:0.9rem;">Note <span class="optional-tag">— optional</span></label>
+      <textarea id="flow-note" placeholder="What happened, how you felt, anything worth remembering..."></textarea>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Osiris &amp; the Duat — Orion in the night sky</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Osiris ruled Egypt well, and his brother Set envied him for it. Set tricked him into a chest, sealed it, and threw it into the Nile — then, when Isis recovered the body, tore it into pieces and scattered them across the land. Isis searched, gathered every piece, bound them together, and revived him long enough to conceive their son Horus. Osiris did not return to the living world. He became lord of the Duat and judge of the dead.<br><br>
-  <strong>And then look up.</strong> Osiris in the sky is <em>Sah</em> — the constellation we call Orion. Isis is <em>Sopdet</em> — Sirius, which rises just behind him, night after night, following. The story of the wife pursuing her husband across the world is a description of what those two stars actually do.<br><br>
-  <strong>The death and return is also literal.</strong> Sirius vanishes below the horizon for about seventy days each year before its heliacal rising brings the Nile flood — and the Egyptian mummification rite lasted about seventy days. The funeral practices of an entire civilisation were timed to a star's disappearance and return. Death, a fixed period of invisibility, then rising again: the myth, the ritual, and the sky are the same document.<br><br>
-  <strong>The Duat itself</strong> is usually translated "underworld," which misleads. It is not beneath the ground in the way we picture it — it is a region of the <em>night sky</em>, the part of the heavens the Sun passes through between setting and rising. Texts like the <em>Amduat</em> ("that which is in the Duat") and the Book of Gates map it as twelve hours with twelve gates, each with its own trial and its own guardian.<br><br>
-  <div class="hl"><strong>Your chart has a Duat</strong>Twelve divisions of the invisible sky, mirroring twelve of the visible: the resonance with the houses is hard to miss. The lower half of your chart — houses 1 through 6 — is the portion of sky that was <em>beneath the horizon</em> at the moment you were born. Planets there were in the Duat when you arrived. It's the same distinction the Egyptians drew between the sky you can see and the sky doing its work out of sight, and the same reason those houses read as private, interior, and formative.</div></div>
+      <button class="btn" onclick="saveFlow()" style="margin-top:0.8rem;">Save this day</button>
+      <div class="msg" id="flow-msg"></div>
+      <p style="font-size:11px;color:var(--text-muted);font-weight:300;line-height:1.5;margin-top:0.8rem;">General wellness tracking, not medical advice. Every body is different — a doctor knows yours. This stays private to you.</p>
+    </div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Horus — the sky, and the moon as a healing eye</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Horus, the falcon-headed son of Isis and Osiris, is not a god who lives in the sky. He <em>is</em> the sky. His name, <em>Heru</em>, means something close to "the distant one" or "he who is above," and the image is a falcon whose outstretched wings span the heavens.<br><br>
-  <strong>His right eye is the Sun. His left eye is the Moon.</strong> Two lights in one face, which is already the entire logic of sect — the diurnal light and the nocturnal light belonging to a single sky.<br><br>
-  <strong>Then comes the injury.</strong> In the long war against Set to avenge his father, Horus's left eye — the Moon — was torn out and shattered into pieces. Thoth, god of measurement and calculation, gathered the fragments and restored it. The healed eye became the <em>wedjat</em>, the Eye of Horus, worn as protection for thousands of years.<br><br>
-  <div class="hl"><strong>That myth is the lunar cycle</strong>The Moon is wounded, diminishes to nothing, and is made whole again — every single month, forever. The Egyptians told the waxing and waning as an eye being broken and repaired, and they gave the repair to the god of mathematics. The Moon isn't restored by force in this story; it's restored by <em>measurement</em>. Which is why the parts of the wedjat were used as fractions in Egyptian arithmetic — halves, quarters, eighths — and why the restored eye is simultaneously a symbol of healing and a system of accounting.</div>
-  Horus was also every living pharaoh, while every dead pharaoh became Osiris — so the throne passing from father to son mirrored the sky handing off between the visible world and the Duat, generation after generation.</div>
+    <div class="flow-history-head">
+      <h2 class="subhead" style="margin:0;">Your log</h2>
+      <span id="flow-count" class="lib-count" style="margin:0;"></span>
+    </div>
+    <div id="flow-list"></div>
+  </div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>Amenti, Maat &amp; the weighing of the heart</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body"><strong>Amenti</strong> — <em>Imentet</em>, "the West" — is where the Sun sets, and therefore the land of the dead. This is why Egyptian tombs and mortuary temples were built on the west bank of the Nile: the dead follow the Sun down. Amenti is not a punishment or a pit; it's a direction, and the whole civilisation oriented its architecture of death around a daily celestial event.<br><br>
-  <strong>The Hall of Two Truths</strong> is where the newly dead arrive. The heart is placed on a scale and weighed against a single ostrich feather — the feather of <strong>Maat</strong>. Thoth stands by and records the result. A heart heavier than the feather has carried too much, and is devoured; a heart in balance passes on into the field of reeds.<br><br>
-  <strong>Maat is the concept underneath everything.</strong> She is truth, balance, justice, and cosmic order — but crucially, not order imposed on the world from outside. Maat is the pattern the world <em>already runs on</em>: the Sun rising on schedule, the flood arriving on time, the stars returning to their places season after season. Her opposite is <em>isfet</em>, chaos, and the pharaoh's central duty was to uphold maat against it. Every ritual, every alignment, every measurement was a way of keeping the human world in step with the celestial one.<br><br>
-  <div class="hl"><strong>Maat is astrology's oldest premise</strong>The sky is orderly, that order is meaningful, and a life can be read against it. Four thousand years before anyone drew a birth chart, that idea already had a name and a feather.</div>
-  <strong>One accuracy note worth having.</strong> The phrase "Halls of Amenti" as it circulates today comes largely from <em>The Emerald Tablets of Thoth</em>, a text written by Maurice Doreal in the 1930s and presented as an ancient Atlantean translation. It's a modern work, not an Egyptian one. The genuine Egyptian Amenti is the western land of the dead described above — beautiful, thoroughly attested, and quite different from the version in that book. Both are worth knowing about; they're just not the same thing.</div>
+  </div>
+  <div id="glow-week-view" style="display:none;"><div id="glow-week-note" class="glow-note-card"></div></div>
+  <div id="glow-month-view" style="display:none;"><div id="glow-month-note" class="glow-note-card"></div></div>
+  <div id="glow-ref-view" style="display:none;"></div>
 
-  <div class="acc-head" onclick="acc(this)"><h3>The outer planets — Uranus, Neptune, Pluto</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body"><strong>Uranus</strong> — the primordial sky, castrated by his own son Saturn; fittingly the planet of sudden overthrow, revolution, and the shock that breaks the old order. <strong>Neptune</strong> — Poseidon, god of the sea and its dissolving, boundless depths: dreams, illusion, mysticism, the loss of edges. <strong>Pluto</strong> — Hades, lord of the underworld and its buried riches (plouton means "wealth"); the abductor of Persephone and ruler of death, power, and everything forced into transformation. The three planets invisible to the ancient eye rule the three forces bigger than any single life: revolution, dissolution, and rebirth.</div>
+  <div id="flow-cal-view" style="display:none;">
+    <div class="flow-date-row" style="margin-bottom:1rem;">
+      <button class="btn-quiet" onclick="flowCalShift(-1)">‹</button>
+      <span id="flow-cal-label" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--text-primary);"></span>
+      <button class="btn-quiet" onclick="flowCalShift(1)">›</button>
+    </div>
+    <div id="flow-cal-grid" class="flow-cal-grid"></div>
+    <div class="flow-cal-legend">
+      <span><span class="dot-energy"></span> energy logged</span>
+      <span>🌑🌓🌕🌗 moon phase</span>
+    </div>
+    <p style="font-size:11.5px;color:var(--text-muted);font-weight:300;text-align:center;margin-top:1rem;">Tap any day to log or edit it. Every logged day is yours forever.</p>
+    <div id="glow-artcalendar" style="margin-top:1.5rem;">
+    <p class="section-sub" style="margin-bottom:1rem;">The Flowing With The Moon 2026 calendar — moon phases, sign ingresses, retrogrades, eclipses, and daily aspects. Tap any month to open it, then tap the image to zoom.</p>
 
-  <div class="acc-head" onclick="acc(this)"><h3>The Moon &amp; the lunar goddesses</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">The Moon wears three faces across mythology, matching her phases: the maiden (waxing), the mother (full), the crone (waning) — Artemis the huntress, Selene the full-moon lover, Hecate the goddess of the dark moon, crossroads, and magic. This triple goddess is why the Moon governs cycles, instinct, the body's rhythms, and the shifting emotional tides. Where your Moon sits is which face of her you most naturally wear — and the house shows the terrain where your inner life seeks its safety and its feeling.</div>
+    <div class="acc-head" onclick="acc(this)"><h3>2026 at a glance — eclipse portals</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body">The full year with every moon phase, and the eclipse portals marked in gold.<img class="brand-img chart-thumb" src="img/cal-2026-year.jpg" alt="Flowing With The Moon 2026 year overview with eclipse portals" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>August 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-08.jpg" alt="August 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>September 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-09.jpg" alt="September 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>October 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-10.jpg" alt="October 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>November 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-11.jpg" alt="November 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>December 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-12.jpg" alt="December 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-top:1.2rem;">Times shown are Eastern. Adjust for your own zone — the Moon moves roughly half a degree an hour, so ingress times shift but the day's overall pattern holds.</p>
+  </div>
+  </div>
 </div>
 
 <div class="section" id="section-account">
@@ -1405,6 +1579,40 @@
       <div class="stat"><div class="stat-num" id="stat-approved">–</div><div class="stat-label">Approved</div></div>
       <div class="stat"><div class="stat-num" id="stat-total">–</div><div class="stat-label">Total</div></div>
     </div>
+    <h2 class="subhead">Glow — Energy Notes</h2>
+    <div class="card">
+      <label>What kind</label>
+      <select id="glow-scope">
+        <option value="today">Daily note (a date)</option>
+        <option value="week">Weekly note</option>
+        <option value="month">Monthly note</option>
+      </select>
+      <label>Date <span class="optional-tag">— for daily: pick the day; weekly/monthly: pick any day in it</span></label>
+      <input type="date" id="glow-date">
+      <label>Your note <span class="optional-tag">— your voice; what to expect, what to lean into, what to watch</span></label>
+      <textarea id="glow-body" rows="4" placeholder="Today the Leo moon lights up your desire to be seen — say yes to what makes you shine. Just watch a tendency to overextend by evening."></textarea>
+      <button class="btn" onclick="saveGlowNote()">Save note</button>
+      <div class="msg" id="glow-admin-msg"></div>
+    </div>
+
+    <h2 class="subhead">Glow — Sky Data</h2>
+    <div class="card">
+      <label>Type</label>
+      <select id="sky-scope">
+        <option value="moons">New / Full Moon · Eclipse</option>
+        <option value="ingresses">Ingress (sign change)</option>
+        <option value="aspects">Aspect</option>
+      </select>
+      <label>Date</label>
+      <input type="date" id="sky-date">
+      <label>Event <span class="optional-tag">— e.g. "New Moon Solar Eclipse in Leo" or "Venus enters Cancer"</span></label>
+      <input type="text" id="sky-title" placeholder="Venus enters Cancer">
+      <label>Meaning <span class="optional-tag">— optional, your one-line take</span></label>
+      <input type="text" id="sky-body" placeholder="Tenderness comes home; nurture what you love.">
+      <button class="btn" onclick="saveSkyData()">Add sky event</button>
+      <div class="msg" id="sky-admin-msg"></div>
+    </div>
+
     <h2 class="subhead">Submissions</h2>
     <input class="search-bar" id="adm-search" placeholder="Search stories, placements, categories..." oninput="renderAdminList()">
     <div class="subtabs">
@@ -1446,7 +1654,7 @@
   <div class="tab active" data-tab="learn" onclick="showTab('learn')"><span class="tab-icon">✨</span><span class="tab-label">Learn</span></div>
   <div class="tab" data-tab="cheat" onclick="showTab('cheat')"><span class="tab-icon">📜</span><span class="tab-label">Cheats</span></div>
   <div class="tab" data-tab="glossary" onclick="showTab('glossary')"><span class="tab-icon">🪶</span><span class="tab-label">Glossary</span></div>
-  <div class="tab" data-tab="myth" onclick="showTab('myth')"><span class="tab-icon">🏛️</span><span class="tab-label">Myth</span></div>
+  <div class="tab" data-tab="flow" onclick="showTab('flow')"><span class="tab-icon">🌙</span><span class="tab-label">Glow</span></div>
   <div class="tab" data-tab="library" onclick="showTab('library')"><span class="tab-icon">🔮</span><span class="tab-label">Patterns</span></div>
   <div class="tab" data-tab="submit" onclick="showTab('submit')"><span class="tab-icon">💌</span><span class="tab-label">Submit</span></div>
   <div class="tab" data-tab="mynotes" onclick="showTab('mynotes')"><span class="tab-icon">⭐</span><span class="tab-label">Notes</span></div>
@@ -1504,6 +1712,7 @@ function showTab(id) {
   window.scrollTo(0, 0);
   if (id === 'library') loadLibrary();
   
+  if (id === 'flow') { flowDate = new Date(); loadGlowContent().then(()=>{ renderGlowNote('today'); }); setGlowView('today'); renderFlow(); }
   if (id === 'mynotes') { renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); }
 }
 
@@ -1529,8 +1738,10 @@ function acc(head) {
 }
 
 function filterMyth() {
-  const q = document.getElementById('myth-search').value.toLowerCase();
-  document.querySelectorAll('#section-myth .acc-head').forEach(h => {
+  const el = document.getElementById('myth-search');
+  if (!el) return;
+  const q = el.value.toLowerCase();
+  document.querySelectorAll('#section-learn .acc-head').forEach(h => {
     const body = h.nextElementSibling;
     const match = (h.textContent + body.textContent).toLowerCase().includes(q);
     h.style.display = match ? '' : 'none';
@@ -1574,7 +1785,7 @@ function renderGloss() {
     : '<p class="empty">No matching terms.</p>';
 }
 
-const BACKUP_KEYS = ['avr-bookmarks', 'avr-mynotes', 'avr-practice', 'avr-questions', 'avr-charts', 'avr-images'];
+const BACKUP_KEYS = ['avr-bookmarks', 'avr-mynotes', 'avr-practice', 'avr-questions', 'avr-charts', 'avr-images', 'avr-flow', 'avr-natal'];
 
 async function runDiagnostics() {
   const d = document.getElementById('diag-msg2') && document.getElementById('diag-msg2').offsetParent !== null ? document.getElementById('diag-msg2') : (document.getElementById('diag-msg') || document.getElementById('diag-msg2'));
@@ -1704,7 +1915,9 @@ async function autoSync() {
     localStorage.setItem('avr-lastchange', cloudTime);
     CHARTS = JSON.parse(localStorage.getItem('avr-charts') || '[]');
     IMAGES = JSON.parse(localStorage.getItem('avr-images') || '[]');
-    renderSavedTerms(); renderCharts(); renderImages(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
+    FLOW = JSON.parse(localStorage.getItem('avr-flow') || '{}');
+    NATAL = JSON.parse(localStorage.getItem('avr-natal') || '{}');
+    renderSavedTerms(); renderCharts(); renderImages(); if(document.getElementById('flow-list')) renderFlow(); renderMyNotes(); renderPractice(); renderQuestions(); renderGlossary();
     setSyncStatus('Up to date — loaded from cloud');
   } else if (localTime) {
     SYNC_READY = true;
@@ -2148,6 +2361,504 @@ function imgDrop(e, targetId) {
   markLocalChange();
   renderImages();
 }
+
+
+
+
+
+// ================= GLOW CONTENT (Aura's energy notes + sky data) =================
+// Cached from Supabase; falls back gracefully so the app is never blank.
+let GLOW_NOTES = { today: {}, week: {}, month: {} };   // keyed by date/period
+let SKY_DATA = { aspects: [], ingresses: [], moons: [] };
+
+function isoDay(d) { return d.toISOString().slice(0,10); }
+function weekKey(d) {
+  // ISO-ish: year + week number
+  const t = new Date(d); t.setHours(0,0,0,0);
+  const onejan = new Date(t.getFullYear(),0,1);
+  const wk = Math.ceil((((t - onejan) / 86400000) + onejan.getDay()+1)/7);
+  return t.getFullYear() + '-W' + wk;
+}
+function monthKey(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0'); }
+
+async function loadGlowContent() {
+  if (!db) return;
+  try {
+    const { data: notes } = await db.from('glow_content').select('*');
+    if (notes) {
+      GLOW_NOTES = { today:{}, week:{}, month:{} };
+      SKY_DATA = { aspects:[], ingresses:[], moons:[] };
+      notes.forEach(n => {
+        if (n.kind === 'note') { GLOW_NOTES[n.scope] = GLOW_NOTES[n.scope] || {}; GLOW_NOTES[n.scope][n.key] = n.body; }
+        else if (n.kind === 'sky') { (SKY_DATA[n.scope] = SKY_DATA[n.scope] || []).push(n); }
+      });
+      SKY_DATA.aspects.sort((a,b)=> (a.key>b.key?1:-1));
+      SKY_DATA.ingresses.sort((a,b)=> (a.key>b.key?1:-1));
+      SKY_DATA.moons.sort((a,b)=> (a.key>b.key?1:-1));
+    }
+  } catch(e) { console.warn('glow content load failed', e); }
+}
+
+function renderGlowNote(scope) {
+  const map = { today: 'glow-energy-note', week: 'glow-week-note', month: 'glow-month-note' };
+  const el = document.getElementById(map[scope]);
+  if (!el) return;
+  let key, dateLabel;
+  const d = new Date();
+  if (scope==='today') { key = isoDay(d); dateLabel = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); }
+  else if (scope==='week') { key = weekKey(d); dateLabel = 'This week'; }
+  else { key = monthKey(d); dateLabel = d.toLocaleDateString('en-US',{month:'long',year:'numeric'}); }
+  const body = (GLOW_NOTES[scope] && GLOW_NOTES[scope][key]) || '';
+  const ph = moonPhase(d); const sign = moonSign(d);
+  if (body) {
+    el.innerHTML = '<div class="glow-note-label">' + dateLabel + '</div>' +
+      (scope==='today' ? '<div class="glow-note-moon">' + ph.emoji + ' ' + ph.name + ' · Moon in ' + sign + '</div>' : '') +
+      '<div class="glow-note-body">' + body.replace(/\n/g,'<br>') + '</div>';
+  } else {
+    // graceful fallback — never blank
+    el.innerHTML = '<div class="glow-note-label">' + dateLabel + '</div>' +
+      (scope==='today' ? '<div class="glow-note-moon">' + ph.emoji + ' ' + ph.name + ' · Moon in ' + sign + '</div>' : '') +
+      '<div class="glow-note-body" style="font-style:italic;opacity:0.75;">' + glowFallback(scope, ph, sign) + '</div>';
+  }
+}
+function glowFallback(scope, ph, sign) {
+  if (scope==='today') return PHASE_WORDS[ph.name] + ' The moon moves through ' + sign + ' today — let that colour how you meet the hours.';
+  if (scope==='week') return 'This week\'s energy note is on its way. For now, notice how the moon shifts signs every couple of days and how your own energy moves with it.';
+  return 'This month\'s overview is coming. Watch for the new and full moon as the two poles of the month\'s rhythm.';
+}
+
+function renderSkyData() {
+  const box = document.getElementById('glow-ref-view');
+  if (!box) return;
+  const section = (title, emoji, items) => {
+    const rows = items.length ? items.map(i =>
+      '<div class="sky-row"><span class="sky-date">' + esc(i.key) + '</span><span class="sky-event">' + esc(i.title||'') + '</span>' +
+      (i.body ? '<div class="sky-note">' + esc(i.body) + '</div>' : '') + '</div>').join('')
+      : '<div class="sky-empty">Coming soon.</div>';
+    return '<div class="sky-block"><div class="sky-block-head">' + emoji + ' ' + title + '</div>' + rows + '</div>';
+  };
+  box.innerHTML =
+    '<p class="section-sub" style="margin-bottom:1rem;">The exact sky — entered by hand for accuracy. Aspects, sign changes, and the moons that anchor each month.</p>' +
+    section('New & Full Moons', '🌕', SKY_DATA.moons) +
+    section('Ingresses (sign changes)', '↔', SKY_DATA.ingresses) +
+    section('Aspects', '✦', SKY_DATA.aspects);
+}
+
+
+async function saveGlowNote() {
+  const scope = document.getElementById('glow-scope').value;
+  const dv = document.getElementById('glow-date').value;
+  const body = document.getElementById('glow-body').value.trim();
+  const msg = document.getElementById('glow-admin-msg');
+  if (!dv || !body) { msg.className='msg err'; msg.textContent='Pick a date and write the note.'; return; }
+  const d = new Date(dv + 'T12:00:00');
+  let key = scope==='today' ? dv : scope==='week' ? weekKey(d) : monthKey(d);
+  const row = { kind:'note', scope, key, body };
+  const { error } = await db.from('glow_content').upsert(row, { onConflict: 'kind,scope,key' });
+  if (error) { msg.className='msg err'; msg.textContent='Save failed: ' + error.message; return; }
+  msg.className='msg ok'; msg.textContent='Saved ✦';
+  document.getElementById('glow-body').value='';
+  loadGlowContent();
+}
+async function saveSkyData() {
+  const scope = document.getElementById('sky-scope').value;
+  const dv = document.getElementById('sky-date').value;
+  const title = document.getElementById('sky-title').value.trim();
+  const body = document.getElementById('sky-body').value.trim();
+  const msg = document.getElementById('sky-admin-msg');
+  if (!dv || !title) { msg.className='msg err'; msg.textContent='Pick a date and name the event.'; return; }
+  const row = { kind:'sky', scope, key: dv, title, body };
+  const { error } = await db.from('glow_content').insert(row);
+  if (error) { msg.className='msg err'; msg.textContent='Save failed: ' + error.message; return; }
+  msg.className='msg ok'; msg.textContent='Added ✦';
+  document.getElementById('sky-title').value=''; document.getElementById('sky-body').value='';
+  loadGlowContent();
+}
+
+// ================= TRANSIT ENGINE =================
+// Approximate geocentric ecliptic longitudes (accurate to ~1-1.5°, good for
+// day-level aspect detection). Offline, no API.
+function planetLongitudes(date) {
+  const d = julian(date) - 2451545.0;
+  const T = d / 36525.0;
+  const norm = x => ((x % 360) + 360) % 360;
+  const sin = a => Math.sin(a*Math.PI/180), cos = a => Math.cos(a*Math.PI/180);
+
+  // Sun
+  const Lsun = 280.460 + 0.9856474*d;
+  const Msun = 357.528 + 0.9856003*d;
+  const sunLon = norm(Lsun + 1.915*sin(Msun) + 0.020*sin(2*Msun));
+
+  // Moon (from existing engine)
+  const moonLon = moonLongitude(date);
+
+  // Mean longitudes (Meeus low-precision), enough for ~1° / day-level:
+  const mercury = norm(252.25 + 4.09233445*d);
+  const venus   = norm(181.98 + 1.60213034*d);
+  const mars    = norm(355.43 + 0.52402068*d);
+  const jupiter = norm(34.35 + 0.08308529*d);
+  const saturn  = norm(50.08 + 0.03344414*d);
+  const uranus  = norm(314.06 + 0.01172834*d);
+  const neptune = norm(304.35 + 0.00598103*d);
+  const pluto   = norm(238.96 + 0.00397702*d);
+
+  // Lunar nodes (mean, retrograde)
+  const node = norm(125.04 - 0.05295377*d);
+
+  return {
+    Sun: sunLon, Moon: moonLon, Mercury: mercury, Venus: venus, Mars: mars,
+    Jupiter: jupiter, Saturn: saturn, Uranus: uranus, Neptune: neptune, Pluto: pluto,
+    'North Node': node, 'South Node': norm(node+180)
+  };
+}
+
+const ASPECTS = [
+  { name: 'conjunction', angle: 0, orb: 6, symbol: '☌' },
+  { name: 'opposition', angle: 180, orb: 6, symbol: '☍' },
+  { name: 'square', angle: 90, orb: 5, symbol: '□' },
+  { name: 'trine', angle: 120, orb: 5, symbol: '△' },
+  { name: 'sextile', angle: 60, orb: 4, symbol: '⚹' },
+  { name: 'quincunx', angle: 150, orb: 2, symbol: '⚻' },
+  { name: 'semi-sextile', angle: 30, orb: 1.5, symbol: '⚺' },
+  { name: 'semi-square', angle: 45, orb: 1.5, symbol: '∠' },
+  { name: 'sesquiquadrate', angle: 135, orb: 1.5, symbol: '⚼' }
+];
+
+function findTransits(date) {
+  if (!hasNatal()) return [];
+  const trans = planetLongitudes(date);
+  const hits = [];
+  Object.keys(trans).forEach(tp => {
+    const tlon = trans[tp];
+    if (tlon === null || tlon === undefined) return;
+    NATAL_BODIES.forEach(np => {
+      const nlon = natalLongitude(np);
+      if (nlon === null) return;
+      let diff = Math.abs(tlon - nlon) % 360;
+      if (diff > 180) diff = 360 - diff;
+      for (const asp of ASPECTS) {
+        const delta = Math.abs(diff - asp.angle);
+        if (delta <= asp.orb) {
+          hits.push({ transit: tp, natal: np, aspect: asp.name, symbol: asp.symbol, orb: delta, exact: delta < 1 });
+          break;
+        }
+      }
+    });
+  });
+  // sort: exact/tight first, then luminaries and personal planets
+  const weight = { Sun:1,Moon:1,Mercury:2,Venus:2,Mars:2,Jupiter:3,Saturn:3,Uranus:4,Neptune:4,Pluto:4,'North Node':5,'South Node':5 };
+  hits.sort((a,b) => (a.orb - b.orb));
+  return hits;
+}
+
+// Placeholder interpretation lookup — Aura fills these in her voice before launch.
+// Key format: "TransitPlanet aspect NatalPlanet" (falls back to a generic line).
+const TRANSIT_READINGS = {
+  // e.g. "Saturn square Moon": "A heaviness around your feelings today...",
+};
+function transitReading(t) {
+  const key = t.transit + ' ' + t.aspect + ' ' + t.natal;
+  if (TRANSIT_READINGS[key]) return TRANSIT_READINGS[key];
+  return null; // no canned line yet — we show the clean aspect until Aura writes it
+}
+
+function renderTransits(date) {
+  const box = document.getElementById('flow-transits');
+  if (!box) return;
+  if (!hasNatal()) { box.innerHTML = ''; return; }
+  const hits = findTransits(date);
+  if (!hits.length) {
+    box.innerHTML = '<div class="transit-empty">No close aspects today — a quiet sky for your chart. A good day to just be.</div>';
+    return;
+  }
+  box.innerHTML = '<div class="transit-head">How the sky touches your chart today</div>' +
+    hits.slice(0, 12).map(t => {
+      const reading = transitReading(t);
+      return '<div class="transit-row' + (t.exact ? ' transit-exact' : '') + '">' +
+        '<div class="transit-line"><strong>' + t.transit + '</strong> <span class="transit-sym">' + t.symbol + '</span> <strong>' + t.natal + '</strong>' +
+        '<span class="transit-aspect">' + t.aspect + (t.exact ? ' · exact' : '') + '</span></div>' +
+        (reading ? '<div class="transit-read">' + reading + '</div>' : '') +
+        '</div>';
+    }).join('');
+}
+
+// ================= NATAL CHART (for personal transits) =================
+const NATAL_BODIES = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','North Node','South Node','Chiron','Lilith','Ascendant','Midheaven'];
+let NATAL = JSON.parse(localStorage.getItem('avr-natal') || '{}');
+
+function renderNatalInputs() {
+  const wrap = document.getElementById('natal-inputs');
+  if (!wrap) return;
+  wrap.innerHTML = NATAL_BODIES.map(b => {
+    const cur = NATAL[b] || {};
+    return '<div class="natal-row">' +
+      '<span class="natal-label">' + b + '</span>' +
+      '<select class="natal-sign" onchange="setNatal(\'' + b + '\',\'sign\',this.value)">' +
+        '<option value="">—</option>' +
+        MOON_SIGNS.map(s => '<option ' + (cur.sign===s?'selected':'') + '>' + s + '</option>').join('') +
+      '</select>' +
+      '<input class="natal-deg" type="number" min="0" max="29" placeholder="°" value="' + (cur.deg!==undefined?cur.deg:'') + '" onchange="setNatal(\'' + b + '\',\'deg\',this.value)">' +
+      '</div>';
+  }).join('');
+}
+function setNatal(body, field, val) {
+  NATAL[body] = Object.assign({}, NATAL[body]);
+  if (field==='deg') { const n = parseInt(val,10); NATAL[body].deg = isNaN(n)?undefined:Math.max(0,Math.min(29,n)); }
+  else NATAL[body].sign = val || undefined;
+}
+function natalLongitude(body) {
+  const p = NATAL[body];
+  if (!p || !p.sign || p.deg===undefined) return null;
+  const idx = MOON_SIGNS.indexOf(p.sign);
+  if (idx<0) return null;
+  return idx*30 + p.deg;
+}
+function hasNatal() { return NATAL_BODIES.some(b => natalLongitude(b)!==null); }
+function saveNatal() {
+  localStorage.setItem('avr-natal', JSON.stringify(NATAL));
+  markLocalChange();
+  const m = document.getElementById('natal-msg');
+  m.className='msg ok'; m.textContent='Chart saved ✦ Your daily transits are now personalized.';
+  updateChartStatus();
+  renderFlowToday();
+  setTimeout(()=>{ m.textContent=''; m.className='msg'; }, 2500);
+}
+function toggleChartSetup() {
+  const open = document.getElementById('chart-setup-open');
+  const coll = document.getElementById('chart-setup-collapsed');
+  if (open.style.display==='none') { open.style.display='block'; coll.style.display='none'; renderNatalInputs(); }
+  else { open.style.display='none'; coll.style.display='block'; }
+}
+function updateChartStatus() {
+  const el = document.getElementById('chart-status');
+  const btn = document.getElementById('chart-setup-btn');
+  if (!el) return;
+  const n = NATAL_BODIES.filter(b => natalLongitude(b)!==null).length;
+  if (n>0) { el.textContent = n + ' placements saved — transits personalized'; if(btn) btn.textContent='Edit'; }
+  else { el.textContent = 'Not added yet — add it to see how the sky touches your chart'; if(btn) btn.textContent='Add my chart'; }
+}
+
+// ================= FLOW: moon engine + energy tracking =================
+// Self-contained astronomy — no API, no key. Computes moon phase and the
+// zodiac sign the Moon occupies for any date, offline, forever.
+
+const MOON_SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const MOON_ELEMENTS = { Aries:'Fire',Leo:'Fire',Sagittarius:'Fire', Taurus:'Earth',Virgo:'Earth',Capricorn:'Earth', Gemini:'Air',Libra:'Air',Aquarius:'Air', Cancer:'Water',Scorpio:'Water',Pisces:'Water' };
+
+function julian(date) {
+  return (date.getTime() / 86400000) + 2440587.5;
+}
+
+// Moon's ecliptic longitude (simplified but accurate to ~1°, good for sign).
+function moonLongitude(date) {
+  const d = julian(date) - 2451545.0;
+  const L = 218.316 + 13.176396 * d;         // mean longitude
+  const M = 134.963 + 13.064993 * d;         // mean anomaly
+  const F = 93.272 + 13.229350 * d;          // argument of latitude
+  let lon = L + 6.289 * Math.sin(M * Math.PI/180);
+  lon = ((lon % 360) + 360) % 360;
+  return lon;
+}
+
+function moonSign(date) {
+  return MOON_SIGNS[Math.floor(moonLongitude(date) / 30) % 12];
+}
+
+// Moon phase: 0=new, 0.5=full. Returns {name, illum, emoji}.
+function moonPhase(date) {
+  const d = julian(date) - 2451550.1;
+  const phase = ((d / 29.530588853) % 1 + 1) % 1;
+  const illum = Math.round((1 - Math.cos(2 * Math.PI * phase)) / 2 * 100);
+  let name, emoji;
+  if (phase < 0.03 || phase > 0.97) { name = 'New Moon'; emoji = '🌑'; }
+  else if (phase < 0.22) { name = 'Waxing Crescent'; emoji = '🌒'; }
+  else if (phase < 0.28) { name = 'First Quarter'; emoji = '🌓'; }
+  else if (phase < 0.47) { name = 'Waxing Gibbous'; emoji = '🌔'; }
+  else if (phase < 0.53) { name = 'Full Moon'; emoji = '🌕'; }
+  else if (phase < 0.72) { name = 'Waning Gibbous'; emoji = '🌖'; }
+  else if (phase < 0.78) { name = 'Last Quarter'; emoji = '🌗'; }
+  else { name = 'Waning Crescent'; emoji = '🌘'; }
+  return { name, illum, emoji, phase };
+}
+
+const PHASE_WORDS = {
+  'New Moon': 'The dark before the seed. A quiet beginning — rest, set intentions, plant what you can\'t yet see.',
+  'Waxing Crescent': 'The first sliver. Momentum gathering — take the small first step.',
+  'First Quarter': 'A turning point of effort. Push through the first resistance.',
+  'Waxing Gibbous': 'Almost full. Refine, adjust, keep building toward the peak.',
+  'Full Moon': 'The peak of light. Culmination, revelation, release — everything is visible now.',
+  'Waning Gibbous': 'The first exhale. Share what you gathered, give back, express.',
+  'Last Quarter': 'A releasing turn. Let go of what didn\'t work; clear the ground.',
+  'Waning Crescent': 'The final dissolve. Rest, surrender, empty out before the next new moon.'
+};
+const SIGN_MOODS = {
+  Fire: 'restless, bold, ready to move',
+  Earth: 'grounded, practical, body-focused',
+  Air: 'mental, social, talkative',
+  Water: 'feeling-heavy, intuitive, tender'
+};
+
+let flowDate = new Date();
+let FLOW = JSON.parse(localStorage.getItem('avr-flow') || '{}');
+const ENERGY_LABELS = ['Depleted','Low','Steady','Bright','Radiant'];
+const MOOD_WORDS = ['Calm','Anxious','Joyful','Tender','Angry','Foggy','Focused','Tired','Inspired','Sad','Sensual','Restless','Grateful','Numb','Playful'];
+const MOVE_WORDS = ['Rest','Walk','Cardio','Strength','Yoga','Pilates','Dance','Stretch'];
+const PERIOD_WORDS = ['Period','Spotting','Cramps','PMS','Ovulating'];
+let flowCalDate = new Date();
+
+function flowKey(d) { return d.toISOString().slice(0,10); }
+
+function renderFlowToday() {
+  renderTransits(flowDate);
+  const ph = moonPhase(flowDate);
+  const sign = moonSign(flowDate);
+  const el = MOON_ELEMENTS[sign];
+  const card = document.getElementById('flow-today');
+  if (card) card.innerHTML =
+    '<div class="flow-sky-label">The sky, alongside you</div>' +
+    '<div class="flow-sky-main"><span class="flow-moon-emoji">' + ph.emoji + '</span>' +
+    '<div><div class="flow-phase-name">' + ph.name + '</div>' +
+    '<div class="flow-phase-sub">' + ph.illum + '% lit · Moon in ' + sign + ' · ' + el + '</div></div></div>' +
+    '<div class="flow-sky-poem">' + PHASE_WORDS[ph.name] + '</div>' +
+    '<div class="flow-sky-poem" style="opacity:0.75;">A ' + el.toLowerCase() + ' moon — the collective mood leans ' + SIGN_MOODS[el] + '.</div>';
+}
+
+function renderEnergyRow() {
+  const k = flowKey(flowDate);
+  const entry = FLOW[k] || {};
+  document.getElementById('energy-row').innerHTML = ENERGY_LABELS.map((lab, i) =>
+    '<div class="energy-dot ' + (entry.energy === i+1 ? 'active' : '') + '" onclick="pickEnergy(' + (i+1) + ')" title="' + lab + '"><span>' + (i+1) + '</span><em>' + lab + '</em></div>').join('');
+  document.getElementById('mood-row').innerHTML = MOOD_WORDS.map(m =>
+    '<div class="mood-chip ' + ((entry.moods||[]).includes(m) ? 'active' : '') + '" onclick="toggleMood(\'' + m + '\')">' + m + '</div>').join('');
+  document.getElementById('move-row').innerHTML = MOVE_WORDS.map(m =>
+    '<div class="mood-chip ' + ((entry.moves||[]).includes(m) ? 'active' : '') + '" onclick="toggleFlowTag(\'moves\',\'' + m + '\')">' + m + '</div>').join('');
+  document.getElementById('period-row').innerHTML = PERIOD_WORDS.map(m =>
+    '<div class="mood-chip ' + ((entry.period||[]).includes(m) ? 'active' : '') + '" onclick="toggleFlowTag(\'period\',\'' + m + '\')">' + m + '</div>').join('');
+  document.getElementById('flow-note').value = entry.note || '';
+  document.getElementById('flow-date-label').textContent = flowDate.toLocaleDateString('en-US', { weekday:'long', month:'short', day:'numeric' });
+}
+
+let flowDraft = {};
+function pickEnergy(n) { flowDraft.energy = n; const k=flowKey(flowDate); FLOW[k]=Object.assign({},FLOW[k],{energy:n}); renderEnergyRow(); }
+function toggleMood(m) { toggleFlowTag('moods', m); }
+function toggleFlowTag(field, m) {
+  const k = flowKey(flowDate);
+  const cur = (FLOW[k] && FLOW[k][field]) ? FLOW[k][field].slice() : [];
+  const i = cur.indexOf(m);
+  if (i>=0) cur.splice(i,1); else cur.push(m);
+  const patch = {}; patch[field] = cur;
+  FLOW[k] = Object.assign({}, FLOW[k], patch);
+  renderEnergyRow();
+}
+function flowShiftDay(dir) {
+  flowDate = new Date(flowDate.getTime() + dir*86400000);
+  if (flowDate > new Date()) flowDate = new Date(); // no future logging
+  renderFlowToday(); renderEnergyRow();
+}
+function saveFlow() {
+  const k = flowKey(flowDate);
+  const ph = moonPhase(flowDate);
+  const entry = Object.assign({}, FLOW[k], {
+    note: document.getElementById('flow-note').value.trim(),
+    phase: ph.name, sign: moonSign(flowDate), date: k
+  });
+  const empty = !entry.energy && !(entry.moods&&entry.moods.length) && !(entry.moves&&entry.moves.length) && !(entry.period&&entry.period.length) && !entry.note;
+  if (empty) { delete FLOW[k]; }
+  else FLOW[k] = entry;
+  localStorage.setItem('avr-flow', JSON.stringify(FLOW));
+  markLocalChange();
+  const m = document.getElementById('flow-msg');
+  m.className = 'msg ok'; m.textContent = 'Saved ✦';
+  setTimeout(() => { m.textContent=''; m.className='msg'; }, 2000);
+  renderFlowList();
+  renderFlowCal();
+}
+function deleteFlow(k) {
+  if (!confirm('Delete this day\'s entry?')) return;
+  delete FLOW[k];
+  localStorage.setItem('avr-flow', JSON.stringify(FLOW));
+  markLocalChange();
+  renderFlowList();
+}
+function renderFlowList() {
+  const keys = Object.keys(FLOW).filter(k => FLOW[k] && (FLOW[k].energy || (FLOW[k].moods&&FLOW[k].moods.length) || FLOW[k].note)).sort().reverse();
+  const cnt = document.getElementById('flow-count');
+  if (cnt) cnt.textContent = keys.length ? keys.length + (keys.length===1?' day':' days') + ' logged' : '';
+  const listEl = document.getElementById('flow-list');
+  if (!listEl) return;
+  listEl.innerHTML = keys.length ? keys.map(k => {
+    const e = FLOW[k];
+    const ph = moonPhase(new Date(k + 'T12:00:00'));
+    return '<div class="flow-entry">' +
+      '<div class="flow-entry-head"><span class="flow-entry-date">' + new Date(k+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + '</span>' +
+      '<span class="flow-entry-moon">' + ph.emoji + ' ' + (e.sign||moonSign(new Date(k+'T12:00:00'))) + '</span>' +
+      '<span class="flow-entry-x" onclick="deleteFlow(\'' + k + '\')">×</span></div>' +
+      (e.energy ? '<div class="flow-entry-energy">' + ENERGY_LABELS[e.energy-1] + '</div>' : '') +
+      ((e.moves&&e.moves.length) ? '<div class="tag-row">' + e.moves.map(m=>'<span class="tag-pill">'+esc(m)+'</span>').join('') + '</div>' : '') +
+      ((e.moods&&e.moods.length) ? '<div class="tag-row">' + e.moods.map(m=>'<span class="tag-pill">'+esc(m)+'</span>').join('') + '</div>' : '') +
+      ((e.period&&e.period.length) ? '<div class="tag-row">' + e.period.map(m=>'<span class="tag-pill" style="border-color:var(--accent);color:var(--accent);">'+esc(m)+'</span>').join('') + '</div>' : '') +
+      (e.note ? '<div class="sub-story">' + esc(e.note) + '</div>' : '') +
+      '</div>';
+  }).join('') : '<p class="empty">No days logged yet — start with today above.</p>';
+}
+const GLOW_VIEWS = ['today','week','month','cal','ref'];
+function setGlowView(v) {
+  GLOW_VIEWS.forEach(x => {
+    const tab = document.getElementById('glowview-'+x);
+    if (tab) tab.classList.toggle('active', x===v);
+  });
+  document.getElementById('glow-today-view').style.display = v==='today' ? 'block' : 'none';
+  document.getElementById('glow-week-view').style.display = v==='week' ? 'block' : 'none';
+  document.getElementById('glow-month-view').style.display = v==='month' ? 'block' : 'none';
+  document.getElementById('flow-cal-view').style.display = v==='cal' ? 'block' : 'none';
+  document.getElementById('glow-ref-view').style.display = v==='ref' ? 'block' : 'none';
+  if (v==='cal') renderFlowCal();
+  if (v==='ref') renderSkyData();
+  if (v==='today') { renderGlowNote('today'); renderFlowToday(); }
+  if (v==='week') renderGlowNote('week');
+  if (v==='month') renderGlowNote('month');
+}
+// keep old name working anywhere it's still called
+function setFlowView(v) { setGlowView(v==='log'?'today':v); }
+function flowCalShift(dir) {
+  flowCalDate = new Date(flowCalDate.getFullYear(), flowCalDate.getMonth()+dir, 1);
+  renderFlowCal();
+}
+function renderFlowCal() {
+  const grid = document.getElementById('flow-cal-grid');
+  if (!grid) return;
+  const y = flowCalDate.getFullYear(), mo = flowCalDate.getMonth();
+  document.getElementById('flow-cal-label').textContent = flowCalDate.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const first = new Date(y, mo, 1).getDay();
+  const days = new Date(y, mo+1, 0).getDate();
+  const today = flowKey(new Date());
+  let html2 = ['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>'<div class="cal-dow">'+d+'</div>').join('');
+  for (let i=0;i<first;i++) html2 += '<div></div>';
+  for (let d=1; d<=days; d++) {
+    const dd = new Date(y, mo, d);
+    const k = flowKey(dd);
+    const e = FLOW[k];
+    const ph = moonPhase(dd);
+    const isToday = k===today;
+    const isFuture = dd > new Date();
+    html2 += '<div class="cal-day' + (isToday?' cal-today':'') + (isFuture?' cal-future':'') + '" ' +
+      (isFuture?'':'onclick="flowOpenDay(\'' + k + '\')"') + '>' +
+      '<span class="cal-num">' + d + '</span>' +
+      '<span class="cal-moon">' + ph.emoji + '</span>' +
+      (e && e.energy ? '<span class="cal-energy" style="opacity:' + (0.3+e.energy*0.14) + '"></span>' : '') +
+      (e && e.period && e.period.length ? '<span class="cal-period"></span>' : '') +
+      '</div>';
+  }
+  grid.innerHTML = html2;
+}
+function flowOpenDay(k) {
+  flowDate = new Date(k + 'T12:00:00');
+  setGlowView('today');
+  renderFlowToday(); renderEnergyRow();
+  document.getElementById('section-flow').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function renderFlow() { updateChartStatus(); renderFlowToday(); renderEnergyRow(); renderFlowList(); renderFlowCal(); }
+
 
 function renderImages() {
   const listEl = document.getElementById('img-list');
