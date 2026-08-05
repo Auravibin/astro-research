@@ -28,7 +28,8 @@ self.addEventListener('fetch', e => {
                  url.pathname.endsWith('.html');
 
   if (isHTML) {
-    // NETWORK FIRST for pages.
+    // NETWORK FIRST for pages — always fetch the newest, so home-screen
+    // apps update themselves with no reinstall.
     e.respondWith(
       fetch(req)
         .then(res => {
@@ -41,11 +42,10 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // Images and other assets: STALE-WHILE-REVALIDATE.
-  // Serve the cached copy instantly if we have a GOOD one, but ALWAYS
-  // fetch from the network in the background to refresh it. Critically,
-  // we never store a failed (404/500) response, and a previously-missing
-  // image will be picked up on the very next load — no reinstall needed.
+  // Images & other assets: STALE-WHILE-REVALIDATE.
+  // Serve cached instantly if good, always refresh in the background, and
+  // never store a failed response — so a newly-uploaded image self-heals
+  // on the next load with no reinstall.
   e.respondWith(
     caches.open(CACHE).then(cache =>
       cache.match(req).then(cached => {
@@ -57,14 +57,7 @@ self.addEventListener('fetch', e => {
             return res;
           })
           .catch(() => null);
-
-        // If we have a valid cached copy, serve it now and refresh in the
-        // background. Otherwise wait for the network (first load, or the
-        // image that used to 404 and is now available).
-        if (cached) {
-          networkFetch; // fire and forget — updates cache for next time
-          return cached;
-        }
+        if (cached) { networkFetch; return cached; }
         return networkFetch.then(res => res || cached);
       })
     )
