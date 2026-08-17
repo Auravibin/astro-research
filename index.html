@@ -239,8 +239,18 @@
   .cal-future { opacity: 0.4; cursor: default; }
   .cal-num { font-size: 13px; color: var(--text-primary); font-weight: 500; }
   .cal-moon { font-size: 11px; line-height: 1; }
-  .cal-energy { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+.cal-energy { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: 7px; height: 7px; border-radius: 50%; }
   .cal-period { position: absolute; top: 5px; right: 5px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+  .cal-logged { position: absolute; top: 5px; left: 5px; width: 4px; height: 4px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; }
+  .flow-legend { margin-top: 1.2rem; padding: 1rem 1.1rem; background: var(--bg-card-deep); border-radius: 14px; }
+  .legend-title { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.6rem; }
+  .legend-row { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.35rem; font-size: 11.5px; color: var(--text-secondary); }
+  .legend-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .legend-note { font-size: 11px; color: var(--text-muted); font-weight: 300; margin-top: 0.6rem; }
+  .day-summary { background: var(--bg-card-deep); border-radius: 12px; padding: 0.8rem 1rem; margin-bottom: 1rem; }
+  .day-summary-title { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
+  .day-summary-row { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
   .flow-cal-legend { display: flex; justify-content: center; gap: 1.2rem; margin-top: 1rem; font-size: 11px; color: var(--text-muted); }
   .flow-cal-legend span { display: flex; align-items: center; gap: 0.3rem; }
   .dot-energy { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); display: inline-block; }
@@ -267,7 +277,7 @@
   .glow-tabs .subtab { white-space: nowrap; flex: 0 0 auto; }
 
   .glow-quote-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 24px; padding: 2.6rem 1.8rem; margin-bottom: 1.4rem; text-align: center; }
-  .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 27px; line-height: 1.4; font-weight: 500; color: var(--text-primary); letter-spacing: 0.01em; }
+  .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 27px; line-height: 1.4; font-weight: 600; color: var(--accent); letter-spacing: 0.01em; }
   .quote-sky { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-top: 1.3rem; font-weight: 500; }
 
   .glow-note-card { background: var(--bg-card-deep); border: 1px solid var(--border); border-radius: 16px; padding: 1rem 1.2rem; margin-bottom: 1.4rem; }
@@ -1303,6 +1313,7 @@
     <div class="subtab" data-sub="saved" onclick="showSub('saved')">Saved Terms</div>
     <div class="subtab" data-sub="notes" onclick="showSub('notes')">Study Notes</div>
     <div class="subtab" data-sub="flash" onclick="showSub('flash')">Flashcards</div>
+    <div class="subtab" data-sub="aura" onclick="showSub('aura')">Work with Aura</div>
     <div class="subtab" data-sub="practice" onclick="showSub('practice')">Chart Practice Log</div>
     <div class="subtab" data-sub="questions" onclick="showSub('questions')">Questions to Research</div>
   </div>
@@ -1388,6 +1399,15 @@
     </div>
   </div>
 
+  <div class="subsection" id="sub-aura">
+    <div style="text-align:center;padding:1.5rem 1rem;">
+      <h2 style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--text-primary);margin-bottom:0.6rem;">Work with Aura</h2>
+      <p style="font-size:14px;color:var(--text-secondary);font-weight:300;line-height:1.65;margin-bottom:1.4rem;max-width:420px;margin-left:auto;margin-right:auto;">This whole app is a gift — everything here is free to learn from. If it's opened something in you and you'd like to go deeper, my courses, readings, and offerings live over here.</p>
+      <a href="https://www.auravibin.com" target="_blank" rel="noopener" class="btn" style="display:inline-block;text-decoration:none;">Explore with Aura ✦</a>
+      <p style="font-size:12px;color:var(--text-muted);font-weight:300;margin-top:1rem;">auravibin.com</p>
+    </div>
+  </div>
+
   <div class="subsection" id="sub-practice">
     <p class="section-sub" style="margin-bottom:1rem;">Log every chart you practice on. Watching this list grow is watching yourself become a reader.</p>
     <label>Whose chart / what chart</label>
@@ -1438,33 +1458,48 @@
     </div>
     <p style="font-size:11.5px;color:var(--text-muted);font-weight:300;text-align:center;margin-top:0.8rem;">Tap any day to log how you felt. Every logged day is yours forever.</p>
 
-    <div class="flow-history-head" style="margin-top:1.6rem;">
-      <h2 class="subhead" style="margin:0;">Your log</h2>
-      <span id="flow-count" class="lib-count" style="margin:0;"></span>
-    </div>
-    <div id="flow-list"></div>
+    <div id="flow-legend" class="flow-legend"></div>
 
     <h2 class="subhead" style="margin-top:1.8rem;">Flowing With The Moon</h2>
     <div id="glow-artcalendar" style="margin-top:1.5rem;">
-    <p class="section-sub" style="margin-bottom:1rem;">The Flowing With The Moon 2026 calendar — moon phases, sign ingresses, retrogrades, eclipses, and daily aspects. Tap any month to open it, then tap the image to zoom.</p>
+    <h2 class="subhead" style="margin-top:0;">Flowing With The Moon · 2026</h2>
+    <p class="section-sub" style="margin-bottom:1rem;">The full 2026 calendar — every moon phase, sign ingress, retrograde, eclipse, and daily aspect, hand-built. Tap any month to open it, then tap the image to zoom.</p>
 
-    <div class="acc-head" onclick="acc(this)"><h3>2026 at a glance — eclipse portals</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body">The full year with every moon phase, and the eclipse portals marked in gold.<img class="brand-img chart-thumb" src="img/cal-2026-year.jpg" alt="Flowing With The Moon 2026 year overview with eclipse portals" loading="lazy" onclick="openLightbox(this.src)"></div>
+    <div class="acc-head" onclick="acc(this)"><h3>January 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-1.jpg" alt="January 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>February 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-2.jpg" alt="February 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>March 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-3.jpg" alt="March 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>April 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-4.jpg" alt="April 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>May 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-5.jpg" alt="May 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>June 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-6.jpg" alt="June 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>July 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-7.jpg" alt="July 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
     <div class="acc-head" onclick="acc(this)"><h3>August 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-08.jpg" alt="August 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-8.jpg" alt="August 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
     <div class="acc-head" onclick="acc(this)"><h3>September 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-09.jpg" alt="September 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-9.jpg" alt="September 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
     <div class="acc-head" onclick="acc(this)"><h3>October 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-10.jpg" alt="October 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-10.jpg" alt="October 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
     <div class="acc-head" onclick="acc(this)"><h3>November 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-11.jpg" alt="November 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-11.jpg" alt="November 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
     <div class="acc-head" onclick="acc(this)"><h3>December 2026</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/cal-2026-12.jpg" alt="December 2026 astrological calendar" loading="lazy" onclick="openLightbox(this.src)"></div>
+    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-12.jpg" alt="December 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
     <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-top:1.2rem;">Times shown are Eastern. Adjust for your own zone — the Moon moves roughly half a degree an hour, so ingress times shift but the day's overall pattern holds.</p>
   </div>
@@ -1480,6 +1515,7 @@
         <span class="flow-modal-x" onclick="closeFlowModal()">×</span>
       </div>
       <div id="flow-modal-moon" class="flow-modal-moon"></div>
+      <div id="flow-day-summary" class="day-summary" style="display:none;"></div>
 
       <label>💪 Movement <span class="optional-tag">— tap any</span></label>
       <div class="mood-row" id="move-row"></div>
@@ -2791,7 +2827,7 @@ let FLOW = JSON.parse(localStorage.getItem('avr-flow') || '{}');
 const ENERGY_LABELS = ['Depleted','Low','Steady','Bright','Radiant'];
 const MOOD_WORDS = ['Calm','Anxious','Joyful','Tender','Angry','Foggy','Focused','Tired','Inspired','Sad','Sensual','Restless','Grateful','Numb','Playful'];
 const MOVE_WORDS = ['Rest','Walk','Cardio','Strength','Yoga','Pilates','Dance','Stretch'];
-const PERIOD_WORDS = ['Period','Spotting','Cramps','PMS','Ovulating'];
+const PERIOD_WORDS = ['Period'];
 let flowCalDate = new Date();
 
 function flowKey(d) { return d.toISOString().slice(0,10); }
@@ -2869,7 +2905,7 @@ function deleteFlow(k) {
   markLocalChange();
   renderFlowList();
 }
-function renderFlowList() {
+function renderFlowList() { const _l=document.getElementById('flow-list'); if(!_l) return renderFlowLegend();
   const keys = Object.keys(FLOW).filter(k => FLOW[k] && (FLOW[k].energy || (FLOW[k].moods&&FLOW[k].moods.length) || FLOW[k].note)).sort().reverse();
   const cnt = document.getElementById('flow-count');
   if (cnt) cnt.textContent = keys.length ? keys.length + (keys.length===1?' day':' days') + ' logged' : '';
@@ -2912,6 +2948,12 @@ function flowCalShift(dir) {
   flowCalDate = new Date(flowCalDate.getFullYear(), flowCalDate.getMonth()+dir, 1);
   renderFlowCal();
 }
+
+function energyColor(n) {
+  // 1 depleted -> 5 radiant
+  return ({1:'#b0674a', 2:'#c98a5b', 3:'#d4a017', 4:'#7aa6c2', 5:'#4a78b0'})[n] || 'transparent';
+}
+
 function renderFlowCal() {
   const grid = document.getElementById('flow-cal-grid');
   if (!grid) return;
@@ -2933,18 +2975,32 @@ function renderFlowCal() {
     html2 += '<div class="cal-day' + (isToday?' cal-today':'') + (isFuture?' cal-future':'') + '" ' +
       (isFuture?'':'onclick="flowOpenDay(\'' + k + '\')"') + '>' +
       '<span class="cal-num">' + d + '</span>' +
-      '<span class="cal-moon">' + ph.emoji + '</span>' +
-      (e && e.energy ? '<span class="cal-energy" style="opacity:' + (0.3+e.energy*0.14) + '"></span>' : '') +
+      (e && e.energy ? '<span class="cal-energy" style="background:' + energyColor(e.energy) + '"></span>' : '') +
       (e && e.period && e.period.length ? '<span class="cal-period"></span>' : '') +
+      (e && (e.note||(e.moods&&e.moods.length)||(e.moves&&e.moves.length)) ? '<span class="cal-logged"></span>' : '') +
       '</div>';
   }
   grid.innerHTML = html2;
 }
 function flowOpenDay(k) {
   flowDate = new Date(k + 'T12:00:00');
-  const ph = moonPhase(flowDate); const sign = moonSign(flowDate);
   document.getElementById('flow-modal-title').textContent = flowDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  document.getElementById('flow-modal-moon').innerHTML = ph.emoji + ' ' + ph.name + ' · Moon in ' + sign;
+  const moonEl = document.getElementById('flow-modal-moon');
+  if (moonEl) moonEl.innerHTML = '';
+  // summary of how the day went, if already logged
+  const e = FLOW[k];
+  const sumEl = document.getElementById('flow-day-summary');
+  if (sumEl) {
+    if (e && (e.energy || (e.moods&&e.moods.length) || (e.moves&&e.moves.length) || e.note || (e.period&&e.period.length))) {
+      sumEl.innerHTML = '<div class="day-summary-title">How this day went</div>' +
+        (e.energy ? '<div class="day-summary-row">Energy: <strong>'+['Depleted','Low','Steady','Bright','Radiant'][e.energy-1]+'</strong></div>' : '') +
+        (e.moves&&e.moves.length ? '<div class="day-summary-row">Movement: '+e.moves.join(', ')+'</div>' : '') +
+        (e.moods&&e.moods.length ? '<div class="day-summary-row">Mood: '+e.moods.join(', ')+'</div>' : '') +
+        (e.period&&e.period.length ? '<div class="day-summary-row">Cycle: '+e.period.join(', ')+'</div>' : '') +
+        (e.note ? '<div class="day-summary-row" style="margin-top:0.3rem;">"'+esc(e.note)+'"</div>' : '');
+      sumEl.style.display = 'block';
+    } else { sumEl.style.display = 'none'; }
+  }
   renderEnergyRow();
   document.getElementById('flow-day-modal').style.display = 'flex';
   document.body.style.overflow = 'hidden';
@@ -2953,9 +3009,21 @@ function closeFlowModal() {
   document.getElementById('flow-day-modal').style.display = 'none';
   document.body.style.overflow = '';
 }
-function renderFlow() { renderFlowCal(); try{renderFlowToday();}catch(e){} try{renderFlowList();}catch(e){} try{renderGlowNote('today');}catch(e){} }
+
+function renderFlowLegend() {
+  const el = document.getElementById('flow-legend');
+  if (!el) return;
+  el.innerHTML = '<div class="legend-title">Your month, by energy</div>' +
+    '<div class="legend-row">' +
+    [1,2,3,4,5].map(n => '<span class="legend-item"><span class="legend-dot" style="background:'+energyColor(n)+'"></span>'+['Depleted','Low','Steady','Bright','Radiant'][n-1]+'</span>').join('') +
+    '</div><div class="legend-note">A dot marks a day you logged. Tap any day to see how it went.</div>';
+}
+
+function renderFlow() { renderFlowCal(); renderFlowLegend(); try{renderFlowToday();}catch(e){} try{renderFlowList();}catch(e){} try{renderGlowNote('today');}catch(e){} }
 
 
+const OPEN_IMGS = new Set();
+function toggleImg(id) { if (OPEN_IMGS.has(id)) OPEN_IMGS.delete(id); else OPEN_IMGS.add(id); renderImages(); }
 function renderImages() {
   const listEl = document.getElementById('img-list');
   if (!listEl) return;
@@ -2970,13 +3038,14 @@ function renderImages() {
     <div class="chart-item img-drag" draggable="true" data-id="${x.id}"
       ondragstart="imgDragStart(event,'${x.id}')" ondragover="imgDragOver(event)" ondrop="imgDrop(event,'${x.id}')" ondragend="imgDragEnd(event)">
       <div class="chart-head">
-        <span class="drag-handle" title="Drag to reorder">⠿</span>
-        <div class="chart-head-main">
+        <span class="drag-handle" title="Drag to reorder" onclick="event.stopPropagation();">⠿</span>
+        <div class="chart-head-main" onclick="toggleImg('${x.id}')">
           <span class="chart-name">${esc(x.title)}</span>
           <span class="chart-sub">${esc(x.cat)}</span>
         </div>
+        <span class="chart-arrow" onclick="toggleImg('${x.id}')">${OPEN_IMGS.has(x.id) ? '↑' : '↓'}</span>
       </div>
-      <div class="chart-body open">
+      <div class="chart-body ${OPEN_IMGS.has(x.id) ? 'open' : ''}">
         <img class="chart-thumb" src="${x.photo}" alt="${esc(x.title)}" onclick="openLightbox(this.src)">
         ${x.note ? '<div class="sub-story">' + esc(x.note) + '</div>' : ''}
         <div style="margin-top:0.7rem;">
