@@ -2890,22 +2890,21 @@ function renderFlowList() {
       '</div>';
   }).join('') : '<p class="empty">No days logged yet — start with today above.</p>';
 }
-const GLOW_VIEWS = ['today','week','month','cal','ref'];
+const GLOW_VIEWS = ['today','week','month','ref'];
 function setGlowView(v) {
   GLOW_VIEWS.forEach(x => {
     const tab = document.getElementById('glowview-'+x);
     if (tab) tab.classList.toggle('active', x===v);
   });
-  document.getElementById('glow-today-view').style.display = v==='today' ? 'block' : 'none';
-  document.getElementById('glow-week-view').style.display = v==='week' ? 'block' : 'none';
-  document.getElementById('glow-month-view').style.display = v==='month' ? 'block' : 'none';
-  document.getElementById('flow-cal-view').style.display = v==='cal' ? 'block' : 'none';
-  document.getElementById('glow-ref-view').style.display = v==='ref' ? 'block' : 'none';
-  if (v==='cal') renderFlowCal();
+  const show = (id, on) => { const el = document.getElementById(id); if (el) el.style.display = on ? 'block' : 'none'; };
+  show('glow-today-view', v==='today');
+  show('glow-week-view', v==='week');
+  show('glow-month-view', v==='month');
+  show('glow-ref-view', v==='ref');
   if (v==='ref') renderSkyData();
   if (v==='today') { renderFlowCal(); try{renderQuote('today');}catch(e){} try{renderGlowNote('today');}catch(e){} try{renderFlowToday();}catch(e){} }
-  if (v==='week') { renderQuote('week'); renderGlowNote('week'); }
-  if (v==='month') { renderQuote('month'); renderGlowNote('month'); }
+  if (v==='week') { try{renderQuote('week');}catch(e){} try{renderGlowNote('week');}catch(e){} }
+  if (v==='month') { try{renderQuote('month');}catch(e){} try{renderGlowNote('month');}catch(e){} }
 }
 // keep old name working anywhere it's still called
 function setFlowView(v) { setGlowView(v==='log'?'today':v); }
