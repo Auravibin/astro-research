@@ -1417,7 +1417,7 @@
     <div class="subtab active" id="glowview-today" onclick="setGlowView('today')">Today</div>
     <div class="subtab" id="glowview-week" onclick="setGlowView('week')">This Week</div>
     <div class="subtab" id="glowview-month" onclick="setGlowView('month')">This Month</div>
-    <div class="subtab" id="glowview-ref" onclick="setGlowView('ref')">Sky Data</div>
+    <div class="subtab" id="glowview-ref" onclick="setGlowView('ref')">This Year</div>
   </div>
 
   <div id="glow-today-view">
@@ -1581,6 +1581,7 @@
         <option value="today">Daily note (a date)</option>
         <option value="week">Weekly note</option>
         <option value="month">Monthly note</option>
+        <option value="year">Yearly overview</option>
       </select>
       <label>Date <span class="optional-tag">— for daily: pick the day; weekly/monthly: pick any day in it</span></label>
       <input type="date" id="glow-date">
@@ -2444,6 +2445,7 @@ function pickQuote(date, scope) {
 
 
 function renderQuote(scope) {
+  try {
   scope = scope || 'today';
   const map = { today:'glow-quote', week:'glow-quote-week', month:'glow-quote-month' };
   const el = document.getElementById(map[scope]);
@@ -2453,12 +2455,14 @@ function renderQuote(scope) {
   if (!q) { el.innerHTML = ''; return; }
   el.innerHTML = '<div class="quote-text">' + esc(q.text) + '</div>' +
     (q.label ? '<div class="quote-sky">' + esc(q.label) + '</div>' : '');
+  } catch(e) { console.warn('renderQuote', e); }
 }
 
 // ================= GLOW CONTENT (Aura's energy notes + sky data) =================
 // Cached from Supabase; falls back gracefully so the app is never blank.
-let GLOW_NOTES = { today: {}, week: {}, month: {} };   // keyed by date/period
+let GLOW_NOTES = { today: {}, week: {}, month: {}, year: {} };   // keyed by date/period
 let SKY_DATA = { aspects: [], ingresses: [], moons: [] };
+let YEAR_ENERGY = '';
 
 function isoDay(d) { return d.toISOString().slice(0,10); }
 function weekKey(d) {
@@ -2475,12 +2479,13 @@ async function loadGlowContent() {
   try {
     const { data: notes } = await db.from('glow_content').select('*');
     if (notes) {
-      GLOW_NOTES = { today:{}, week:{}, month:{} };
+      GLOW_NOTES = { today:{}, week:{}, month:{}, year:{} };
       SKY_DATA = { aspects:[], ingresses:[], moons:[] };
       notes.forEach(n => {
         if (n.kind === 'note') { GLOW_NOTES[n.scope] = GLOW_NOTES[n.scope] || {}; GLOW_NOTES[n.scope][n.key] = n.body; }
         else if (n.kind === 'sky') { (SKY_DATA[n.scope] = SKY_DATA[n.scope] || []).push(n); }
       });
+      YEAR_ENERGY = (GLOW_NOTES.year && GLOW_NOTES.year[String(new Date().getFullYear())]) || '';
       SKY_DATA.aspects.sort((a,b)=> (a.key>b.key?1:-1));
       SKY_DATA.ingresses.sort((a,b)=> (a.key>b.key?1:-1));
       SKY_DATA.moons.sort((a,b)=> (a.key>b.key?1:-1));
@@ -2527,7 +2532,8 @@ function renderSkyData() {
     return '<div class="sky-block"><div class="sky-block-head">' + emoji + ' ' + title + '</div>' + rows + '</div>';
   };
   box.innerHTML =
-    '<p class="section-sub" style="margin-bottom:1rem;">The exact sky — entered by hand for accuracy. Aspects, sign changes, and the moons that anchor each month.</p>' +
+    '<div class="glow-quote-card" style="margin-bottom:1.4rem;"><div class="quote-text" style="font-size:22px;">' + (YEAR_ENERGY || 'The year ahead, in your own words — coming soon.') + '</div></div>' +
+    '<p class="section-sub" style="margin-bottom:1rem;">The major sky of the year — the big transits, eclipse themes, and the moons that anchor each month.</p>' +
     section('New & Full Moons', '🌕', SKY_DATA.moons) +
     section('Ingresses (sign changes)', '↔', SKY_DATA.ingresses) +
     section('Aspects', '✦', SKY_DATA.aspects);
@@ -2558,7 +2564,7 @@ async function saveGlowNote() {
   const msg = document.getElementById('glow-admin-msg');
   if (!dv || !body) { msg.className='msg err'; msg.textContent='Pick a date and write the note.'; return; }
   const d = new Date(dv + 'T12:00:00');
-  let key = scope==='today' ? dv : scope==='week' ? weekKey(d) : monthKey(d);
+  let key = scope==='today' ? dv : scope==='week' ? weekKey(d) : scope==='year' ? String(d.getFullYear()) : monthKey(d);
   const row = { kind:'note', scope, key, body };
   const { error } = await db.from('glow_content').upsert(row, { onConflict: 'kind,scope,key' });
   if (error) { msg.className='msg err'; msg.textContent='Save failed: ' + error.message; return; }
@@ -2720,30 +2726,6 @@ function natalLongitude(body) {
   return idx*30 + p.deg;
 }
 function hasNatal() { return NATAL_BODIES.some(b => natalLongitude(b)!==null); }
-function saveNatal() {
-  localStorage.setItem('avr-natal', JSON.stringify(NATAL));
-  markLocalChange();
-  const m = document.getElementById('natal-msg');
-  m.className='msg ok'; m.textContent='Chart saved ✦ Your daily transits are now personalized.';
-  updateChartStatus();
-  renderFlowToday();
-  setTimeout(()=>{ m.textContent=''; m.className='msg'; }, 2500);
-}
-function toggleChartSetup() {
-  const open = document.getElementById('chart-setup-open');
-  const coll = document.getElementById('chart-setup-collapsed');
-  if (open.style.display==='none') { open.style.display='block'; coll.style.display='none'; renderNatalInputs(); }
-  else { open.style.display='none'; coll.style.display='block'; }
-}
-function updateChartStatus() {
-  const el = document.getElementById('chart-status');
-  const btn = document.getElementById('chart-setup-btn');
-  if (!el) return;
-  const n = NATAL_BODIES.filter(b => natalLongitude(b)!==null).length;
-  if (n>0) { el.textContent = n + ' placements saved — transits personalized'; if(btn) btn.textContent='Edit'; }
-  else { el.textContent = 'Not added yet — add it to see how the sky touches your chart'; if(btn) btn.textContent='Add my chart'; }
-}
-
 // ================= FLOW: moon engine + energy tracking =================
 // Self-contained astronomy — no API, no key. Computes moon phase and the
 // zodiac sign the Moon occupies for any date, offline, forever.
@@ -2921,7 +2903,7 @@ function setGlowView(v) {
   document.getElementById('glow-ref-view').style.display = v==='ref' ? 'block' : 'none';
   if (v==='cal') renderFlowCal();
   if (v==='ref') renderSkyData();
-  if (v==='today') { renderQuote('today'); renderGlowNote('today'); renderFlowToday(); renderFlowCal(); }
+  if (v==='today') { renderFlowCal(); try{renderQuote('today');}catch(e){} try{renderGlowNote('today');}catch(e){} try{renderFlowToday();}catch(e){} }
   if (v==='week') { renderQuote('week'); renderGlowNote('week'); }
   if (v==='month') { renderQuote('month'); renderGlowNote('month'); }
 }
@@ -2935,7 +2917,8 @@ function renderFlowCal() {
   const grid = document.getElementById('flow-cal-grid');
   if (!grid) return;
   const y = flowCalDate.getFullYear(), mo = flowCalDate.getMonth();
-  document.getElementById('flow-cal-label').textContent = flowCalDate.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+  const labelEl = document.getElementById('flow-cal-label');
+  if (labelEl) labelEl.textContent = flowCalDate.toLocaleDateString('en-US',{month:'long',year:'numeric'});
   const first = new Date(y, mo, 1).getDay();
   const days = new Date(y, mo+1, 0).getDate();
   const today = flowKey(new Date());
@@ -2971,7 +2954,7 @@ function closeFlowModal() {
   document.getElementById('flow-day-modal').style.display = 'none';
   document.body.style.overflow = '';
 }
-function renderFlow() { updateChartStatus(); renderFlowToday(); renderFlowList(); renderFlowCal(); renderGlowNote('today'); }
+function renderFlow() { renderFlowCal(); try{renderFlowToday();}catch(e){} try{renderFlowList();}catch(e){} try{renderGlowNote('today');}catch(e){} }
 
 
 function renderImages() {
