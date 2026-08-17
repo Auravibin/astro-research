@@ -245,6 +245,17 @@
   .flow-cal-legend span { display: flex; align-items: center; gap: 0.3rem; }
   .dot-energy { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); display: inline-block; }
 
+
+  .flow-modal { position: fixed; inset: 0; background: rgba(20,10,16,0.55); z-index: 1000; display: flex; align-items: flex-end; justify-content: center; animation: fadein 0.2s ease; }
+  .flow-modal-inner { background: var(--bg); width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto; border-radius: 24px 24px 0 0; padding: 1.4rem 1.4rem 2rem; box-shadow: 0 -8px 40px rgba(0,0,0,0.25); animation: slideup 0.28s cubic-bezier(0.2,0.8,0.2,1); }
+  @media (min-width: 560px) { .flow-modal { align-items: center; } .flow-modal-inner { border-radius: 24px; } }
+  .flow-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.3rem; }
+  #flow-modal-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: var(--text-primary); }
+  .flow-modal-x { font-size: 26px; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0 4px; }
+  .flow-modal-moon { font-size: 13px; color: var(--text-muted); margin-bottom: 1rem; }
+  @keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
   .flow-sky-card { background: linear-gradient(135deg, #2a2340, #1a1530); color: #f0e9f5; border-radius: 20px; padding: 1.3rem 1.4rem; margin-bottom: 1.4rem; }
   .flow-sky-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.7rem; }
   .flow-sky-main { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.8rem; }
@@ -254,7 +265,12 @@
   .flow-sky-poem { font-size: 13px; line-height: 1.6; font-style: italic; opacity: 0.9; margin-top: 0.5rem; }
   .glow-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
   .glow-tabs .subtab { white-space: nowrap; flex: 0 0 auto; }
-  .glow-note-card { background: linear-gradient(135deg, var(--bg-card), var(--bg-card-deep)); border: 1.5px solid var(--border); border-radius: 20px; padding: 1.3rem 1.4rem; margin-bottom: 1.4rem; }
+
+  .glow-quote-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 24px; padding: 2.6rem 1.8rem; margin-bottom: 1.4rem; text-align: center; }
+  .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 27px; line-height: 1.4; font-weight: 500; color: var(--text-primary); letter-spacing: 0.01em; }
+  .quote-sky { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-top: 1.3rem; font-weight: 500; }
+
+  .glow-note-card { background: var(--bg-card-deep); border: 1px solid var(--border); border-radius: 16px; padding: 1rem 1.2rem; margin-bottom: 1.4rem; }
   .glow-note-label { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; }
   .glow-note-moon { font-size: 13px; color: var(--text-muted); margin-bottom: 0.7rem; }
   .glow-note-body { font-size: 15px; line-height: 1.7; color: var(--text-primary); font-weight: 300; }
@@ -1397,85 +1413,19 @@
   <h1 class="section-title">Let's help you <span style="color:var(--accent);font-style:italic;">glow</span></h1>
   <p class="section-sub">Your daily check-in with the sky. What today holds, how the energy moves through the week and month, and space to track your own rhythm alongside it.</p>
 
-  <div id="flow-chart-setup" class="flow-log-box" style="margin-bottom:1.4rem;">
-    <div class="chart-setup-collapsed" id="chart-setup-collapsed">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:0.6rem;">
-        <div>
-          <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:0.2rem;">Your chart</div>
-          <div id="chart-status" style="font-size:13px;color:var(--text-muted);font-weight:300;"></div>
-        </div>
-        <button class="btn btn-sm" onclick="toggleChartSetup()" id="chart-setup-btn">Add my chart</button>
-      </div>
-    </div>
-    <div class="chart-setup-open" id="chart-setup-open" style="display:none;">
-      <div style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:0.5rem;">Your birth chart</div>
-      <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-bottom:0.9rem;">Enter your placements once. The daily sky then shows how today's transits touch <em>your</em> chart. Enter what you know — you can fill the rest later. Private to you.</p>
-      <div id="natal-inputs"></div>
-      <div style="display:flex;gap:0.5rem;margin-top:0.9rem;flex-wrap:wrap;">
-        <button class="btn btn-sm" onclick="saveNatal()">Save chart</button>
-        <button class="btn btn-sm btn-ghost" onclick="toggleChartSetup()">Close</button>
-      </div>
-      <div class="msg" id="natal-msg"></div>
-    </div>
-  </div>
-
-
-
   <div class="subtabs glow-tabs" style="margin-bottom:1.2rem;">
     <div class="subtab active" id="glowview-today" onclick="setGlowView('today')">Today</div>
     <div class="subtab" id="glowview-week" onclick="setGlowView('week')">This Week</div>
     <div class="subtab" id="glowview-month" onclick="setGlowView('month')">This Month</div>
-    <div class="subtab" id="glowview-cal" onclick="setGlowView('cal')">Calendar</div>
     <div class="subtab" id="glowview-ref" onclick="setGlowView('ref')">Sky Data</div>
   </div>
 
   <div id="glow-today-view">
+    <div id="glow-quote" class="glow-quote-card"></div>
     <div id="glow-energy-note" class="glow-note-card"></div>
     <div id="flow-today" class="flow-sky-card"></div>
-    <div id="flow-transits" class="flow-transits-box"></div>
-  <div id="flow-log-view">
-    <div class="flow-log-box">
-      <div class="flow-date-row">
-        <button class="btn-quiet" onclick="flowShiftDay(-1)">‹ Prev</button>
-        <span id="flow-date-label"></span>
-        <button class="btn-quiet" onclick="flowShiftDay(1)">Next ›</button>
-      </div>
+    <span id="flow-date-label" style="display:none;"></span>
 
-      <label>💪 Movement <span class="optional-tag">— tap any</span></label>
-      <div class="mood-row" id="move-row"></div>
-
-      <label style="margin-top:0.9rem;">⚡ Energy</label>
-      <div class="energy-row" id="energy-row"></div>
-
-      <label style="margin-top:0.9rem;">🌙 Mood <span class="optional-tag">— tap any that fit</span></label>
-      <div class="mood-row" id="mood-row"></div>
-
-      <div id="period-block">
-        <label style="margin-top:0.9rem;">🩸 Cycle <span class="optional-tag">— optional</span></label>
-        <div class="mood-row" id="period-row"></div>
-      </div>
-
-      <label style="margin-top:0.9rem;">Note <span class="optional-tag">— optional</span></label>
-      <textarea id="flow-note" placeholder="What happened, how you felt, anything worth remembering..."></textarea>
-
-      <button class="btn" onclick="saveFlow()" style="margin-top:0.8rem;">Save this day</button>
-      <div class="msg" id="flow-msg"></div>
-      <p style="font-size:11px;color:var(--text-muted);font-weight:300;line-height:1.5;margin-top:0.8rem;">General wellness tracking, not medical advice. Every body is different — a doctor knows yours. This stays private to you.</p>
-    </div>
-
-    <div class="flow-history-head">
-      <h2 class="subhead" style="margin:0;">Your log</h2>
-      <span id="flow-count" class="lib-count" style="margin:0;"></span>
-    </div>
-    <div id="flow-list"></div>
-  </div>
-
-  </div>
-  <div id="glow-week-view" style="display:none;"><div id="glow-week-note" class="glow-note-card"></div></div>
-  <div id="glow-month-view" style="display:none;"><div id="glow-month-note" class="glow-note-card"></div></div>
-  <div id="glow-ref-view" style="display:none;"></div>
-
-  <div id="flow-cal-view" style="display:none;">
     <div class="flow-date-row" style="margin-bottom:1rem;">
       <button class="btn-quiet" onclick="flowCalShift(-1)">‹</button>
       <span id="flow-cal-label" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--text-primary);"></span>
@@ -1486,7 +1436,15 @@
       <span><span class="dot-energy"></span> energy logged</span>
       <span>🌑🌓🌕🌗 moon phase</span>
     </div>
-    <p style="font-size:11.5px;color:var(--text-muted);font-weight:300;text-align:center;margin-top:1rem;">Tap any day to log or edit it. Every logged day is yours forever.</p>
+    <p style="font-size:11.5px;color:var(--text-muted);font-weight:300;text-align:center;margin-top:0.8rem;">Tap any day to log how you felt. Every logged day is yours forever.</p>
+
+    <div class="flow-history-head" style="margin-top:1.6rem;">
+      <h2 class="subhead" style="margin:0;">Your log</h2>
+      <span id="flow-count" class="lib-count" style="margin:0;"></span>
+    </div>
+    <div id="flow-list"></div>
+
+    <h2 class="subhead" style="margin-top:1.8rem;">Flowing With The Moon</h2>
     <div id="glow-artcalendar" style="margin-top:1.5rem;">
     <p class="section-sub" style="margin-bottom:1rem;">The Flowing With The Moon 2026 calendar — moon phases, sign ingresses, retrogrades, eclipses, and daily aspects. Tap any month to open it, then tap the image to zoom.</p>
 
@@ -1511,7 +1469,44 @@
     <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-top:1.2rem;">Times shown are Eastern. Adjust for your own zone — the Moon moves roughly half a degree an hour, so ingress times shift but the day's overall pattern holds.</p>
   </div>
   </div>
-</div>
+    <div id="glow-week-view" style="display:none;"><div id="glow-quote-week" class="glow-quote-card"></div><div id="glow-week-note" class="glow-note-card"></div></div>
+  <div id="glow-month-view" style="display:none;"><div id="glow-quote-month" class="glow-quote-card"></div><div id="glow-month-note" class="glow-note-card"></div></div>
+  <div id="glow-ref-view" style="display:none;"></div>
+
+  <div id="flow-day-modal" class="flow-modal" style="display:none;">
+    <div class="flow-modal-inner">
+      <div class="flow-modal-head">
+        <span id="flow-modal-title"></span>
+        <span class="flow-modal-x" onclick="closeFlowModal()">×</span>
+      </div>
+      <div id="flow-modal-moon" class="flow-modal-moon"></div>
+
+      <label>💪 Movement <span class="optional-tag">— tap any</span></label>
+      <div class="mood-row" id="move-row"></div>
+
+      <label style="margin-top:0.9rem;">⚡ Energy</label>
+      <div class="energy-row" id="energy-row"></div>
+
+      <label style="margin-top:0.9rem;">🌙 Mood <span class="optional-tag">— tap any that fit</span></label>
+      <div class="mood-row" id="mood-row"></div>
+
+      <div id="period-block">
+        <label style="margin-top:0.9rem;">🩸 Cycle <span class="optional-tag">— optional</span></label>
+        <div class="mood-row" id="period-row"></div>
+      </div>
+
+      <label style="margin-top:0.9rem;">Note <span class="optional-tag">— optional</span></label>
+      <textarea id="flow-note" placeholder="What happened, how you felt, anything worth remembering..."></textarea>
+
+      <div style="display:flex;gap:0.5rem;margin-top:0.9rem;">
+        <button class="btn" onclick="saveFlow()" style="flex:1;">Save</button>
+        <button class="btn btn-ghost" onclick="closeFlowModal()">Close</button>
+      </div>
+      <div class="msg" id="flow-msg"></div>
+      <p style="font-size:11px;color:var(--text-muted);font-weight:300;line-height:1.5;margin-top:0.6rem;">General wellness tracking, not medical advice. Every body is different — a doctor knows yours. Private to you.</p>
+    </div>
+  </div>
+  </div>
 
 <div class="section" id="section-account">
   <div class="section-eyebrow">Account</div>
@@ -1593,6 +1588,31 @@
       <textarea id="glow-body" rows="4" placeholder="Today the Leo moon lights up your desire to be seen — say yes to what makes you shine. Just watch a tendency to overextend by evening."></textarea>
       <button class="btn" onclick="saveGlowNote()">Save note</button>
       <div class="msg" id="glow-admin-msg"></div>
+    </div>
+
+    <h2 class="subhead">Glow — Quotes</h2>
+    <div class="card">
+      <p style="font-size:12px;color:var(--text-muted);font-weight:300;margin-bottom:0.7rem;">The daily draw. One is chosen per day by the sky. Voice: short, present tense, affirmative law — never "it's not X, it's Y", no hedging, no advice, no questions.</p>
+      <label>Quote <span class="optional-tag">— two sentences max</span></label>
+      <textarea id="q-text" rows="2" placeholder="What is buried is gathering. The dark does its own work."></textarea>
+      <label>Theme</label>
+      <select id="q-theme">
+        <option value="universal">Universal (any day)</option>
+        <option value="new_moon">New Moon</option>
+        <option value="full_moon">Full Moon</option>
+        <option value="waxing">Waxing</option>
+        <option value="waning">Waning</option>
+        <option value="eclipse">Eclipse</option>
+        <option value="ingress">Ingress (sign change)</option>
+        <option value="retrograde">Retrograde</option>
+      </select>
+      <label>Sign <span class="optional-tag">— optional, leave blank for any</span></label>
+      <select id="q-sign"><option value="">Any</option><option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option><option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option><option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option></select>
+      <label>Scope</label>
+      <select id="q-scope"><option value="day">Daily</option><option value="week">Weekly</option><option value="month">Monthly</option></select>
+      <button class="btn" onclick="saveQuote()">Add quote</button>
+      <div class="msg" id="q-msg"></div>
+      <div id="q-count" style="font-size:12px;color:var(--text-muted);margin-top:0.6rem;"></div>
     </div>
 
     <h2 class="subhead">Glow — Sky Data</h2>
@@ -1712,7 +1732,7 @@ function showTab(id) {
   window.scrollTo(0, 0);
   if (id === 'library') loadLibrary();
   
-  if (id === 'flow') { flowDate = new Date(); loadGlowContent().then(()=>{ renderGlowNote('today'); }); setGlowView('today'); renderFlow(); }
+  if (id === 'flow') { flowDate = new Date(); Promise.all([loadGlowContent(), loadQuotes()]).then(()=>{ renderQuote('today'); renderGlowNote('today'); }); setGlowView('today'); renderFlow(); }
   if (id === 'mynotes') { renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); }
 }
 
@@ -2366,6 +2386,75 @@ function imgDrop(e, targetId) {
 
 
 
+
+// ================= QUOTE ENGINE (the daily draw) =================
+let QUOTE_POOL = [];
+async function loadQuotes() {
+  if (!db) return;
+  try {
+    const { data } = await db.from('quote_pool').select('*');
+    if (data) QUOTE_POOL = data;
+  } catch(e) { console.warn('quote load failed', e); }
+}
+
+// deterministic hash from a string -> 0..1
+function seedRand(str) {
+  let h = 2166136261;
+  for (let i=0; i<str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return ((h >>> 0) % 100000) / 100000;
+}
+
+// figure out the most significant event for a given date + its theme/sign
+function skyEvent(date) {
+  const ph = moonPhase(date);
+  const sign = moonSign(date);
+  // check hand-entered sky data for an exact eclipse / moon on this day
+  const iso = isoDay(date);
+  const moons = (SKY_DATA.moons||[]).filter(m => m.key === iso);
+  const eclipse = moons.find(m => /eclipse/i.test(m.title||''));
+  if (eclipse) return { theme:'eclipse', sign, label:eclipse.title };
+  if (moons.length) {
+    const isFull = /full/i.test(moons[0].title||'') || ph.name==='Full Moon';
+    return { theme: isFull?'full_moon':'new_moon', sign, label:moons[0].title };
+  }
+  // ingress today?
+  const ing = (SKY_DATA.ingresses||[]).find(m => m.key === iso);
+  if (ing) return { theme:'ingress', sign, label:ing.title };
+  // else fall back to moon phase buckets
+  if (ph.name==='New Moon') return { theme:'new_moon', sign, label:'New Moon in '+sign };
+  if (ph.name==='Full Moon') return { theme:'full_moon', sign, label:'Full Moon in '+sign };
+  if (ph.phase < 0.5) return { theme:'waxing', sign, label:ph.name+' · Moon in '+sign };
+  return { theme:'waning', sign, label:ph.name+' · Moon in '+sign };
+}
+
+function pickQuote(date, scope) {
+  scope = scope || 'day';
+  const ev = skyEvent(date);
+  const pool = QUOTE_POOL.filter(q => q.scope===scope);
+  if (!pool.length) return null;
+  // prefer sign-specific matches for the theme, then theme, then universal
+  let matches = pool.filter(q => q.theme===ev.theme && q.sign===ev.sign);
+  if (!matches.length) matches = pool.filter(q => q.theme===ev.theme && !q.sign);
+  if (!matches.length) matches = pool.filter(q => q.theme==='universal');
+  if (!matches.length) matches = pool;
+  const key = scope + '|' + (scope==='day'?isoDay(date):scope==='week'?weekKey(date):monthKey(date));
+  const idx = Math.floor(seedRand(key) * matches.length) % matches.length;
+  return { text: matches[idx].text, label: ev.label };
+}
+
+
+function renderQuote(scope) {
+  scope = scope || 'today';
+  const map = { today:'glow-quote', week:'glow-quote-week', month:'glow-quote-month' };
+  const el = document.getElementById(map[scope]);
+  if (!el) return;
+  const d = new Date();
+  const q = pickQuote(d, scope==='today'?'day':scope);
+  if (!q) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="quote-text">' + esc(q.text) + '</div>' +
+    (q.label ? '<div class="quote-sky">' + esc(q.label) + '</div>' : '');
+}
+
 // ================= GLOW CONTENT (Aura's energy notes + sky data) =================
 // Cached from Supabase; falls back gracefully so the app is never blank.
 let GLOW_NOTES = { today: {}, week: {}, month: {} };   // keyed by date/period
@@ -2444,6 +2533,23 @@ function renderSkyData() {
     section('Aspects', '✦', SKY_DATA.aspects);
 }
 
+
+
+async function saveQuote() {
+  const text = document.getElementById('q-text').value.trim();
+  const msg = document.getElementById('q-msg');
+  if (!text) { msg.className='msg err'; msg.textContent='Write the quote first.'; return; }
+  // gentle guard against the banned "not X, it's Y" pattern
+  if (/\bnot\b[^.?!]*\bit'?s\b/i.test(text) || /isn'?t\b[^.?!]*\bit'?s\b/i.test(text)) {
+    msg.className='msg err'; msg.textContent='That looks like "not X, it\'s Y" — rewrite as pure affirmative.'; return;
+  }
+  const row = { text, theme: document.getElementById('q-theme').value, sign: document.getElementById('q-sign').value || null, scope: document.getElementById('q-scope').value };
+  const { error } = await db.from('quote_pool').insert(row);
+  if (error) { msg.className='msg err'; msg.textContent='Save failed: '+error.message; return; }
+  msg.className='msg ok'; msg.textContent='Added ✦';
+  document.getElementById('q-text').value='';
+  loadQuotes().then(()=>{ const c=document.getElementById('q-count'); if(c) c.textContent=QUOTE_POOL.length+' quotes in the pool'; });
+}
 
 async function saveGlowNote() {
   const scope = document.getElementById('glow-scope').value;
@@ -2564,7 +2670,7 @@ function transitReading(t) {
 
 function renderTransits(date) {
   const box = document.getElementById('flow-transits');
-  if (!box) return;
+  if (!box) return; // transits UI removed — safe no-op
   if (!hasNatal()) { box.innerHTML = ''; return; }
   const hits = findTransits(date);
   if (!hits.length) {
@@ -2772,6 +2878,7 @@ function saveFlow() {
   setTimeout(() => { m.textContent=''; m.className='msg'; }, 2000);
   renderFlowList();
   renderFlowCal();
+  setTimeout(closeFlowModal, 600);
 }
 function deleteFlow(k) {
   if (!confirm('Delete this day\'s entry?')) return;
@@ -2814,9 +2921,9 @@ function setGlowView(v) {
   document.getElementById('glow-ref-view').style.display = v==='ref' ? 'block' : 'none';
   if (v==='cal') renderFlowCal();
   if (v==='ref') renderSkyData();
-  if (v==='today') { renderGlowNote('today'); renderFlowToday(); }
-  if (v==='week') renderGlowNote('week');
-  if (v==='month') renderGlowNote('month');
+  if (v==='today') { renderQuote('today'); renderGlowNote('today'); renderFlowToday(); renderFlowCal(); }
+  if (v==='week') { renderQuote('week'); renderGlowNote('week'); }
+  if (v==='month') { renderQuote('month'); renderGlowNote('month'); }
 }
 // keep old name working anywhere it's still called
 function setFlowView(v) { setGlowView(v==='log'?'today':v); }
@@ -2853,11 +2960,18 @@ function renderFlowCal() {
 }
 function flowOpenDay(k) {
   flowDate = new Date(k + 'T12:00:00');
-  setGlowView('today');
-  renderFlowToday(); renderEnergyRow();
-  document.getElementById('section-flow').scrollIntoView({behavior:'smooth',block:'start'});
+  const ph = moonPhase(flowDate); const sign = moonSign(flowDate);
+  document.getElementById('flow-modal-title').textContent = flowDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('flow-modal-moon').innerHTML = ph.emoji + ' ' + ph.name + ' · Moon in ' + sign;
+  renderEnergyRow();
+  document.getElementById('flow-day-modal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
 }
-function renderFlow() { updateChartStatus(); renderFlowToday(); renderEnergyRow(); renderFlowList(); renderFlowCal(); }
+function closeFlowModal() {
+  document.getElementById('flow-day-modal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+function renderFlow() { updateChartStatus(); renderFlowToday(); renderFlowList(); renderFlowCal(); renderGlowNote('today'); }
 
 
 function renderImages() {
