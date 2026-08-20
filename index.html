@@ -278,6 +278,7 @@
 
   .glow-quote-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 24px; padding: 2.6rem 1.8rem; margin-bottom: 1.4rem; text-align: center; }
   .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 27px; line-height: 1.4; font-weight: 600; color: var(--accent); letter-spacing: 0.01em; }
+  .quote-expansion { font-size: 14px; line-height: 1.65; color: var(--text-secondary); font-weight: 300; margin-top: 1rem; font-family: 'DM Sans', sans-serif; }
   .quote-sky { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-top: 1.3rem; font-weight: 500; }
 
   .glow-note-card { background: var(--bg-card-deep); border: 1px solid var(--border); border-radius: 16px; padding: 1rem 1.2rem; margin-bottom: 1.4rem; }
@@ -1303,6 +1304,14 @@
     <button class="btn-quiet" onclick="showTab('account')">Sync across devices</button>
     <input type="file" id="import-file" accept=".json,application/json" style="display:none;" onchange="importNotes(event)">
   </div>
+
+  <div class="acc-head" onclick="acc(this)" style="margin-top:0.8rem;"><h3>How do backups work?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">
+  <strong>The simplest option is "Sync across devices."</strong> Make a free account (in the Account tab), and your notes save to the cloud and appear on any device you sign into. This is the easiest way to keep everything safe and move between your phone and computer — most people should just use this.<br><br>
+  <strong>The backup file is for extra safety, or syncing without an account.</strong> Here's exactly how it works:<br><br>
+  <strong>To save a backup:</strong> tap <em>Export a backup file</em>. A small file (ending in <em>.json</em>) downloads to your device — on a phone it lands in your Files app (usually a "Downloads" folder); on a computer, your Downloads folder. That one file holds all your notes, charts, saved terms, and logs. Keep it somewhere safe — email it to yourself, put it in your cloud drive, or just leave it in Downloads.<br><br>
+  <strong>To restore it</strong> (on a new phone, or after reinstalling): open this site, come to this Notes tab, tap <em>Import a backup</em>, and choose that .json file. Everything comes back exactly as it was.<br><br>
+  <em>Think of the backup file like a photo of your notes — you can keep it anywhere, and load it back in whenever you need it.</em></div>
   <div class="msg" id="backup-msg"></div>
 
   
@@ -1452,53 +1461,53 @@
       <button class="btn-quiet" onclick="flowCalShift(1)">›</button>
     </div>
     <div id="flow-cal-grid" class="flow-cal-grid"></div>
-    <div class="flow-cal-legend">
-      <span><span class="dot-energy"></span> energy logged</span>
-      <span>🌑🌓🌕🌗 moon phase</span>
-    </div>
+
     <p style="font-size:11.5px;color:var(--text-muted);font-weight:300;text-align:center;margin-top:0.8rem;">Tap any day to log how you felt. Every logged day is yours forever.</p>
 
     <div id="flow-legend" class="flow-legend"></div>
 
     <h2 class="subhead" style="margin-top:1.8rem;">Flowing With The Moon</h2>
     <div id="glow-artcalendar" style="margin-top:1.5rem;">
-    <h2 class="subhead" style="margin-top:0;">Flowing With The Moon · 2026</h2>
+    <h2 class="subhead" style="margin-top:0;">Flowing With The Moon</h2>
     <p class="section-sub" style="margin-bottom:1rem;">The full 2026 calendar — every moon phase, sign ingress, retrograde, eclipse, and daily aspect, hand-built. Tap any month to open it, then tap the image to zoom.</p>
 
-    <div class="acc-head" onclick="acc(this)"><h3>January 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>2026 · Year at a glance</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-body">The full year with every moon phase, and the eclipse portals marked in gold.<img class="brand-img chart-thumb" src="img/2026-main.jpg" alt="2026 year overview — Flowing With The Moon, eclipse portals marked" loading="lazy" onclick="openLightbox(this.src)"></div>
+
+    <div class="acc-head" onclick="acc(this)"><h3>January</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-1.jpg" alt="January 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>February 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>February</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-2.jpg" alt="February 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>March 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>March</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-3.jpg" alt="March 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>April 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>April</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-4.jpg" alt="April 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>May 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>May</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-5.jpg" alt="May 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>June 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>June</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-6.jpg" alt="June 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>July 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>July</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-7.jpg" alt="July 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>August 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>August</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-8.jpg" alt="August 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>September 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>September</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-9.jpg" alt="September 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>October 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>October</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-10.jpg" alt="October 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>November 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>November</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-11.jpg" alt="November 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
-    <div class="acc-head" onclick="acc(this)"><h3>December 2026</h3><span class="acc-arrow">↓</span></div>
+    <div class="acc-head" onclick="acc(this)"><h3>December</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-12.jpg" alt="December 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
 
     <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-top:1.2rem;">Times shown are Eastern. Adjust for your own zone — the Moon moves roughly half a degree an hour, so ingress times shift but the day's overall pattern holds.</p>
@@ -2464,10 +2473,20 @@ function skyEvent(date) {
   return { theme:'waning', sign, label:ph.name+' · Moon in '+sign };
 }
 
+function dayOfYear(date) {
+  const start = new Date(date.getFullYear(), 0, 0);
+  return Math.floor((date - start) / 86400000);
+}
 function pickQuote(date, scope) {
   scope = scope || 'day';
   const ev = skyEvent(date);
-  const pool = QUOTE_POOL.filter(q => q.scope===scope);
+  // For the daily quote, use Aura's 365 wisdom cycle by day-of-year.
+  if (scope === 'day') {
+    const doy = dayOfYear(date);
+    const wisdom = QUOTE_POOL.find(q => q.theme==='wisdom' && q.day_of_year===doy);
+    if (wisdom) return { text: wisdom.text, label: ev.label, expansion: wisdom.expansion };
+  }
+  const pool = QUOTE_POOL.filter(q => q.scope===scope && q.theme!=='wisdom');
   if (!pool.length) return null;
   // prefer sign-specific matches for the theme, then theme, then universal
   let matches = pool.filter(q => q.theme===ev.theme && q.sign===ev.sign);
@@ -2490,6 +2509,7 @@ function renderQuote(scope) {
   const q = pickQuote(d, scope==='today'?'day':scope);
   if (!q) { el.innerHTML = ''; return; }
   el.innerHTML = '<div class="quote-text">' + esc(q.text) + '</div>' +
+    (q.expansion ? '<div class="quote-expansion">' + esc(q.expansion) + '</div>' : '') +
     (q.label ? '<div class="quote-sky">' + esc(q.label) + '</div>' : '');
   } catch(e) { console.warn('renderQuote', e); }
 }
