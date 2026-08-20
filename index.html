@@ -6,7 +6,7 @@
 <meta name="color-scheme" content="light">
 <title>Seshat · Aura Vibin Astrology</title>
 <meta name="description" content="A living astrology research hub — learn the real mechanics of astrology and contribute to community-driven pattern research.">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Noto+Sans+Symbols:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
@@ -231,16 +231,27 @@
   .natal-label { flex: 0 0 92px; font-size: 12.5px; color: var(--text-secondary); }
   .natal-sign { flex: 1; margin: 0 !important; padding: 0.4rem 0.5rem !important; }
   .natal-deg { flex: 0 0 56px; margin: 0 !important; padding: 0.4rem 0.4rem !important; text-align: center; }
-  .flow-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+  .flow-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
   .cal-dow { text-align: center; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 4px; }
-  .cal-day { position: relative; aspect-ratio: 1; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; padding: 2px; }
+  .cal-day { position: relative; min-height: 64px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; cursor: pointer; transition: all 0.15s; padding: 3px 4px; overflow: hidden; }
+  .cal-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .cal-moon-mini { line-height: 0; flex: 0 0 auto; }
+  .cal-moon-mini svg { display: block; }
+  .cal-events { margin-top: 1px; display: flex; flex-direction: column; gap: 0px; flex: 1 1 auto; }
+  .cal-ev { font-size: 7.5px; line-height: 1.25; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cal-ev-t { color: var(--text-muted); margin-left: 2px; }
+  .cal-ev-moon { color: var(--accent); font-weight: 500; white-space: normal; }
+  .astro-glyph { font-family: 'Noto Sans Symbols', 'Cormorant Garamond', 'Times New Roman', serif; font-variant-emoji: text; text-rendering: optimizeLegibility; color: var(--text-secondary); }
+  .cal-marks { display: flex; gap: 3px; align-items: center; position: absolute; bottom: 3px; right: 4px; }
   .cal-day:active { transform: scale(0.94); }
   .cal-today { border-color: var(--accent); border-width: 2px; }
   .cal-future { opacity: 0.4; cursor: default; }
-  .cal-num { font-size: 13px; color: var(--text-primary); font-weight: 500; }
+  .cal-num { font-size: 12px; color: var(--text-primary); font-weight: 600; line-height: 1; }
+  .cal-moon-mini { display: block; line-height: 0; }
+  .cal-moon-mini svg { display: block; }
   .cal-moon { font-size: 11px; line-height: 1; }
-.cal-energy { position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); width: 7px; height: 7px; border-radius: 50%; }
-  .cal-period { position: absolute; top: 5px; right: 5px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.cal-energy { width: 7px; height: 7px; border-radius: 50%; }
+  .cal-period { width: 5px; height: 5px; border-radius: 50%; background: #c0392b; }
   .cal-logged { position: absolute; top: 5px; left: 5px; width: 4px; height: 4px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; }
   .flow-legend { margin-top: 1.2rem; padding: 1rem 1.1rem; background: var(--bg-card-deep); border-radius: 14px; }
   .legend-title { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.6rem; }
@@ -266,12 +277,13 @@
   @keyframes slideup { from { transform: translateY(100%); } to { transform: translateY(0); } }
   @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
 
-  .flow-sky-card { background: linear-gradient(135deg, #2a2340, #1a1530); color: #f0e9f5; border-radius: 20px; padding: 1.3rem 1.4rem; margin-bottom: 1.4rem; }
-  .flow-sky-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.7rem; }
+  .flow-moon-graphic { display: flex; justify-content: center; margin: 0.5rem 0 0.8rem; }
+  .flow-sky-card { background: transparent; color: var(--text-primary); border-radius: 20px; padding: 0.5rem 1rem 1.5rem; margin-bottom: 1rem; text-align: center; }
+  .flow-sky-label { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem; }
   .flow-sky-main { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 0.8rem; }
   .flow-moon-emoji { font-size: 40px; line-height: 1; }
-  .flow-phase-name { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; }
-  .flow-phase-sub { font-size: 12px; opacity: 0.8; letter-spacing: 0.03em; margin-top: 2px; }
+  .flow-phase-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--text-primary); }
+  .flow-phase-sub { font-size: 12px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; font-weight: 500; }
   .flow-sky-poem { font-size: 13px; line-height: 1.6; font-style: italic; opacity: 0.9; margin-top: 0.5rem; }
   .glow-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
   .glow-tabs .subtab { white-space: nowrap; flex: 0 0 auto; }
@@ -1466,8 +1478,7 @@
 
     <div id="flow-legend" class="flow-legend"></div>
 
-    <h2 class="subhead" style="margin-top:1.8rem;">Flowing With The Moon</h2>
-    <div id="glow-artcalendar" style="margin-top:1.5rem;">
+    <div id="glow-artcalendar" style="margin-top:1.8rem;">
     <h2 class="subhead" style="margin-top:0;">Flowing With The Moon</h2>
     <p class="section-sub" style="margin-bottom:1rem;">The full 2026 calendar — every moon phase, sign ingress, retrograde, eclipse, and daily aspect, hand-built. Tap any month to open it, then tap the image to zoom.</p>
 
@@ -1661,21 +1672,38 @@
       <div id="q-count" style="font-size:12px;color:var(--text-muted);margin-top:0.6rem;"></div>
     </div>
 
-    <h2 class="subhead">Glow — Sky Data</h2>
+    <h2 class="subhead">Calendar — Sky Events</h2>
     <div class="card">
+      <p style="font-size:12px;color:var(--text-muted);font-weight:300;margin-bottom:0.7rem;">Add anything from your calendar — ingresses, moons, eclipses, retrogrades, aspects. These show right in the day cell with real glyphs, and feed This Week / Month / Year. All times Eastern.</p>
       <label>Type</label>
-      <select id="sky-scope">
-        <option value="moons">New / Full Moon · Eclipse</option>
-        <option value="ingresses">Ingress (sign change)</option>
-        <option value="aspects">Aspect</option>
+      <select id="sky-kind" onchange="skyKindChange()">
+        <option value="ingress">Ingress (planet enters a sign)</option>
+        <option value="moon">New / Full Moon or Eclipse</option>
+        <option value="retro">Retrograde / Station</option>
+        <option value="aspect">Aspect</option>
       </select>
       <label>Date</label>
       <input type="date" id="sky-date">
-      <label>Event <span class="optional-tag">— e.g. "New Moon Solar Eclipse in Leo" or "Venus enters Cancer"</span></label>
-      <input type="text" id="sky-title" placeholder="Venus enters Cancer">
-      <label>Meaning <span class="optional-tag">— optional, your one-line take</span></label>
-      <input type="text" id="sky-body" placeholder="Tenderness comes home; nurture what you love.">
-      <button class="btn" onclick="saveSkyData()">Add sky event</button>
+
+      <div id="sky-f-body"><label>Planet / Body</label>
+        <select id="sky-body-sel">
+          <option>Sun</option><option>Moon</option><option>Mercury</option><option>Venus</option><option>Mars</option><option>Jupiter</option><option>Saturn</option><option>Uranus</option><option>Neptune</option><option>Pluto</option><option>Chiron</option><option>Lilith</option><option>NorthNode</option>
+        </select>
+      </div>
+      <div id="sky-f-sign"><label>Sign</label>
+        <select id="sky-sign-sel">
+          <option value="">—</option><option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option><option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option><option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option>
+        </select>
+      </div>
+      <div id="sky-f-aspect" style="display:none;"><label>Aspect</label>
+        <select id="sky-aspect-sel"><option>conjunction</option><option>opposition</option><option>square</option><option>trine</option><option>sextile</option></select>
+      </div>
+      <label>Time <span class="optional-tag">— Eastern, e.g. "4:00 pm"</span></label>
+      <input type="text" id="sky-time" placeholder="4:00 pm">
+      <label>Note / label <span class="optional-tag">— e.g. "New Moon in Taurus" or a short meaning</span></label>
+      <input type="text" id="sky-note" placeholder="New Moon in Taurus">
+      <label style="display:flex;align-items:center;gap:0.5rem;margin-top:0.6rem;"><input type="checkbox" id="sky-portal" style="width:auto;"> Eclipse portal (gold marker)</label>
+      <button class="btn" onclick="saveSkyEvent()">Add to calendar</button>
       <div class="msg" id="sky-admin-msg"></div>
     </div>
 
@@ -1778,7 +1806,7 @@ function showTab(id) {
   window.scrollTo(0, 0);
   if (id === 'library') loadLibrary();
   
-  if (id === 'flow') { flowDate = new Date(); Promise.all([loadGlowContent(), loadQuotes()]).then(()=>{ renderQuote('today'); renderGlowNote('today'); }); setGlowView('today'); renderFlow(); }
+  if (id === 'flow') { flowDate = new Date(); Promise.all([loadGlowContent(), loadQuotes(), loadSkyEvents()]).then(()=>{ renderQuote('today'); renderGlowNote('today'); }); setGlowView('today'); renderFlow(); }
   if (id === 'mynotes') { renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); }
 }
 
@@ -2628,19 +2656,30 @@ async function saveGlowNote() {
   document.getElementById('glow-body').value='';
   loadGlowContent();
 }
-async function saveSkyData() {
-  const scope = document.getElementById('sky-scope').value;
-  const dv = document.getElementById('sky-date').value;
-  const title = document.getElementById('sky-title').value.trim();
-  const body = document.getElementById('sky-body').value.trim();
+function skyKindChange() {
+  const k = document.getElementById('sky-kind').value;
+  document.getElementById('sky-f-aspect').style.display = k==='aspect' ? 'block' : 'none';
+  document.getElementById('sky-f-sign').style.display = (k==='aspect') ? 'block' : (k==='moon'?'block':'block');
+}
+async function saveSkyEvent() {
+  const kind = document.getElementById('sky-kind').value;
+  const date = document.getElementById('sky-date').value;
   const msg = document.getElementById('sky-admin-msg');
-  if (!dv || !title) { msg.className='msg err'; msg.textContent='Pick a date and name the event.'; return; }
-  const row = { kind:'sky', scope, key: dv, title, body };
-  const { error } = await db.from('glow_content').insert(row);
-  if (error) { msg.className='msg err'; msg.textContent='Save failed: ' + error.message; return; }
-  msg.className='msg ok'; msg.textContent='Added ✦';
-  document.getElementById('sky-title').value=''; document.getElementById('sky-body').value='';
-  loadGlowContent();
+  if (!date) { msg.className='msg err'; msg.textContent='Pick a date.'; return; }
+  const row = {
+    date, kind,
+    body: document.getElementById('sky-body-sel').value || null,
+    sign: document.getElementById('sky-sign-sel').value || null,
+    aspect: kind==='aspect' ? document.getElementById('sky-aspect-sel').value : null,
+    time: document.getElementById('sky-time').value.trim() || null,
+    note: document.getElementById('sky-note').value.trim() || null,
+    portal: document.getElementById('sky-portal').checked
+  };
+  const { error } = await db.from('sky_events').insert(row);
+  if (error) { msg.className='msg err'; msg.textContent='Save failed: '+error.message; return; }
+  msg.className='msg ok'; msg.textContent='Added \u2726';
+  document.getElementById('sky-note').value=''; document.getElementById('sky-time').value=''; document.getElementById('sky-portal').checked=false;
+  loadSkyEvents();
 }
 
 // ================= TRANSIT ENGINE =================
@@ -2852,6 +2891,145 @@ let flowCalDate = new Date();
 
 function flowKey(d) { return d.toISOString().slice(0,10); }
 
+
+
+// ================= ASTRO GLYPHS + EVENT LAYER =================
+// Real Unicode astro glyphs. We force a serif/symbol font so they render as
+// line glyphs (♀ ♏ ☿) not colored emoji.
+const GLYPH = {
+  Sun:'\u2609', Moon:'\u263D', Mercury:'\u263F', Venus:'\u2640', Mars:'\u2642',
+  Jupiter:'\u2643', Saturn:'\u2644', Uranus:'\u2645', Neptune:'\u2646', Pluto:'\u2647',
+  Chiron:'\u26B7', Lilith:'\u26B8', NorthNode:'\u260A', SouthNode:'\u260B',
+  Aries:'\u2648', Taurus:'\u2649', Gemini:'\u264A', Cancer:'\u264B', Leo:'\u264C',
+  Virgo:'\u264D', Libra:'\u264E', Scorpio:'\u264F', Sagittarius:'\u2650',
+  Capricorn:'\u2651', Aquarius:'\u2652', Pisces:'\u2653',
+  conjunction:'\u260C', opposition:'\u260D', square:'\u25A1', trine:'\u25B3',
+  sextile:'\u26B9', Rx:'\u211E'
+};
+const SIGN_ABBR = { Aries:'Ari',Taurus:'Tau',Gemini:'Gem',Cancer:'Can',Leo:'Leo',Virgo:'Vir',Libra:'Lib',Scorpio:'Sco',Sagittarius:'Sag',Capricorn:'Cap',Aquarius:'Aqu',Pisces:'Pis' };
+
+function glyph(name) { const g = GLYPH[name]; return g ? (g + '\uFE0E') : (name || ''); }
+// turn a token string like "Venus Scorpio" or "Sun square Saturn" into glyphs
+function glyphify(text) {
+  if (!text) return '';
+  return text.split(/\s+/).map(tok => GLYPH[tok] ? '<span class="astro-glyph">'+GLYPH[tok]+'\uFE0E</span>' : tok).join(' ');
+}
+
+// SKY_EVENTS: hand-entered accurate data (from Astro-Seek), keyed by ISO date.
+// Each: { date, kind:'ingress|moon|aspect|retro|station', body, sign, aspect, time, note, portal }
+let SKY_EVENTS = {};   // { '2026-08-12': [ {..}, {..} ] }
+async function loadSkyEvents() {
+  if (!db) return;
+  try {
+    const { data } = await db.from('sky_events').select('*');
+    if (data) {
+      SKY_EVENTS = {};
+      data.forEach(e => { (SKY_EVENTS[e.date] = SKY_EVENTS[e.date] || []).push(e); });
+    }
+  } catch(err) { console.warn('sky events load failed', err); }
+}
+
+// Render the little event lines inside a calendar day cell
+function dayEventsHTML(k) {
+  const evs = SKY_EVENTS[k];
+  if (!evs || !evs.length) return '';
+  return evs.slice(0,4).map(e => {
+    if (e.kind === 'ingress') {
+      return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span><span class="astro-glyph">'+glyph(e.sign)+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
+    }
+    if (e.kind === 'moon') {
+      return '<div class="cal-ev cal-ev-moon">'+esc(e.note||'')+(e.time?' '+esc(e.time):'')+'</div>';
+    }
+    if (e.kind === 'retro' || e.kind === 'station') {
+      return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span><span class="astro-glyph">'+glyph('Rx')+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
+    }
+    if (e.kind === 'aspect') {
+      return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span><span class="astro-glyph">'+glyph(e.aspect)+'</span><span class="astro-glyph">'+glyph(e.sign)+'</span></div>';
+    }
+    return '<div class="cal-ev">'+esc(e.note||'')+'</div>';
+  }).join('');
+}
+
+
+// ---- Moon graphic (Aura Moon style): floating cream sphere, pink glow, gold limb ----
+function moonSVG(date, size, opts) {
+  opts = opts || {};
+  size = size || 120;
+  const ph = moonPhase(date);
+  const r = size * 0.34;
+  const cx = size/2, cy = size/2;
+  const frac = ph.illum / 100;
+  const waxing = ph.phase < 0.5;
+  const uid = 'm' + Math.floor(Math.random()*1e9);
+  const lightRight = waxing;
+  // tinted moons (calendar) echo the PDF colors; big Today moon stays cream
+  let litA = '#ffffff', litB = '#fdf6fa', litC = '#f3dfec';
+  if (opts.tint) {
+    if (ph.name === 'Full Moon') { litA='#f2a9b8'; litB='#e97f95'; litC='#e0607a'; }
+    else if (ph.name === 'New Moon') { litA='#6a6280'; litB='#4a4463'; litC='#3a3350'; }
+    else if (ph.name.indexOf('Quarter')>=0) { litA='#d9c2ec'; litB='#c3a3e0'; litC='#b57edc'; }
+    else if (ph.name.indexOf('Gibbous')>=0) { litA='#e8c2e4'; litB='#d5a3cf'; litC='#c98ac0'; }
+    else { litA='#fce0ec'; litB='#f7cadd'; litC='#f0b8d0'; }
+  }
+
+  // Shadow terminator (the unlit portion), carved with an ellipse
+  let shadow = '';
+  const shColor = `url(#${uid}sh)`;
+  if (frac >= 0.985) {
+    shadow = '';
+  } else if (frac <= 0.015) {
+    shadow = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${shColor}"/>`;
+  } else {
+    const sweep = lightRight ? 0 : 1;
+    const termR = Math.abs(r * (1 - 2*frac));
+    const ellipseFill = (frac < 0.5) ? shColor : `url(#${uid}lit)`;
+    shadow = `
+      <path d="M ${cx} ${cy-r} A ${r} ${r} 0 0 ${sweep} ${cx} ${cy+r} Z" fill="${shColor}"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="${termR}" ry="${r}" fill="${ellipseFill}"/>`;
+  }
+  // warm gold sliver along the terminator edge (like Aura Moon)
+  let goldLimb = '';
+  if (frac > 0.02 && frac < 0.98) {
+    const sweep = lightRight ? 0 : 1;
+    goldLimb = `<path d="M ${cx} ${cy-r} A ${r} ${r} 0 0 ${sweep} ${cx} ${cy+r}" fill="none" stroke="url(#${uid}gold)" stroke-width="${size*0.02}" opacity="0.9"/>`;
+  }
+
+  const craters = `
+    <circle cx="${cx - r*0.30}" cy="${cy - r*0.12}" r="${r*0.09}" fill="rgba(200,170,190,0.20)"/>
+    <circle cx="${cx + r*0.06}" cy="${cy - r*0.34}" r="${r*0.12}" fill="rgba(200,170,190,0.16)"/>
+    <circle cx="${cx + r*0.26}" cy="${cy + r*0.18}" r="${r*0.15}" fill="rgba(200,170,190,0.17)"/>
+    <circle cx="${cx - r*0.14}" cy="${cy + r*0.28}" r="${r*0.07}" fill="rgba(200,170,190,0.15)"/>`;
+
+  return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" style="overflow:visible;display:block;">
+    <defs>
+      <radialGradient id="${uid}lit" cx="40%" cy="36%" r="68%">
+        <stop offset="0%" stop-color="${litA}"/>
+        <stop offset="55%" stop-color="${litB}"/>
+        <stop offset="100%" stop-color="${litC}"/>
+      </radialGradient>
+      <radialGradient id="${uid}sh" cx="55%" cy="50%" r="65%">
+        <stop offset="0%" stop-color="#e9d3e2"/>
+        <stop offset="100%" stop-color="#dcc0d5"/>
+      </radialGradient>
+      <linearGradient id="${uid}gold" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f6d9a0"/>
+        <stop offset="50%" stop-color="#e8b96b"/>
+        <stop offset="100%" stop-color="#f6d9a0"/>
+      </linearGradient>
+      <radialGradient id="${uid}halo" cx="50%" cy="50%" r="50%">
+        <stop offset="45%" stop-color="rgba(229,8,126,0.30)"/>
+        <stop offset="75%" stop-color="rgba(229,8,126,0.10)"/>
+        <stop offset="100%" stop-color="rgba(229,8,126,0)"/>
+      </radialGradient>
+    </defs>
+    <circle cx="${cx}" cy="${cy}" r="${r*1.55}" fill="url(#${uid}halo)"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${uid}lit)"/>
+    ${shadow}
+    ${goldLimb}
+    ${craters}
+  </svg>`;
+}
+
 function renderFlowToday() {
   renderTransits(flowDate);
   const ph = moonPhase(flowDate);
@@ -2860,11 +3038,9 @@ function renderFlowToday() {
   const card = document.getElementById('flow-today');
   if (card) card.innerHTML =
     '<div class="flow-sky-label">The sky, alongside you</div>' +
-    '<div class="flow-sky-main"><span class="flow-moon-emoji">' + ph.emoji + '</span>' +
-    '<div><div class="flow-phase-name">' + ph.name + '</div>' +
-    '<div class="flow-phase-sub">' + ph.illum + '% lit · Moon in ' + sign + ' · ' + el + '</div></div></div>' +
-    '<div class="flow-sky-poem">' + PHASE_WORDS[ph.name] + '</div>' +
-    '<div class="flow-sky-poem" style="opacity:0.75;">A ' + el.toLowerCase() + ' moon — the collective mood leans ' + SIGN_MOODS[el] + '.</div>';
+    '<div class="flow-moon-graphic">' + moonSVG(flowDate, 118) + '</div>' +
+    '<div class="flow-phase-name" style="text-align:center;">' + ph.name + '</div>' +
+    '<div class="flow-phase-sub" style="text-align:center;">' + ph.illum + '% lit · Moon in ' + sign + ' · ' + el + '</div>';
 }
 
 function renderEnergyRow() {
@@ -2994,10 +3170,15 @@ function renderFlowCal() {
     const isFuture = dd > new Date();
     html2 += '<div class="cal-day' + (isToday?' cal-today':'') + (isFuture?' cal-future':'') + '" ' +
       (isFuture?'':'onclick="flowOpenDay(\'' + k + '\')"') + '>' +
-      '<span class="cal-num">' + d + '</span>' +
-      (e && e.energy ? '<span class="cal-energy" style="background:' + energyColor(e.energy) + '"></span>' : '') +
-      (e && e.period && e.period.length ? '<span class="cal-period"></span>' : '') +
-      (e && (e.note||(e.moods&&e.moods.length)||(e.moves&&e.moves.length)) ? '<span class="cal-logged"></span>' : '') +
+      '<div class="cal-top">' +
+        '<span class="cal-num">' + d + '</span>' +
+        '<span class="cal-moon-mini">' + moonSVG(dd, 22, {tint:true}) + '</span>' +
+      '</div>' +
+      '<div class="cal-events">' + dayEventsHTML(k) + '</div>' +
+      '<div class="cal-marks">' +
+        (e && e.energy ? '<span class="cal-energy" style="background:' + energyColor(e.energy) + '"></span>' : '') +
+        (e && e.period && e.period.length ? '<span class="cal-period"></span>' : '') +
+      '</div>' +
       '</div>';
   }
   grid.innerHTML = html2;
