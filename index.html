@@ -231,16 +231,23 @@
   .natal-label { flex: 0 0 92px; font-size: 12.5px; color: var(--text-secondary); }
   .natal-sign { flex: 1; margin: 0 !important; padding: 0.4rem 0.5rem !important; }
   .natal-deg { flex: 0 0 56px; margin: 0 !important; padding: 0.4rem 0.4rem !important; text-align: center; }
-  .flow-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .flow-cal-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -1rem; padding: 0 1rem; }
+  .flow-cal-grid { display: grid; grid-template-columns: repeat(7, minmax(96px, 1fr)); gap: 4px; min-width: 700px; }
   .cal-dow { text-align: center; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 4px; }
-  .cal-day { position: relative; min-height: 64px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; cursor: pointer; transition: all 0.15s; padding: 3px 4px; overflow: hidden; }
+  .cal-day { position: relative; min-height: 92px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; cursor: pointer; transition: all 0.15s; padding: 4px 5px; overflow: hidden; }
   .cal-top { display: flex; align-items: flex-start; justify-content: space-between; }
   .cal-moon-mini { line-height: 0; flex: 0 0 auto; }
   .cal-moon-mini svg { display: block; }
   .cal-events { margin-top: 1px; display: flex; flex-direction: column; gap: 0px; flex: 1 1 auto; }
-  .cal-ev { font-size: 7.5px; line-height: 1.25; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cal-ev { font-size: 9px; line-height: 1.3; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cal-ev-t { color: var(--text-muted); margin-left: 2px; }
-  .cal-ev-moon { color: var(--accent); font-weight: 500; white-space: normal; }
+    .cal-ev-moon { color: var(--accent); font-weight: 500; white-space: normal; font-size: 8.5px; }
+  .cal-ev-moonsign { color: var(--text-primary); font-weight: 500; }
+  .cal-ev-moonsign .cal-ev-t, .cal-ev .cal-ev-t { display: inline-block; }
+  .day-sky-block { background: var(--bg-card-deep); border-radius: 12px; padding: 0.8rem 1rem; margin-bottom: 1rem; }
+  .day-sky-head { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+  .day-sky-row { display: flex; gap: 0.6rem; font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .day-sky-time { color: var(--text-muted); min-width: 62px; flex: 0 0 auto; }
   .astro-glyph { font-family: 'Noto Sans Symbols', 'Cormorant Garamond', 'Times New Roman', serif; font-variant-emoji: text; text-rendering: optimizeLegibility; color: var(--text-secondary); }
   .cal-marks { display: flex; gap: 3px; align-items: center; position: absolute; bottom: 3px; right: 4px; }
   .cal-day:active { transform: scale(0.94); }
@@ -250,7 +257,7 @@
   .cal-moon-mini { display: block; line-height: 0; }
   .cal-moon-mini svg { display: block; }
   .cal-moon { font-size: 11px; line-height: 1; }
-.cal-energy { width: 7px; height: 7px; border-radius: 50%; }
+.cal-energy { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 0 1.5px var(--bg-card); }
   .cal-period { width: 5px; height: 5px; border-radius: 50%; background: #c0392b; }
   .cal-logged { position: absolute; top: 5px; left: 5px; width: 4px; height: 4px; border-radius: 50%; background: var(--text-muted); opacity: 0.5; }
   .flow-legend { margin-top: 1.2rem; padding: 1rem 1.1rem; background: var(--bg-card-deep); border-radius: 14px; }
@@ -369,7 +376,7 @@
 <header>
   <div class="header-top">
     <div class="logo-wrap" onclick="logoTap()">
-      <div class="logo">Ses<span>hat</span></div>
+      <div class="logo">Sesh<span>at</span></div>
       <div class="logo-tag">Sacred scribe of the stars</div>
     </div>
     <div class="header-actions">
@@ -1472,9 +1479,9 @@
       <span id="flow-cal-label" style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;color:var(--text-primary);"></span>
       <button class="btn-quiet" onclick="flowCalShift(1)">›</button>
     </div>
-    <div id="flow-cal-grid" class="flow-cal-grid"></div>
+    <div class="flow-cal-wrap"><div id="flow-cal-grid" class="flow-cal-grid"></div></div>
 
-    <p style="font-size:11.5px;color:var(--text-muted);font-weight:300;text-align:center;margin-top:0.8rem;">Tap any day to log how you felt. Every logged day is yours forever.</p>
+    <p style="font-size:11.5px;color:var(--text-muted);font-weight:300;text-align:center;margin-top:0.8rem;">Tap any day to log how you felt, or to see the sky for that day. All times Eastern (ET). Every logged day is yours forever.</p>
 
     <div id="flow-legend" class="flow-legend"></div>
 
@@ -1535,6 +1542,7 @@
         <span class="flow-modal-x" onclick="closeFlowModal()">×</span>
       </div>
       <div id="flow-modal-moon" class="flow-modal-moon"></div>
+      <div id="flow-day-sky"></div>
       <div id="flow-day-summary" class="day-summary" style="display:none;"></div>
 
       <label>💪 Movement <span class="optional-tag">— tap any</span></label>
@@ -2933,12 +2941,19 @@ async function loadSkyEvents() {
 function dayEventsHTML(k) {
   const evs = SKY_EVENTS[k];
   if (!evs || !evs.length) return '';
-  return evs.slice(0,4).map(e => {
+  // order: moon sign-change first (with time), then moon phase events, then ingress/retro/aspect
+  const order = { moonsign:0, moon:1, ingress:2, retro:3, station:4, aspect:5 };
+  const sorted = evs.slice().sort((a,b)=>(order[a.kind]??9)-(order[b.kind]??9));
+  return sorted.slice(0,5).map(e => {
+    if (e.kind === 'moonsign') {
+      // Moon glyph -> sign glyph, with the exact Eastern change time below
+      return '<div class="cal-ev cal-ev-moonsign"><span class="astro-glyph">'+glyph('Moon')+'</span>\u2192<span class="astro-glyph">'+glyph(e.sign)+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
+    }
     if (e.kind === 'ingress') {
-      return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span><span class="astro-glyph">'+glyph(e.sign)+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
+      return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span>\u2192<span class="astro-glyph">'+glyph(e.sign)+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
     }
     if (e.kind === 'moon') {
-      return '<div class="cal-ev cal-ev-moon">'+esc(e.note||'')+(e.time?' '+esc(e.time):'')+'</div>';
+      return '<div class="cal-ev cal-ev-moon">'+esc(e.note||('Moon in '+(e.sign||'')))+(e.time?' '+esc(e.time):'')+'</div>';
     }
     if (e.kind === 'retro' || e.kind === 'station') {
       return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span><span class="astro-glyph">'+glyph('Rx')+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
@@ -2950,8 +2965,27 @@ function dayEventsHTML(k) {
   }).join('');
 }
 
+// Full event list for the day modal (expanded view — readable sentences)
+function dayEventsFull(k) {
+  const evs = SKY_EVENTS[k];
+  if (!evs || !evs.length) return '';
+  const SIGN_FULL = {Aries:'Aries',Taurus:'Taurus',Gemini:'Gemini',Cancer:'Cancer',Leo:'Leo',Virgo:'Virgo',Libra:'Libra',Scorpio:'Scorpio',Sagittarius:'Sagittarius',Capricorn:'Capricorn',Aquarius:'Aquarius',Pisces:'Pisces'};
+  const rows = evs.map(e => {
+    let txt = '';
+    if (e.kind==='moonsign') txt = 'Moon enters '+(e.sign||'');
+    else if (e.kind==='ingress') txt = (e.body||'')+' enters '+(e.sign||'');
+    else if (e.kind==='moon') txt = e.note || ('Moon in '+(e.sign||''));
+    else if (e.kind==='retro') txt = (e.note|| ((e.body||'')+' goes retrograde'));
+    else if (e.kind==='station') txt = e.note || ((e.body||'')+' stations');
+    else if (e.kind==='aspect') txt = (e.body||'')+' '+(e.aspect||'')+' '+(e.sign||'');
+    else txt = e.note||'';
+    return '<div class="day-sky-row">'+ (e.time?'<span class="day-sky-time">'+esc(e.time)+'</span>':'') + '<span>'+esc(txt)+'</span></div>';
+  }).join('');
+  return '<div class="day-sky-block"><div class="day-sky-head">In the sky this day · ET</div>'+rows+'</div>';
+}
 
-// ---- Moon graphic (Aura Moon style): floating cream sphere, pink glow, gold limb ----
+
+// ---- Moon graphic: consistent full disc, real shadow overlay, optional glow/tint ----
 function moonSVG(date, size, opts) {
   opts = opts || {};
   size = size || 120;
@@ -2962,71 +2996,100 @@ function moonSVG(date, size, opts) {
   const waxing = ph.phase < 0.5;
   const uid = 'm' + Math.floor(Math.random()*1e9);
   const lightRight = waxing;
-  // tinted moons (calendar) echo the PDF colors; big Today moon stays cream
-  let litA = '#ffffff', litB = '#fdf6fa', litC = '#f3dfec';
+  const showGlow = opts.glow !== false;   // calendar passes glow:false
+  const clip = uid + 'clip';
+
+  // Color scheme — clearly differentiated by phase
+  // Full = WHITE/cream, New = deep PURPLE, Quarters = mid PURPLE, Gibbous = PINK, Crescent = soft pink
+  let litA='#ffffff', litB='#fdf6fa', litC='#f3dfec';   // default cream (big moon)
   if (opts.tint) {
-    if (ph.name === 'Full Moon') { litA='#f2a9b8'; litB='#e97f95'; litC='#e0607a'; }
-    else if (ph.name === 'New Moon') { litA='#6a6280'; litB='#4a4463'; litC='#3a3350'; }
-    else if (ph.name.indexOf('Quarter')>=0) { litA='#d9c2ec'; litB='#c3a3e0'; litC='#b57edc'; }
-    else if (ph.name.indexOf('Gibbous')>=0) { litA='#e8c2e4'; litB='#d5a3cf'; litC='#c98ac0'; }
-    else { litA='#fce0ec'; litB='#f7cadd'; litC='#f0b8d0'; }
+    const p = ph.phase;  // 0=new, .25=first Q, .5=full, .75=third Q, 1=new
+    // helper to lerp two hex colors
+    const lerp = (a,b,t)=>{const ah=a.match(/\w\w/g).map(x=>parseInt(x,16)),bh=b.match(/\w\w/g).map(x=>parseInt(x,16));return '#'+ah.map((v,i)=>Math.round(v+(bh[i]-v)*t).toString(16).padStart(2,'0')).join('');};
+    // palette anchors
+    const WHITE=['#ffffff','#fbeef4','#f6e2ec'];
+    const PINK =['#f9b8d6','#f295c0','#e87aa8'];
+    const RED  =['#f26d6d','#e94f4f','#d93a3a'];
+    const PURP =['#c9a0e8','#b47ddb','#9d5bd0'];
+    let pal;
+    if (p < 0.10) pal = WHITE;                 // around new (just after) — white lit / dark shadow
+    else if (p < 0.33) pal = PINK;             // waxing — pink (growing)
+    else if (p < 0.43) {                       // ripening pink -> red before full
+      const t=(p-0.33)/0.10; pal=[lerp(PINK[0],RED[0],t),lerp(PINK[1],RED[1],t),lerp(PINK[2],RED[2],t)];
+    }
+    else if (p < 0.57) pal = RED;              // full moon window — red
+    else if (p < 0.90) pal = PURP;             // waning — purple
+    else pal = WHITE;                          // approaching new — white/black again
+    litA=pal[0]; litB=pal[1]; litC=pal[2];
+  }
+  // shadow (unlit part) is always deep/dark so the lit color-slice reads as a real moon phase.
+  let shA = '#e9d3e2', shB = '#dcc0d5';   // big cream moon default (soft)
+  if (opts.tint) {
+    // a deep dusk tone tinted slightly toward the phase colour, but clearly DARK
+    const p = ph.phase;
+    if (p < 0.57 && p >= 0.43) { shA='#3a1420'; shB='#260d16'; }      // full → very dark red-black
+    else if (p < 0.33) { shA='#3a1f30'; shB='#260f1f'; }             // waxing → dark plum
+    else if (p >= 0.57 && p < 0.90) { shA='#2a1f3d'; shB='#1a1228'; } // waning → dark purple-black
+    else { shA='#1e1a2e'; shB='#12101d'; }                            // new → near black
   }
 
-  // Shadow terminator (the unlit portion), carved with an ellipse
+  // Shadow: a full disc is ALWAYS drawn (lit), then the dark part is overlaid,
+  // clipped to the moon circle so the outer size never changes between phases.
   let shadow = '';
-  const shColor = `url(#${uid}sh)`;
-  if (frac >= 0.985) {
-    shadow = '';
-  } else if (frac <= 0.015) {
-    shadow = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${shColor}"/>`;
-  } else {
+  if (frac < 0.985 && frac > 0.015) {
     const sweep = lightRight ? 0 : 1;
     const termR = Math.abs(r * (1 - 2*frac));
-    const ellipseFill = (frac < 0.5) ? shColor : `url(#${uid}lit)`;
-    shadow = `
-      <path d="M ${cx} ${cy-r} A ${r} ${r} 0 0 ${sweep} ${cx} ${cy+r} Z" fill="${shColor}"/>
-      <ellipse cx="${cx}" cy="${cy}" rx="${termR}" ry="${r}" fill="${ellipseFill}"/>`;
-  }
-  // warm gold sliver along the terminator edge (like Aura Moon)
-  let goldLimb = '';
-  if (frac > 0.02 && frac < 0.98) {
-    const sweep = lightRight ? 0 : 1;
-    goldLimb = `<path d="M ${cx} ${cy-r} A ${r} ${r} 0 0 ${sweep} ${cx} ${cy+r}" fill="none" stroke="url(#${uid}gold)" stroke-width="${size*0.02}" opacity="0.9"/>`;
+    const ellipseFill = (frac < 0.5) ? `url(#${uid}sh)` : `url(#${uid}lit)`;
+    shadow = `<g clip-path="url(#${clip})">
+      <path d="M ${cx} ${cy-r} A ${r} ${r} 0 0 ${sweep} ${cx} ${cy+r} Z" fill="url(#${uid}sh)"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="${termR}" ry="${r}" fill="${ellipseFill}"/>
+    </g>`;
+  } else if (frac <= 0.015) {
+    shadow = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${uid}sh)"/>`;
   }
 
-  const craters = `
-    <circle cx="${cx - r*0.30}" cy="${cy - r*0.12}" r="${r*0.09}" fill="rgba(200,170,190,0.20)"/>
-    <circle cx="${cx + r*0.06}" cy="${cy - r*0.34}" r="${r*0.12}" fill="rgba(200,170,190,0.16)"/>
-    <circle cx="${cx + r*0.26}" cy="${cy + r*0.18}" r="${r*0.15}" fill="rgba(200,170,190,0.17)"/>
-    <circle cx="${cx - r*0.14}" cy="${cy + r*0.28}" r="${r*0.07}" fill="rgba(200,170,190,0.15)"/>`;
+  // gold limb only on the big (glow) moon
+  let goldLimb = '';
+  if (showGlow && frac > 0.04 && frac < 0.96) {
+    const sweep = lightRight ? 0 : 1;
+    goldLimb = `<path d="M ${cx} ${cy-r} A ${r} ${r} 0 0 ${sweep} ${cx} ${cy+r}" fill="none" stroke="url(#${uid}gold)" stroke-width="${size*0.018}" opacity="0.85"/>`;
+  }
+
+  const craterOp = opts.tint ? 0.13 : 0.18;
+  const craters = `<g clip-path="url(#${clip})">
+    <circle cx="${cx - r*0.30}" cy="${cy - r*0.12}" r="${r*0.09}" fill="rgba(150,120,150,${craterOp})"/>
+    <circle cx="${cx + r*0.06}" cy="${cy - r*0.34}" r="${r*0.12}" fill="rgba(150,120,150,${craterOp*0.85})"/>
+    <circle cx="${cx + r*0.26}" cy="${cy + r*0.18}" r="${r*0.15}" fill="rgba(150,120,150,${craterOp*0.9})"/>
+  </g>`;
+
+  const halo = showGlow ? `<circle cx="${cx}" cy="${cy}" r="${r*1.5}" fill="url(#${uid}halo)"/>` : '';
 
   return `<svg viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" style="overflow:visible;display:block;">
     <defs>
-      <radialGradient id="${uid}lit" cx="40%" cy="36%" r="68%">
+      <clipPath id="${clip}"><circle cx="${cx}" cy="${cy}" r="${r}"/></clipPath>
+      <radialGradient id="${uid}lit" cx="38%" cy="34%" r="72%">
         <stop offset="0%" stop-color="${litA}"/>
-        <stop offset="55%" stop-color="${litB}"/>
+        <stop offset="45%" stop-color="${litB}"/>
         <stop offset="100%" stop-color="${litC}"/>
       </radialGradient>
       <radialGradient id="${uid}sh" cx="55%" cy="50%" r="65%">
-        <stop offset="0%" stop-color="#e9d3e2"/>
-        <stop offset="100%" stop-color="#dcc0d5"/>
+        <stop offset="0%" stop-color="${shA}"/>
+        <stop offset="100%" stop-color="${shB}"/>
       </radialGradient>
-      <linearGradient id="${uid}gold" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#f6d9a0"/>
-        <stop offset="50%" stop-color="#e8b96b"/>
-        <stop offset="100%" stop-color="#f6d9a0"/>
+      ${showGlow ? `<linearGradient id="${uid}gold" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f6d9a0"/><stop offset="50%" stop-color="#e8b96b"/><stop offset="100%" stop-color="#f6d9a0"/>
       </linearGradient>
       <radialGradient id="${uid}halo" cx="50%" cy="50%" r="50%">
-        <stop offset="45%" stop-color="rgba(229,8,126,0.30)"/>
-        <stop offset="75%" stop-color="rgba(229,8,126,0.10)"/>
+        <stop offset="42%" stop-color="rgba(229,8,126,0.28)"/>
+        <stop offset="72%" stop-color="rgba(229,8,126,0.09)"/>
         <stop offset="100%" stop-color="rgba(229,8,126,0)"/>
-      </radialGradient>
+      </radialGradient>` : ''}
     </defs>
-    <circle cx="${cx}" cy="${cy}" r="${r*1.55}" fill="url(#${uid}halo)"/>
+    ${halo}
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#${uid}lit)"/>
     ${shadow}
-    ${goldLimb}
     ${craters}
+    ${opts.tint ? `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(90,50,80,0.22)" stroke-width="${Math.max(0.75, size*0.02)}"/>` : ''}
   </svg>`;
 }
 
@@ -3038,7 +3101,7 @@ function renderFlowToday() {
   const card = document.getElementById('flow-today');
   if (card) card.innerHTML =
     '<div class="flow-sky-label">The sky, alongside you</div>' +
-    '<div class="flow-moon-graphic">' + moonSVG(flowDate, 118) + '</div>' +
+    '<div class="flow-moon-graphic">' + moonSVG(flowDate, 118, {tint:true}) + '</div>' +
     '<div class="flow-phase-name" style="text-align:center;">' + ph.name + '</div>' +
     '<div class="flow-phase-sub" style="text-align:center;">' + ph.illum + '% lit · Moon in ' + sign + ' · ' + el + '</div>';
 }
@@ -3147,7 +3210,7 @@ function flowCalShift(dir) {
 
 function energyColor(n) {
   // 1 depleted -> 5 radiant
-  return ({1:'#b0674a', 2:'#c98a5b', 3:'#d4a017', 4:'#7aa6c2', 5:'#4a78b0'})[n] || 'transparent';
+  return ({1:'#a63d2f', 2:'#d68a3c', 3:'#e8c23a', 4:'#5fa8d3', 5:'#2f6fb0'})[n] || 'transparent';
 }
 
 function renderFlowCal() {
@@ -3172,7 +3235,7 @@ function renderFlowCal() {
       (isFuture?'':'onclick="flowOpenDay(\'' + k + '\')"') + '>' +
       '<div class="cal-top">' +
         '<span class="cal-num">' + d + '</span>' +
-        '<span class="cal-moon-mini">' + moonSVG(dd, 22, {tint:true}) + '</span>' +
+        '<span class="cal-moon-mini">' + moonSVG(dd, 26, {tint:true, glow:false}) + '</span>' +
       '</div>' +
       '<div class="cal-events">' + dayEventsHTML(k) + '</div>' +
       '<div class="cal-marks">' +
@@ -3187,7 +3250,12 @@ function flowOpenDay(k) {
   flowDate = new Date(k + 'T12:00:00');
   document.getElementById('flow-modal-title').textContent = flowDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   const moonEl = document.getElementById('flow-modal-moon');
-  if (moonEl) moonEl.innerHTML = '';
+  if (moonEl) {
+    const ph = moonPhase(flowDate); const sign = moonSign(flowDate);
+    moonEl.innerHTML = ph.name + ' \u00b7 Moon in ' + sign;
+  }
+  const skyEl = document.getElementById('flow-day-sky');
+  if (skyEl) skyEl.innerHTML = dayEventsFull(k);
   // summary of how the day went, if already logged
   const e = FLOW[k];
   const sumEl = document.getElementById('flow-day-summary');
