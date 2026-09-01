@@ -231,17 +231,17 @@
   .natal-label { flex: 0 0 92px; font-size: 12.5px; color: var(--text-secondary); }
   .natal-sign { flex: 1; margin: 0 !important; padding: 0.4rem 0.5rem !important; }
   .natal-deg { flex: 0 0 56px; margin: 0 !important; padding: 0.4rem 0.4rem !important; text-align: center; }
-  .flow-cal-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 -1rem; padding: 0 1rem; }
-  .flow-cal-grid { display: grid; grid-template-columns: repeat(7, minmax(96px, 1fr)); gap: 4px; min-width: 700px; }
+  .flow-cal-wrap { }
+  .flow-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
   .cal-dow { text-align: center; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 4px; }
-  .cal-day { position: relative; min-height: 92px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; display: flex; flex-direction: column; cursor: pointer; transition: all 0.15s; padding: 4px 5px; overflow: hidden; }
+  .cal-day { position: relative; min-height: 76px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; cursor: pointer; transition: all 0.15s; padding: 2px 3px; overflow: hidden; }
   .cal-top { display: flex; align-items: flex-start; justify-content: space-between; }
   .cal-moon-mini { line-height: 0; flex: 0 0 auto; }
   .cal-moon-mini svg { display: block; }
   .cal-events { margin-top: 1px; display: flex; flex-direction: column; gap: 0px; flex: 1 1 auto; }
-  .cal-ev { font-size: 9px; line-height: 1.3; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .cal-ev-t { color: var(--text-muted); margin-left: 2px; }
-    .cal-ev-moon { color: var(--accent); font-weight: 500; white-space: normal; font-size: 8.5px; }
+  .cal-ev { font-size: 7px; line-height: 1.2; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cal-ev-t { color: var(--text-muted); margin-left: 1px; font-size: 6px; }
+    .cal-ev-moon { color: var(--accent); font-weight: 500; white-space: nowrap; font-size: 6.5px; overflow: hidden; text-overflow: ellipsis; }
   .cal-ev-moonsign { color: var(--text-primary); font-weight: 500; }
   .cal-ev-moonsign .cal-ev-t, .cal-ev .cal-ev-t { display: inline-block; }
   .day-sky-block { background: var(--bg-card-deep); border-radius: 12px; padding: 0.8rem 1rem; margin-bottom: 1rem; }
@@ -252,8 +252,8 @@
   .cal-marks { display: flex; gap: 3px; align-items: center; position: absolute; bottom: 3px; right: 4px; }
   .cal-day:active { transform: scale(0.94); }
   .cal-today { border-color: var(--accent); border-width: 2px; }
-  .cal-future { opacity: 0.4; cursor: default; }
-  .cal-num { font-size: 12px; color: var(--text-primary); font-weight: 600; line-height: 1; }
+  .cal-future { opacity: 0.6; cursor: pointer; }
+  .cal-num { font-size: 10px; color: var(--text-primary); font-weight: 600; line-height: 1; }
   .cal-moon-mini { display: block; line-height: 0; }
   .cal-moon-mini svg { display: block; }
   .cal-moon { font-size: 11px; line-height: 1; }
@@ -311,6 +311,9 @@
   .sky-event { font-size: 14px; color: var(--text-primary); margin-left: 0.6rem; }
   .sky-note { font-size: 13px; color: var(--text-secondary); font-weight: 300; line-height: 1.55; margin-top: 0.3rem; }
   .sky-empty { font-size: 13px; color: var(--text-muted); font-style: italic; padding: 0.5rem 0; }
+  .sky-time { color: var(--text-muted); font-size: 11px; }
+  .sky-events-list { margin-top: 1rem; }
+  .sky-events-list .sky-block-head { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
   .flow-transits-box { margin-bottom: 1.4rem; }
   .transit-head { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
   .transit-row { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 14px; padding: 0.7rem 0.9rem; margin-bottom: 0.5rem; }
@@ -2585,6 +2588,32 @@ async function loadGlowContent() {
   } catch(e) { console.warn('glow content load failed', e); }
 }
 
+
+// list all sky events between two ISO dates (inclusive), as readable HTML rows
+function skyEventsInRange(startISO, endISO, title) {
+  const keys = Object.keys(SKY_EVENTS).filter(k => k >= startISO && k <= endISO).sort();
+  if (!keys.length) return '<div class="sky-empty">No major events entered for this range yet.</div>';
+  let rows = '';
+  keys.forEach(k => {
+    const dObj = new Date(k + 'T12:00:00');
+    const dayLabel = dObj.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    // only show the meaningful events in these summaries (skip routine moon sign-changes to reduce noise)
+    const evs = SKY_EVENTS[k].filter(e => e.kind !== 'moonsign');
+    evs.forEach(e => {
+      let txt='';
+      if (e.kind==='ingress') txt=(e.body||'')+' enters '+(e.sign||'');
+      else if (e.kind==='moon') txt=e.note||('Moon in '+(e.sign||''));
+      else if (e.kind==='retro') txt=e.note||((e.body||'')+' goes retrograde');
+      else if (e.kind==='station') txt=e.note||((e.body||'')+' stations direct');
+      else if (e.kind==='aspect') txt=e.note||((e.body||'')+' '+(e.aspect||'')+' '+(e.sign||''));
+      else txt=e.note||'';
+      const portal = e.portal ? ' <span style="color:var(--gold);">\u2600</span>' : '';
+      rows += '<div class="sky-row"><span class="sky-date">'+dayLabel+'</span><span class="sky-event">'+esc(txt)+portal+(e.time?' <span class="sky-time">'+esc(e.time)+'</span>':'')+'</span></div>';
+    });
+  });
+  return (title?'<div class="sky-block-head">'+title+'</div>':'') + (rows || '<div class="sky-empty">No major events this range.</div>');
+}
+
 function renderGlowNote(scope) {
   const map = { today: 'glow-energy-note', week: 'glow-week-note', month: 'glow-month-note' };
   const el = document.getElementById(map[scope]);
@@ -2594,6 +2623,27 @@ function renderGlowNote(scope) {
   if (scope==='today') { key = isoDay(d); dateLabel = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); }
   else if (scope==='week') { key = weekKey(d); dateLabel = 'This week'; }
   else { key = monthKey(d); dateLabel = d.toLocaleDateString('en-US',{month:'long',year:'numeric'}); }
+  // attach the sky events list for week/month
+  if (scope==='week' || scope==='month') {
+    let s, e;
+    if (scope==='week') {
+      const day = d.getDay(); const start = new Date(d); start.setDate(d.getDate()-day);
+      const end = new Date(start); end.setDate(start.getDate()+6);
+      s = isoDay(start); e = isoDay(end);
+    } else {
+      s = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01';
+      const last = new Date(d.getFullYear(), d.getMonth()+1, 0);
+      e = isoDay(last);
+    }
+    setTimeout(()=>{
+      const noteEl = document.getElementById(map[scope]);
+      if (noteEl) {
+        let skyDiv = document.getElementById('sky-list-'+scope);
+        if (!skyDiv) { skyDiv = document.createElement('div'); skyDiv.id='sky-list-'+scope; skyDiv.className='sky-events-list'; noteEl.parentNode.insertBefore(skyDiv, noteEl.nextSibling); }
+        skyDiv.innerHTML = skyEventsInRange(s, e, 'In the sky · ET');
+      }
+    }, 0);
+  }
   const body = (GLOW_NOTES[scope] && GLOW_NOTES[scope][key]) || '';
   const ph = moonPhase(d); const sign = moonSign(d);
   if (body) {
@@ -2616,19 +2666,36 @@ function glowFallback(scope, ph, sign) {
 function renderSkyData() {
   const box = document.getElementById('glow-ref-view');
   if (!box) return;
-  const section = (title, emoji, items) => {
-    const rows = items.length ? items.map(i =>
-      '<div class="sky-row"><span class="sky-date">' + esc(i.key) + '</span><span class="sky-event">' + esc(i.title||'') + '</span>' +
-      (i.body ? '<div class="sky-note">' + esc(i.body) + '</div>' : '') + '</div>').join('')
-      : '<div class="sky-empty">Coming soon.</div>';
-    return '<div class="sky-block"><div class="sky-block-head">' + emoji + ' ' + title + '</div>' + rows + '</div>';
-  };
+  const year = new Date().getFullYear();
+  // group the year's real sky events by month, big events only (skip routine moon sign-changes)
+  const byMonth = {};
+  Object.keys(SKY_EVENTS).filter(k => k.startsWith(year)).sort().forEach(k => {
+    const m = k.slice(0,7);
+    (byMonth[m] = byMonth[m] || []).push(...SKY_EVENTS[k].filter(e => e.kind !== 'moonsign').map(e => ({...e, date:k})));
+  });
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let yearHTML = '';
+  Object.keys(byMonth).sort().forEach(m => {
+    const mi = parseInt(m.slice(5,7),10)-1;
+    const rows = byMonth[m].map(e => {
+      let txt='';
+      if (e.kind==='ingress') txt=(e.body||'')+' enters '+(e.sign||'');
+      else if (e.kind==='moon') txt=e.note||('Moon in '+(e.sign||''));
+      else if (e.kind==='retro') txt=e.note||((e.body||'')+' goes retrograde');
+      else if (e.kind==='station') txt=e.note||((e.body||'')+' stations direct');
+      else if (e.kind==='aspect') txt=e.note||((e.body||'')+' '+(e.aspect||'')+' '+(e.sign||''));
+      else txt=e.note||'';
+      const dLabel = new Date(e.date+'T12:00:00').toLocaleDateString('en-US',{day:'numeric'});
+      const portal = e.portal ? ' <span style="color:var(--gold);">\u2600</span>' : '';
+      return '<div class="sky-row"><span class="sky-date">'+monthNames[mi].slice(0,3)+' '+dLabel+'</span><span class="sky-event">'+esc(txt)+portal+(e.time?' <span class="sky-time">'+esc(e.time)+'</span>':'')+'</span></div>';
+    }).join('');
+    yearHTML += '<div class="sky-block"><div class="sky-block-head">'+monthNames[mi]+'</div>'+rows+'</div>';
+  });
+  if (!yearHTML) yearHTML = '<div class="sky-empty">The year\'s major events are being added.</div>';
   box.innerHTML =
-    '<div class="glow-quote-card" style="margin-bottom:1.4rem;"><div class="quote-text" style="font-size:22px;">' + (YEAR_ENERGY || 'The year ahead, in your own words — coming soon.') + '</div></div>' +
-    '<p class="section-sub" style="margin-bottom:1rem;">The major sky of the year — the big transits, eclipse themes, and the moons that anchor each month.</p>' +
-    section('New & Full Moons', '🌕', SKY_DATA.moons) +
-    section('Ingresses (sign changes)', '↔', SKY_DATA.ingresses) +
-    section('Aspects', '✦', SKY_DATA.aspects);
+    '<div class="glow-quote-card" style="margin-bottom:1.4rem;"><div class="quote-text" style="font-size:22px;">' + (YEAR_ENERGY || 'The year ahead — the major sky that shapes it.') + '</div></div>' +
+    '<p class="section-sub" style="margin-bottom:1.2rem;">The major sky of '+year+' — ingresses, retrogrades, eclipses, and the moons that anchor each month. All times Eastern (ET).</p>' +
+    yearHTML;
 }
 
 
@@ -3232,10 +3299,10 @@ function renderFlowCal() {
     const isToday = k===today;
     const isFuture = dd > new Date();
     html2 += '<div class="cal-day' + (isToday?' cal-today':'') + (isFuture?' cal-future':'') + '" ' +
-      (isFuture?'':'onclick="flowOpenDay(\'' + k + '\')"') + '>' +
+      'onclick="flowOpenDay(\'' + k + '\')">' +
       '<div class="cal-top">' +
         '<span class="cal-num">' + d + '</span>' +
-        '<span class="cal-moon-mini">' + moonSVG(dd, 26, {tint:true, glow:false}) + '</span>' +
+        '<span class="cal-moon-mini">' + moonSVG(dd, 17, {tint:true, glow:false}) + '</span>' +
       '</div>' +
       '<div class="cal-events">' + dayEventsHTML(k) + '</div>' +
       '<div class="cal-marks">' +
