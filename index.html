@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light">
 <title>Seshat · Aura Vibin Astrology</title>
 <meta name="description" content="A living astrology research hub — learn the real mechanics of astrology and contribute to community-driven pattern research.">
@@ -236,10 +236,11 @@
   .cal-dow { text-align: center; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 4px; }
   .cal-day { position: relative; min-height: 88px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; cursor: pointer; transition: all 0.15s; padding: 2px 3px; overflow: hidden; }
   .cal-top { display: flex; align-items: flex-start; justify-content: space-between; }
-  .cal-signrow { display: flex; align-items: center; gap: 1px; margin-top: -6px; font-size: 8px; color: var(--text-primary); min-height: 10px; }
-  .cal-signrow .astro-glyph { font-size: 9px; }
-  .cal-arrow { font-size: 7px; color: var(--text-muted); }
-  .cal-ms-t { font-size: 6px; color: var(--text-muted); margin-left: 1px; }
+  .cal-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1px; }
+  .cal-midsign { flex: 1 1 auto; text-align: center; display: flex; flex-direction: column; align-items: center; line-height: 1; padding-top: 1px; }
+  .cal-signs { display: flex; gap: 0px; }
+  .cal-signs .astro-glyph { font-size: 10px; color: var(--text-primary); }
+  .cal-signtime { font-size: 6px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; }
   .cal-ev-asp { font-size: 6.5px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cal-moon-mini { line-height: 0; flex: 0 0 auto; }
   .cal-moon-mini svg { display: block; }
@@ -319,6 +320,8 @@
   .sky-time { color: var(--text-muted); font-size: 11px; }
   .sky-events-list { margin-top: 1rem; }
   .sky-title-lg { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.8rem; }
+  .sky-section-label { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0.4rem 0 0.8rem; }
+  .sky-range { font-size: 11px; color: var(--gold); font-style: italic; margin-top: 1px; }
   .sky-cat { margin-bottom: 1.2rem; }
   .sky-cat-head { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: var(--accent); margin-bottom: 0.4rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
   .sky-until { color: var(--gold); font-size: 11px; font-style: italic; }
@@ -2599,13 +2602,16 @@ async function loadGlowContent() {
 }
 
 
-// categorized sky events between two dates (inclusive) — split by type, with retrograde "until"
+// Tab content: dated CHANGES this period at top, ongoing SKY (retrogrades) at bottom.
+function fmtDateY(iso) {
+  return new Date(iso+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
 function skyEventsInRange(startISO, endISO, title) {
   const keys = Object.keys(SKY_EVENTS).filter(k => k >= startISO && k <= endISO).sort();
   const cats = { moon:[], ingress:[], retro:[], aspect:[] };
   keys.forEach(k => {
     (SKY_EVENTS[k]||[]).forEach(e => {
-      if (e.kind === 'moonsign') return; // shown on the calendar, not in summaries
+      if (e.kind === 'moonsign') return;
       const dayLabel = new Date(k+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
       let txt='';
       if (e.kind==='ingress') { txt=(e.body||'')+' enters '+(e.sign||''); cats.ingress.push({dayLabel,txt,time:e.time,portal:e.portal}); }
@@ -2614,25 +2620,32 @@ function skyEventsInRange(startISO, endISO, title) {
       else if (e.kind==='aspect') { txt=e.note||((e.body||'')+' '+(e.aspect||'')+' '+(e.sign||'')); cats.aspect.push({dayLabel,txt,time:e.time,portal:e.portal}); }
     });
   });
-  // currently-retrograde planets active during this range (show "until")
-  const activeRetro = activeRetrogrades(startISO).concat(activeRetrogrades(endISO)).filter((r,i,arr)=>arr.findIndex(x=>x.body===r.body&&x.start===r.start)===i);
+  const rowsOf = (arr) => arr.map(i =>
+    '<div class="sky-row"><span class="sky-date">'+i.dayLabel+'</span><span class="sky-event">'+esc(i.txt)+(i.portal?' <span style="color:var(--gold);">\u2600</span>':'')+(i.time?' <span class="sky-time">'+esc(i.time)+'</span>':'')+'</span></div>').join('');
 
-  const rowsOf = (arr) => arr.length ? arr.map(i =>
-    '<div class="sky-row"><span class="sky-date">'+i.dayLabel+'</span><span class="sky-event">'+esc(i.txt)+(i.portal?' <span style="color:var(--gold);">\u2600</span>':'')+(i.time?' <span class="sky-time">'+esc(i.time)+'</span>':'')+'</span></div>').join('')
-    : '<div class="sky-empty">None this period.</div>';
+  let out = title ? '<div class="sky-title-lg">'+title+'</div>' : '';
 
-  let html = title ? '<div class="sky-title-lg">'+title+'</div>' : '';
-  if (activeRetro.length) {
-    html += '<div class="sky-cat"><div class="sky-cat-head">\u211E Retrogrades in motion</div>' +
-      activeRetro.map(r => '<div class="sky-row"><span class="sky-event"><span class="astro-glyph">'+glyph(r.body)+'</span> '+r.body+' Rx in '+r.sign+' <span class="sky-until">until '+fmtDate(r.end)+'</span></span></div>').join('') + '</div>';
+  // ===== TOP: the changes happening THIS period =====
+  const anyChange = cats.moon.length || cats.ingress.length || cats.retro.length || cats.aspect.length;
+  if (anyChange) {
+    out += '<div class="sky-section-label">What shifts this period</div>';
+    if (cats.moon.length) out += '<div class="sky-cat"><div class="sky-cat-head">\ud83c\udf19 Moons</div>'+rowsOf(cats.moon)+'</div>';
+    if (cats.ingress.length) out += '<div class="sky-cat"><div class="sky-cat-head">\u2192 Ingresses</div>'+rowsOf(cats.ingress)+'</div>';
+    if (cats.retro.length) out += '<div class="sky-cat"><div class="sky-cat-head">\u211E Stations (retrograde &amp; direct)</div>'+rowsOf(cats.retro)+'</div>';
+    if (cats.aspect.length) out += '<div class="sky-cat"><div class="sky-cat-head">\u260c Aspects</div>'+rowsOf(cats.aspect)+'</div>';
   }
-  if (cats.moon.length) html += '<div class="sky-cat"><div class="sky-cat-head">\ud83c\udf19 Moons</div>'+rowsOf(cats.moon)+'</div>';
-  if (cats.ingress.length) html += '<div class="sky-cat"><div class="sky-cat-head">\u2192 Ingresses</div>'+rowsOf(cats.ingress)+'</div>';
-  if (cats.retro.length) html += '<div class="sky-cat"><div class="sky-cat-head">\u211E Stations (retrograde &amp; direct)</div>'+rowsOf(cats.retro)+'</div>';
-  if (cats.aspect.length) html += '<div class="sky-cat"><div class="sky-cat-head">\u260c Aspects</div>'+rowsOf(cats.aspect)+'</div>';
-  if (!cats.moon.length && !cats.ingress.length && !cats.retro.length && !cats.aspect.length && !activeRetro.length)
-    html += '<div class="sky-empty">No major events entered for this range yet.</div>';
-  return html;
+
+  // ===== BOTTOM: the ongoing backdrop (what's retrograde the whole period) =====
+  const activeRetro = activeRetrogrades(startISO).concat(activeRetrogrades(endISO))
+    .filter((r,i,arr)=>arr.findIndex(x=>x.body===r.body&&x.start===r.start)===i);
+  if (activeRetro.length) {
+    out += '<div class="sky-section-label" style="margin-top:1.5rem;">The sky right now · ongoing</div>';
+    out += '<div class="sky-cat"><div class="sky-cat-head">\u211E Retrogrades in motion</div>' +
+      activeRetro.map(r => '<div class="sky-row"><span class="sky-event"><span class="astro-glyph">'+glyph(r.body)+'</span> '+r.body+' Rx in '+r.sign+'<div class="sky-range">'+fmtDateY(r.start)+' \u2014 '+fmtDateY(r.end)+'</div></span></div>').join('') + '</div>';
+  }
+
+  if (!anyChange && !activeRetro.length) out += '<div class="sky-empty">No major events entered for this range yet.</div>';
+  return out;
 }
 
 function renderGlowNote(scope) {
@@ -3061,14 +3074,14 @@ async function loadSkyEvents() {
 function cellMoonSign(k, dd) {
   const evs = (SKY_EVENTS[k] || []).filter(e => e.kind === 'moonsign');
   if (evs.length) {
-    // sign changes this day: show prevSign -> newSign + time
     const change = evs[0];
-    const prev = moonSign(new Date(new Date(k+'T00:00:00').getTime() - 3600000)); // sign just before
-    return '<span class="cal-moonsign"><span class="astro-glyph">'+glyph(prev)+'</span><span class="cal-arrow">\u2192</span><span class="astro-glyph">'+glyph(change.sign)+'</span>'+(change.time?'<span class="cal-ms-t">'+esc(change.time)+'</span>':'')+'</span>';
+    const prev = moonSign(new Date(new Date(k+'T00:00:00').getTime() - 3600000));
+    // two signs together (no arrow), time underneath
+    return '<div class="cal-signs"><span class="astro-glyph">'+glyph(prev)+'</span><span class="astro-glyph">'+glyph(change.sign)+'</span></div>' +
+           (change.time?'<div class="cal-signtime">'+esc(change.time)+'</div>':'');
   }
-  // no change — just the current sign
   const sign = moonSign(dd);
-  return '<span class="cal-moonsign"><span class="astro-glyph">'+glyph(sign)+'</span></span>';
+  return '<div class="cal-signs"><span class="astro-glyph">'+glyph(sign)+'</span></div>';
 }
 
 function dayEventsNoMoonsign(k) {
@@ -3384,9 +3397,9 @@ function renderFlowCal() {
       'onclick="flowOpenDay(\'' + k + '\')">' +
       '<div class="cal-top">' +
         '<span class="cal-num">' + d + '</span>' +
+        '<span class="cal-midsign">' + cellMoonSign(k, dd) + '</span>' +
         '<span class="cal-moon-mini">' + moonSVG(dd, 16, {tint:true, glow:false}) + '</span>' +
       '</div>' +
-      '<div class="cal-signrow">' + cellMoonSign(k, dd) + '</div>' +
       '<div class="cal-events">' + dayEventsNoMoonsign(k) + '</div>' +
       '<div class="cal-marks">' +
         (e && e.energy ? '<span class="cal-energy" style="background:' + energyColor(e.energy) + '"></span>' : '') +
@@ -4243,5 +4256,25 @@ function logoTap() {
     }).catch(() => {});
   }
 </script>
+
+<script>
+// Keep the bottom nav pinned to the visible area even when the user pinch-zooms (iOS Safari).
+(function(){
+  if (!window.visualViewport) return;
+  var nav = null;
+  function pin(){
+    if(!nav) nav = document.querySelector('.bottom-nav');
+    if(!nav) return;
+    var vv = window.visualViewport;
+    // offset the nav so it sits at the bottom of the *visual* viewport, not the layout viewport
+    var bottomGap = (window.innerHeight - (vv.height + vv.offsetTop));
+    nav.style.transform = 'translateY(' + (-bottomGap) + 'px) translateZ(0)';
+  }
+  window.visualViewport.addEventListener('resize', pin);
+  window.visualViewport.addEventListener('scroll', pin);
+  window.addEventListener('scroll', pin);
+})();
+</script>
+
 </body>
 </html>
