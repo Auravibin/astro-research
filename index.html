@@ -166,7 +166,7 @@
   .check-item { display: flex; gap: 0.65rem; align-items: flex-start; padding: 0.8rem 1.05rem; background: var(--bg-card-deep); border-radius: 16px; margin-bottom: 0.5rem; font-size: 13.5px; color: var(--text-secondary); position: relative; }
   .check-item input { width: auto; margin-top: 3px; accent-color: var(--accent); }
   .check-item.done span { text-decoration: line-through; opacity: 0.5; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 500; will-change: transform; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1.5px solid var(--border); display: flex; justify-content: space-around; align-items: stretch; padding: 0.5rem 0.25rem calc(0.6rem + env(safe-area-inset-bottom)); }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 500; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1.5px solid var(--border); display: flex; justify-content: space-around; align-items: stretch; padding: 0.5rem 0.25rem calc(0.6rem + env(safe-area-inset-bottom)); }
   .tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0.3rem 0.35rem; cursor: pointer; border-radius: 14px; min-width: 42px; }
   .tab-icon { font-size: 21px; line-height: 1; filter: grayscale(0.35) opacity(0.75); transition: filter 0.15s, transform 0.15s; }
   .tab-label { font-size: 9.5px; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 500; }
@@ -1794,7 +1794,7 @@ function showTab(id) {
   window.scrollTo(0, 0);
   if (id === 'library') loadLibrary();
   
-  if (id === 'flow') { flowDate = new Date(); Promise.all([loadGlowContent(), loadQuotes(), loadSkyEvents()]).then(()=>{ renderQuote('today'); renderGlowNote('today'); }); setGlowView('today'); renderFlow(); }
+  if (id === 'flow') { flowDate = new Date(); Promise.all([loadGlowContent(), loadQuotes(), loadSkyEvents()]).then(()=>{ renderQuote('today'); renderGlowNote('today'); renderFlowCal(); }); setGlowView('today'); renderFlow(); }
   if (id === 'mynotes') { renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); }
 }
 
@@ -4253,35 +4253,7 @@ function logoTap() {
   }
 </script>
 
-<script>
-// Keep the bottom nav pinned to the visible viewport during pinch-zoom (iOS Safari).
-// iOS pins fixed elements to the layout viewport, so we counter-translate using the
-// visualViewport API. This is best-effort — iOS zoom is only partially controllable.
-(function(){
-  if (!window.visualViewport) return;
-  var nav = null, raf = null;
-  function pinNow(){
-    if(!nav) nav = document.querySelector('.bottom-nav');
-    if(!nav) return;
-    var vv = window.visualViewport;
-    var scale = vv.scale || 1;
-    // bottom of the visible area relative to the layout viewport
-    var visBottom = vv.offsetTop + vv.height;
-    var layoutH = document.documentElement.clientHeight;
-    var dy = visBottom - layoutH;              // how far the visible bottom is from layout bottom
-    // counter-scale so the bar keeps its size, and shift it to the visible bottom
-    nav.style.transformOrigin = 'bottom left';
-    nav.style.transform = 'translate(' + vv.offsetLeft + 'px, ' + dy + 'px) scale(' + (1/scale) + ')';
-    nav.style.width = (vv.width) + 'px';
-  }
-  function pin(){ if(raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(pinNow); }
-  window.visualViewport.addEventListener('resize', pin);
-  window.visualViewport.addEventListener('scroll', pin);
-  window.addEventListener('scroll', pin, {passive:true});
-  window.addEventListener('orientationchange', pin);
-  pin();
-})();
-</script>
+
 
 </body>
 </html>
