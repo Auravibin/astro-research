@@ -166,7 +166,7 @@
   .check-item { display: flex; gap: 0.65rem; align-items: flex-start; padding: 0.8rem 1.05rem; background: var(--bg-card-deep); border-radius: 16px; margin-bottom: 0.5rem; font-size: 13.5px; color: var(--text-secondary); position: relative; }
   .check-item input { width: auto; margin-top: 3px; accent-color: var(--accent); }
   .check-item.done span { text-decoration: line-through; opacity: 0.5; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1.5px solid var(--border); display: flex; justify-content: space-around; align-items: stretch; padding: 0.5rem 0.25rem calc(0.6rem + env(safe-area-inset-bottom)); }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 500; will-change: transform; transform: translateZ(0); background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1.5px solid var(--border); display: flex; justify-content: space-around; align-items: stretch; padding: 0.5rem 0.25rem calc(0.6rem + env(safe-area-inset-bottom)); }
   .tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0.3rem 0.35rem; cursor: pointer; border-radius: 14px; min-width: 42px; }
   .tab-icon { font-size: 21px; line-height: 1; filter: grayscale(0.35) opacity(0.75); transition: filter 0.15s, transform 0.15s; }
   .tab-label { font-size: 9.5px; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 500; }
@@ -234,8 +234,13 @@
   .flow-cal-wrap { }
   .flow-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
   .cal-dow { text-align: center; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); padding-bottom: 4px; }
-  .cal-day { position: relative; min-height: 76px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; cursor: pointer; transition: all 0.15s; padding: 2px 3px; overflow: hidden; }
+  .cal-day { position: relative; min-height: 88px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; cursor: pointer; transition: all 0.15s; padding: 2px 3px; overflow: hidden; }
   .cal-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .cal-signrow { display: flex; align-items: center; gap: 1px; margin-top: -6px; font-size: 8px; color: var(--text-primary); min-height: 10px; }
+  .cal-signrow .astro-glyph { font-size: 9px; }
+  .cal-arrow { font-size: 7px; color: var(--text-muted); }
+  .cal-ms-t { font-size: 6px; color: var(--text-muted); margin-left: 1px; }
+  .cal-ev-asp { font-size: 6.5px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cal-moon-mini { line-height: 0; flex: 0 0 auto; }
   .cal-moon-mini svg { display: block; }
   .cal-events { margin-top: 1px; display: flex; flex-direction: column; gap: 0px; flex: 1 1 auto; }
@@ -295,9 +300,9 @@
   .glow-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
   .glow-tabs .subtab { white-space: nowrap; flex: 0 0 auto; }
 
-  .glow-quote-card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 24px; padding: 2.6rem 1.8rem; margin-bottom: 1.4rem; text-align: center; }
-  .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 27px; line-height: 1.4; font-weight: 600; color: var(--accent); letter-spacing: 0.01em; }
-  .quote-expansion { font-size: 14px; line-height: 1.65; color: var(--text-secondary); font-weight: 300; margin-top: 1rem; font-family: 'DM Sans', sans-serif; }
+  .glow-quote-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem 1.3rem; margin-bottom: 1rem; text-align: center; }
+  .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 20px; line-height: 1.35; font-weight: 600; color: var(--accent); letter-spacing: 0.01em; }
+  .quote-expansion { font-size: 12.5px; line-height: 1.6; color: var(--text-secondary); font-weight: 300; margin-top: 0.6rem; font-family: 'DM Sans', sans-serif; }
   .quote-sky { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-top: 1.3rem; font-weight: 500; }
 
   .glow-note-card { background: var(--bg-card-deep); border: 1px solid var(--border); border-radius: 16px; padding: 1rem 1.2rem; margin-bottom: 1.4rem; }
@@ -313,6 +318,10 @@
   .sky-empty { font-size: 13px; color: var(--text-muted); font-style: italic; padding: 0.5rem 0; }
   .sky-time { color: var(--text-muted); font-size: 11px; }
   .sky-events-list { margin-top: 1rem; }
+  .sky-title-lg { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.8rem; }
+  .sky-cat { margin-bottom: 1.2rem; }
+  .sky-cat-head { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: var(--accent); margin-bottom: 0.4rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+  .sky-until { color: var(--gold); font-size: 11px; font-style: italic; }
   .sky-events-list .sky-block-head { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--accent); margin-bottom: 0.5rem; }
   .flow-transits-box { margin-bottom: 1.4rem; }
   .transit-head { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; }
@@ -1469,12 +1478,13 @@
     <div class="subtab" id="glowview-week" onclick="setGlowView('week')">This Week</div>
     <div class="subtab" id="glowview-month" onclick="setGlowView('month')">This Month</div>
     <div class="subtab" id="glowview-ref" onclick="setGlowView('ref')">This Year</div>
+    <div class="subtab" id="glowview-y2027" onclick="setGlowView('y2027')">2027</div>
   </div>
 
   <div id="glow-today-view">
     <div id="glow-quote" class="glow-quote-card"></div>
-    <div id="glow-energy-note" class="glow-note-card"></div>
     <div id="flow-today" class="flow-sky-card"></div>
+    <div id="glow-energy-note" class="glow-note-card"></div>
     <span id="flow-date-label" style="display:none;"></span>
 
     <div class="flow-date-row" style="margin-bottom:1rem;">
@@ -1537,6 +1547,7 @@
     <div id="glow-week-view" style="display:none;"><div id="glow-quote-week" class="glow-quote-card"></div><div id="glow-week-note" class="glow-note-card"></div></div>
   <div id="glow-month-view" style="display:none;"><div id="glow-quote-month" class="glow-quote-card"></div><div id="glow-month-note" class="glow-note-card"></div></div>
   <div id="glow-ref-view" style="display:none;"></div>
+  <div id="glow-y2027-view" style="display:none;"></div>
 
   <div id="flow-day-modal" class="flow-modal" style="display:none;">
     <div class="flow-modal-inner">
@@ -2548,8 +2559,7 @@ function renderQuote(scope) {
   const q = pickQuote(d, scope==='today'?'day':scope);
   if (!q) { el.innerHTML = ''; return; }
   el.innerHTML = '<div class="quote-text">' + esc(q.text) + '</div>' +
-    (q.expansion ? '<div class="quote-expansion">' + esc(q.expansion) + '</div>' : '') +
-    (q.label ? '<div class="quote-sky">' + esc(q.label) + '</div>' : '');
+    (q.expansion ? '<div class="quote-expansion">' + esc(q.expansion) + '</div>' : '');
   } catch(e) { console.warn('renderQuote', e); }
 }
 
@@ -2589,29 +2599,40 @@ async function loadGlowContent() {
 }
 
 
-// list all sky events between two ISO dates (inclusive), as readable HTML rows
+// categorized sky events between two dates (inclusive) — split by type, with retrograde "until"
 function skyEventsInRange(startISO, endISO, title) {
   const keys = Object.keys(SKY_EVENTS).filter(k => k >= startISO && k <= endISO).sort();
-  if (!keys.length) return '<div class="sky-empty">No major events entered for this range yet.</div>';
-  let rows = '';
+  const cats = { moon:[], ingress:[], retro:[], aspect:[] };
   keys.forEach(k => {
-    const dObj = new Date(k + 'T12:00:00');
-    const dayLabel = dObj.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    // only show the meaningful events in these summaries (skip routine moon sign-changes to reduce noise)
-    const evs = SKY_EVENTS[k].filter(e => e.kind !== 'moonsign');
-    evs.forEach(e => {
+    (SKY_EVENTS[k]||[]).forEach(e => {
+      if (e.kind === 'moonsign') return; // shown on the calendar, not in summaries
+      const dayLabel = new Date(k+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
       let txt='';
-      if (e.kind==='ingress') txt=(e.body||'')+' enters '+(e.sign||'');
-      else if (e.kind==='moon') txt=e.note||('Moon in '+(e.sign||''));
-      else if (e.kind==='retro') txt=e.note||((e.body||'')+' goes retrograde');
-      else if (e.kind==='station') txt=e.note||((e.body||'')+' stations direct');
-      else if (e.kind==='aspect') txt=e.note||((e.body||'')+' '+(e.aspect||'')+' '+(e.sign||''));
-      else txt=e.note||'';
-      const portal = e.portal ? ' <span style="color:var(--gold);">\u2600</span>' : '';
-      rows += '<div class="sky-row"><span class="sky-date">'+dayLabel+'</span><span class="sky-event">'+esc(txt)+portal+(e.time?' <span class="sky-time">'+esc(e.time)+'</span>':'')+'</span></div>';
+      if (e.kind==='ingress') { txt=(e.body||'')+' enters '+(e.sign||''); cats.ingress.push({dayLabel,txt,time:e.time,portal:e.portal}); }
+      else if (e.kind==='moon') { txt=e.note||('Moon in '+(e.sign||'')); cats.moon.push({dayLabel,txt,time:e.time,portal:e.portal}); }
+      else if (e.kind==='retro'||e.kind==='station') { txt=e.note||((e.body||'')+(e.kind==='retro'?' retrograde':' direct')); cats.retro.push({dayLabel,txt,time:e.time,portal:e.portal}); }
+      else if (e.kind==='aspect') { txt=e.note||((e.body||'')+' '+(e.aspect||'')+' '+(e.sign||'')); cats.aspect.push({dayLabel,txt,time:e.time,portal:e.portal}); }
     });
   });
-  return (title?'<div class="sky-block-head">'+title+'</div>':'') + (rows || '<div class="sky-empty">No major events this range.</div>');
+  // currently-retrograde planets active during this range (show "until")
+  const activeRetro = activeRetrogrades(startISO).concat(activeRetrogrades(endISO)).filter((r,i,arr)=>arr.findIndex(x=>x.body===r.body&&x.start===r.start)===i);
+
+  const rowsOf = (arr) => arr.length ? arr.map(i =>
+    '<div class="sky-row"><span class="sky-date">'+i.dayLabel+'</span><span class="sky-event">'+esc(i.txt)+(i.portal?' <span style="color:var(--gold);">\u2600</span>':'')+(i.time?' <span class="sky-time">'+esc(i.time)+'</span>':'')+'</span></div>').join('')
+    : '<div class="sky-empty">None this period.</div>';
+
+  let html = title ? '<div class="sky-title-lg">'+title+'</div>' : '';
+  if (activeRetro.length) {
+    html += '<div class="sky-cat"><div class="sky-cat-head">\u211E Retrogrades in motion</div>' +
+      activeRetro.map(r => '<div class="sky-row"><span class="sky-event"><span class="astro-glyph">'+glyph(r.body)+'</span> '+r.body+' Rx in '+r.sign+' <span class="sky-until">until '+fmtDate(r.end)+'</span></span></div>').join('') + '</div>';
+  }
+  if (cats.moon.length) html += '<div class="sky-cat"><div class="sky-cat-head">\ud83c\udf19 Moons</div>'+rowsOf(cats.moon)+'</div>';
+  if (cats.ingress.length) html += '<div class="sky-cat"><div class="sky-cat-head">\u2192 Ingresses</div>'+rowsOf(cats.ingress)+'</div>';
+  if (cats.retro.length) html += '<div class="sky-cat"><div class="sky-cat-head">\u211E Stations (retrograde &amp; direct)</div>'+rowsOf(cats.retro)+'</div>';
+  if (cats.aspect.length) html += '<div class="sky-cat"><div class="sky-cat-head">\u260c Aspects</div>'+rowsOf(cats.aspect)+'</div>';
+  if (!cats.moon.length && !cats.ingress.length && !cats.retro.length && !cats.aspect.length && !activeRetro.length)
+    html += '<div class="sky-empty">No major events entered for this range yet.</div>';
+  return html;
 }
 
 function renderGlowNote(scope) {
@@ -2663,10 +2684,10 @@ function glowFallback(scope, ph, sign) {
   return 'This month\'s overview is coming. Watch for the new and full moon as the two poles of the month\'s rhythm.';
 }
 
-function renderSkyData() {
-  const box = document.getElementById('glow-ref-view');
+function renderSkyData(yearArg, boxId) {
+  const box = document.getElementById(boxId || 'glow-ref-view');
   if (!box) return;
-  const year = new Date().getFullYear();
+  const year = yearArg || new Date().getFullYear();
   // group the year's real sky events by month, big events only (skip routine moon sign-changes)
   const byMonth = {};
   Object.keys(SKY_EVENTS).filter(k => k.startsWith(year)).sort().forEach(k => {
@@ -2978,7 +2999,7 @@ const GLYPH = {
   Aries:'\u2648', Taurus:'\u2649', Gemini:'\u264A', Cancer:'\u264B', Leo:'\u264C',
   Virgo:'\u264D', Libra:'\u264E', Scorpio:'\u264F', Sagittarius:'\u2650',
   Capricorn:'\u2651', Aquarius:'\u2652', Pisces:'\u2653',
-  conjunction:'\u260C', opposition:'\u260D', square:'\u25A1', trine:'\u25B3',
+  conjunction:'\u260C', opposition:'\u260D', square:'\u25A1', trine:'\u25B3', D:'D',
   sextile:'\u26B9', Rx:'\u211E'
 };
 const SIGN_ABBR = { Aries:'Ari',Taurus:'Tau',Gemini:'Gem',Cancer:'Can',Leo:'Leo',Virgo:'Vir',Libra:'Lib',Scorpio:'Sco',Sagittarius:'Sag',Capricorn:'Cap',Aquarius:'Aqu',Pisces:'Pis' };
@@ -2992,6 +3013,36 @@ function glyphify(text) {
 
 // SKY_EVENTS: hand-entered accurate data (from Astro-Seek), keyed by ISO date.
 // Each: { date, kind:'ingress|moon|aspect|retro|station', body, sign, aspect, time, note, portal }
+
+// Retrograde periods (start -> end) so tabs can show "until X". Times Eastern.
+const RETRO_PERIODS = [
+  {body:'Mercury', sign:'Pisces', start:'2026-02-26', end:'2026-03-20'},
+  {body:'Mercury', sign:'Cancer', start:'2026-06-29', end:'2026-07-23'},
+  {body:'Mercury', sign:'Scorpio', start:'2026-10-24', end:'2026-11-13'},
+  {body:'Venus', sign:'Scorpio', start:'2026-10-03', end:'2026-11-13'},
+  {body:'Jupiter', sign:'Leo', start:'2026-12-12', end:'2027-04-12'},
+  {body:'Saturn', sign:'Aries', start:'2026-07-26', end:'2026-12-10'},
+  {body:'Uranus', sign:'Gemini', start:'2026-09-10', end:'2027-02-08'},
+  {body:'Neptune', sign:'Aries', start:'2026-07-07', end:'2026-12-12'},
+  {body:'Pluto', sign:'Aquarius', start:'2026-05-06', end:'2026-10-15'},
+  {body:'Chiron', sign:'Taurus', start:'2026-08-03', end:'2027-01-06'},
+  {body:'Mars', sign:'Virgo', start:'2027-01-10', end:'2027-04-01'},
+  {body:'Mercury', sign:'Pisces', start:'2027-02-09', end:'2027-03-03'},
+  {body:'Mercury', sign:'Cancer', start:'2027-06-10', end:'2027-07-04'},
+  {body:'Mercury', sign:'Scorpio', start:'2027-10-07', end:'2027-10-28'},
+  {body:'Pluto', sign:'Aquarius', start:'2027-05-08', end:'2027-10-17'},
+  {body:'Neptune', sign:'Aries', start:'2027-07-09', end:'2027-12-15'},
+  {body:'Saturn', sign:'Aries', start:'2027-08-09', end:'2027-12-23'},
+  {body:'Chiron', sign:'Taurus', start:'2027-08-07', end:'2028-01-10'},
+  {body:'Uranus', sign:'Gemini', start:'2027-09-15', end:'2028-02-12'},
+];
+function activeRetrogrades(isoDate) {
+  return RETRO_PERIODS.filter(r => isoDate >= r.start && isoDate <= r.end);
+}
+function fmtDate(iso) {
+  return new Date(iso+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
 let SKY_EVENTS = {};   // { '2026-08-12': [ {..}, {..} ] }
 async function loadSkyEvents() {
   if (!db) return;
@@ -3005,6 +3056,35 @@ async function loadSkyEvents() {
 }
 
 // Render the little event lines inside a calendar day cell
+
+// Moon sign glyph(s) for a calendar cell — one sign, or two with time if it shifts that day
+function cellMoonSign(k, dd) {
+  const evs = (SKY_EVENTS[k] || []).filter(e => e.kind === 'moonsign');
+  if (evs.length) {
+    // sign changes this day: show prevSign -> newSign + time
+    const change = evs[0];
+    const prev = moonSign(new Date(new Date(k+'T00:00:00').getTime() - 3600000)); // sign just before
+    return '<span class="cal-moonsign"><span class="astro-glyph">'+glyph(prev)+'</span><span class="cal-arrow">\u2192</span><span class="astro-glyph">'+glyph(change.sign)+'</span>'+(change.time?'<span class="cal-ms-t">'+esc(change.time)+'</span>':'')+'</span>';
+  }
+  // no change — just the current sign
+  const sign = moonSign(dd);
+  return '<span class="cal-moonsign"><span class="astro-glyph">'+glyph(sign)+'</span></span>';
+}
+
+function dayEventsNoMoonsign(k) {
+  const evs = (SKY_EVENTS[k] || []).filter(e => e.kind !== 'moonsign');
+  if (!evs.length) return '';
+  const order = { moon:0, ingress:1, retro:2, station:3, aspect:4 };
+  const sorted = evs.slice().sort((a,b)=>(order[a.kind]??9)-(order[b.kind]??9));
+  return sorted.slice(0,6).map(e => {
+    if (e.kind === 'ingress') return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span><span class="cal-arrow">\u2192</span><span class="astro-glyph">'+glyph(e.sign)+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
+    if (e.kind === 'moon') return '<div class="cal-ev cal-ev-moon">'+esc((e.note||'').replace(/ in .*/,''))+'</div>';
+    if (e.kind === 'retro' || e.kind === 'station') return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span><span class="astro-glyph">'+glyph(e.kind==='retro'?'Rx':'D')+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
+    if (e.kind === 'aspect') return '<div class="cal-ev cal-ev-asp">'+esc((e.note||'').replace(/ in .*/,''))+'</div>';
+    return '<div class="cal-ev">'+esc(e.note||'')+'</div>';
+  }).join('');
+}
+
 function dayEventsHTML(k) {
   const evs = SKY_EVENTS[k];
   if (!evs || !evs.length) return '';
@@ -3252,7 +3332,7 @@ function renderFlowList() { const _l=document.getElementById('flow-list'); if(!_
       '</div>';
   }).join('') : '<p class="empty">No days logged yet — start with today above.</p>';
 }
-const GLOW_VIEWS = ['today','week','month','ref'];
+const GLOW_VIEWS = ['today','week','month','ref','y2027'];
 function setGlowView(v) {
   GLOW_VIEWS.forEach(x => {
     const tab = document.getElementById('glowview-'+x);
@@ -3263,7 +3343,9 @@ function setGlowView(v) {
   show('glow-week-view', v==='week');
   show('glow-month-view', v==='month');
   show('glow-ref-view', v==='ref');
+  show('glow-y2027-view', v==='y2027');
   if (v==='ref') renderSkyData();
+  if (v==='y2027') renderSkyData(2027, 'glow-y2027-view');
   if (v==='today') { renderFlowCal(); try{renderQuote('today');}catch(e){} try{renderGlowNote('today');}catch(e){} try{renderFlowToday();}catch(e){} }
   if (v==='week') { try{renderQuote('week');}catch(e){} try{renderGlowNote('week');}catch(e){} }
   if (v==='month') { try{renderQuote('month');}catch(e){} try{renderGlowNote('month');}catch(e){} }
@@ -3302,9 +3384,10 @@ function renderFlowCal() {
       'onclick="flowOpenDay(\'' + k + '\')">' +
       '<div class="cal-top">' +
         '<span class="cal-num">' + d + '</span>' +
-        '<span class="cal-moon-mini">' + moonSVG(dd, 17, {tint:true, glow:false}) + '</span>' +
+        '<span class="cal-moon-mini">' + moonSVG(dd, 16, {tint:true, glow:false}) + '</span>' +
       '</div>' +
-      '<div class="cal-events">' + dayEventsHTML(k) + '</div>' +
+      '<div class="cal-signrow">' + cellMoonSign(k, dd) + '</div>' +
+      '<div class="cal-events">' + dayEventsNoMoonsign(k) + '</div>' +
       '<div class="cal-marks">' +
         (e && e.energy ? '<span class="cal-energy" style="background:' + energyColor(e.energy) + '"></span>' : '') +
         (e && e.period && e.period.length ? '<span class="cal-period"></span>' : '') +
