@@ -79,7 +79,7 @@
   .header-link { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); cursor: pointer; }
   .admin-link { display: none !important; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); cursor: pointer; }
   .admin-link.show { display: block !important; }
-  main { max-width: 1100px; margin: 0 auto; padding: 1.25rem 1.25rem 7.5rem; }
+  main { max-width: 1100px; margin: 0 auto; padding: 1.25rem 1.25rem 6rem; }
   .section { display: none; }
   .section.active { display: block; animation: fade 0.25s ease; }
   @keyframes fade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
@@ -166,7 +166,7 @@
   .check-item { display: flex; gap: 0.65rem; align-items: flex-start; padding: 0.8rem 1.05rem; background: var(--bg-card-deep); border-radius: 16px; margin-bottom: 0.5rem; font-size: 13.5px; color: var(--text-secondary); position: relative; }
   .check-item input { width: auto; margin-top: 3px; accent-color: var(--accent); }
   .check-item.done span { text-decoration: line-through; opacity: 0.5; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 500; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1.5px solid var(--border); display: flex; justify-content: space-around; align-items: stretch; padding: 0.5rem 0.25rem calc(0.6rem + env(safe-area-inset-bottom)); }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 500; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1.5px solid var(--border); display: flex; justify-content: space-around; align-items: stretch; padding: 0.5rem 0.25rem 0.6rem; padding-bottom: max(0.6rem, env(safe-area-inset-bottom)); }
   .tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0.3rem 0.35rem; cursor: pointer; border-radius: 14px; min-width: 42px; }
   .tab-icon { font-size: 21px; line-height: 1; filter: grayscale(0.35) opacity(0.75); transition: filter 0.15s, transform 0.15s; }
   .tab-label { font-size: 9.5px; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 500; }
@@ -237,9 +237,9 @@
   .cal-day { position: relative; min-height: 88px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; cursor: pointer; transition: all 0.15s; padding: 2px 3px; overflow: hidden; }
   .cal-top { display: flex; align-items: flex-start; justify-content: space-between; }
   .cal-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1px; }
-  .cal-midsign { flex: 1 1 auto; text-align: center; display: flex; flex-direction: column; align-items: center; line-height: 1; padding-top: 1px; }
-  .cal-signs { display: flex; gap: 0px; }
-  .cal-signs .astro-glyph { font-size: 10px; color: var(--text-primary); }
+  .cal-midsign { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; line-height: 1; padding-top: 1px; padding-right: 2px; }
+  .cal-signs { display: flex; gap: 0px; justify-content: flex-end; }
+  .cal-signs .astro-glyph { font-size: 8px; color: var(--text-primary); }
   .cal-signtime { font-size: 6px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; }
   .cal-ev-asp { font-size: 6.5px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cal-moon-mini { line-height: 0; flex: 0 0 auto; }
@@ -259,7 +259,7 @@
   .cal-day:active { transform: scale(0.94); }
   .cal-today { border-color: var(--accent); border-width: 2px; }
   .cal-future { opacity: 0.6; cursor: pointer; }
-  .cal-num { font-size: 10px; color: var(--text-primary); font-weight: 600; line-height: 1; }
+  .cal-num { font-size: 10px; color: var(--text-primary); font-weight: 600; line-height: 1; white-space: nowrap; flex: 0 0 auto; }
   .cal-moon-mini { display: block; line-height: 0; }
   .cal-moon-mini svg { display: block; }
   .cal-moon { font-size: 11px; line-height: 1; }
@@ -300,6 +300,8 @@
   .flow-sky-poem { font-size: 13px; line-height: 1.6; font-style: italic; opacity: 0.9; margin-top: 0.5rem; }
   .glow-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
   .glow-tabs .subtab { white-space: nowrap; flex: 0 0 auto; }
+  #glow-today-view, #glow-week-view, #glow-month-view, #glow-ref-view, #glow-y2027-view { border: 0; outline: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+  .glow-tabs { border: 0; box-shadow: none; }
 
   .glow-quote-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem 1.3rem; margin-bottom: 1rem; text-align: center; }
   .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 20px; line-height: 1.35; font-weight: 600; color: var(--accent); letter-spacing: 0.01em; }
@@ -313,6 +315,7 @@
   .sky-block { margin-bottom: 1.5rem; }
   .sky-block-head { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--text-primary); margin-bottom: 0.6rem; }
   .sky-row { padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
+  .sky-cat .sky-row:last-child { border-bottom: 0; }
   .sky-date { font-size: 12px; color: var(--accent); font-weight: 500; letter-spacing: 0.03em; }
   .sky-event { font-size: 14px; color: var(--text-primary); margin-left: 0.6rem; }
   .sky-note { font-size: 13px; color: var(--text-secondary); font-weight: 300; line-height: 1.55; margin-top: 0.3rem; }
@@ -1510,8 +1513,8 @@
     <div class="acc-body">The full year with every moon phase, and the eclipse portals marked in gold.<img class="brand-img chart-thumb" src="img/2026-main.jpg" alt="2026 year overview — Flowing With The Moon, eclipse portals marked" loading="lazy" onclick="openLightbox(this.src)"></div>
     </div>
   </div>
-    <div id="glow-week-view" style="display:none;"><div id="glow-quote-week" class="glow-quote-card"></div><div id="glow-week-note" class="glow-note-card"></div></div>
-  <div id="glow-month-view" style="display:none;"><div id="glow-quote-month" class="glow-quote-card"></div><div id="glow-month-note" class="glow-note-card"></div></div>
+    <div id="glow-week-view" style="display:none;"><div id="glow-week-note" class="glow-note-card"></div></div>
+  <div id="glow-month-view" style="display:none;"><div id="glow-month-note" class="glow-note-card"></div></div>
   <div id="glow-ref-view" style="display:none;"></div>
   <div id="glow-y2027-view" style="display:none;"></div>
 
@@ -2518,7 +2521,7 @@ function pickQuote(date, scope) {
 function renderQuote(scope) {
   try {
   scope = scope || 'today';
-  const map = { today:'glow-quote', week:'glow-quote-week', month:'glow-quote-month' };
+  const map = { today:'glow-quote' };
   const el = document.getElementById(map[scope]);
   if (!el) return;
   const d = new Date();
@@ -3356,8 +3359,8 @@ function setGlowView(v) {
   if (v==='ref') renderSkyData();
   if (v==='y2027') renderSkyData(2027, 'glow-y2027-view');
   if (v==='today') { renderFlowCal(); try{renderQuote('today');}catch(e){} try{renderGlowNote('today');}catch(e){} try{renderFlowToday();}catch(e){} }
-  if (v==='week') { try{renderQuote('week');}catch(e){} try{renderGlowNote('week');}catch(e){} }
-  if (v==='month') { try{renderQuote('month');}catch(e){} try{renderGlowNote('month');}catch(e){} }
+  if (v==='week') { try{renderGlowNote('week');}catch(e){} }
+  if (v==='month') { try{renderGlowNote('month');}catch(e){} }
 }
 // keep old name working anywhere it's still called
 function setFlowView(v) { setGlowView(v==='log'?'today':v); }
