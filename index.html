@@ -68,7 +68,7 @@
   pre, code { white-space: pre-wrap; overflow-wrap: anywhere; }
   .section { overflow-wrap: anywhere; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; transition: background 0.3s; }
-  header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 1rem 1.25rem 0.75rem; }
+  header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 1rem 1.25rem 0.75rem; margin-bottom: -1px; padding-bottom: calc(0.75rem + 1px); }
   .header-top { display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
   .logo-wrap { cursor: pointer; user-select: none; -webkit-user-select: none; }
   .logo { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-weight: 600; letter-spacing: 0.02em; line-height: 1.05; }
@@ -166,7 +166,7 @@
   .check-item { display: flex; gap: 0.65rem; align-items: flex-start; padding: 0.8rem 1.05rem; background: var(--bg-card-deep); border-radius: 16px; margin-bottom: 0.5rem; font-size: 13.5px; color: var(--text-secondary); position: relative; }
   .check-item input { width: auto; margin-top: 3px; accent-color: var(--accent); }
   .check-item.done span { text-decoration: line-through; opacity: 0.5; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 500; will-change: transform; transform: translateZ(0); background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1.5px solid var(--border); display: flex; justify-content: space-around; align-items: stretch; padding: 0.5rem 0.25rem calc(0.6rem + env(safe-area-inset-bottom)); }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 500; will-change: transform; background: var(--nav-bg); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1.5px solid var(--border); display: flex; justify-content: space-around; align-items: stretch; padding: 0.5rem 0.25rem calc(0.6rem + env(safe-area-inset-bottom)); }
   .tab { display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0.3rem 0.35rem; cursor: pointer; border-radius: 14px; min-width: 42px; }
   .tab-icon { font-size: 21px; line-height: 1; filter: grayscale(0.35) opacity(0.75); transition: filter 0.15s, transform 0.15s; }
   .tab-label { font-size: 9.5px; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 500; }
@@ -1487,8 +1487,6 @@
   <div id="glow-today-view">
     <div id="glow-quote" class="glow-quote-card"></div>
     <div id="flow-today" class="flow-sky-card"></div>
-    <div id="glow-energy-note" class="glow-note-card"></div>
-    <span id="flow-date-label" style="display:none;"></span>
 
     <div class="flow-date-row" style="margin-bottom:1rem;">
       <button class="btn-quiet" onclick="flowCalShift(-1)">‹</button>
@@ -1501,51 +1499,16 @@
 
     <div id="flow-legend" class="flow-legend"></div>
 
-    <div id="glow-artcalendar" style="margin-top:1.8rem;">
-    <h2 class="subhead" style="margin-top:0;">Flowing With The Moon</h2>
-    <p class="section-sub" style="margin-bottom:1rem;">The full 2026 calendar — every moon phase, sign ingress, retrograde, eclipse, and daily aspect, hand-built. Tap any month to open it, then tap the image to zoom.</p>
+    <span id="flow-date-label" style="display:none;"></span>
 
+    <!-- Sky specs / energy read now BELOW the calendar (calendar stays the hero) -->
+    <div id="glow-energy-note" class="glow-note-card" style="margin-top:1.6rem;"></div>
+
+    <!-- Year at a glance (eclipse portals) — the only image toggle kept -->
+    <div id="glow-artcalendar" style="margin-top:1.8rem;">
     <div class="acc-head" onclick="acc(this)"><h3>2026 · Year at a glance</h3><span class="acc-arrow">↓</span></div>
     <div class="acc-body">The full year with every moon phase, and the eclipse portals marked in gold.<img class="brand-img chart-thumb" src="img/2026-main.jpg" alt="2026 year overview — Flowing With The Moon, eclipse portals marked" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>January</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-1.jpg" alt="January 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>February</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-2.jpg" alt="February 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>March</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-3.jpg" alt="March 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>April</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-4.jpg" alt="April 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>May</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-5.jpg" alt="May 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>June</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-6.jpg" alt="June 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>July</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-7.jpg" alt="July 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>August</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-8.jpg" alt="August 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>September</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-9.jpg" alt="September 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>October</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-10.jpg" alt="October 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>November</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-11.jpg" alt="November 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <div class="acc-head" onclick="acc(this)"><h3>December</h3><span class="acc-arrow">↓</span></div>
-    <div class="acc-body"><img class="brand-img chart-thumb" src="img/2026-12.jpg" alt="December 2026 astrological calendar — Flowing With The Moon" loading="lazy" onclick="openLightbox(this.src)"></div>
-
-    <p style="font-size:12.5px;color:var(--text-muted);font-weight:300;line-height:1.55;margin-top:1.2rem;">Times shown are Eastern. Adjust for your own zone — the Moon moves roughly half a degree an hour, so ingress times shift but the day's overall pattern holds.</p>
-  </div>
+    </div>
   </div>
     <div id="glow-week-view" style="display:none;"><div id="glow-quote-week" class="glow-quote-card"></div><div id="glow-week-note" class="glow-note-card"></div></div>
   <div id="glow-month-view" style="display:none;"><div id="glow-quote-month" class="glow-quote-card"></div><div id="glow-month-note" class="glow-note-card"></div></div>
@@ -2606,6 +2569,49 @@ async function loadGlowContent() {
 function fmtDateY(iso) {
   return new Date(iso+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 }
+
+// Auto energy read — one clocked line from the sky itself (no manual note needed).
+const SIGN_ELEMENT = { Aries:'Fire',Leo:'Fire',Sagittarius:'Fire', Taurus:'Earth',Virgo:'Earth',Capricorn:'Earth', Gemini:'Air',Libra:'Air',Aquarius:'Air', Cancer:'Water',Scorpio:'Water',Pisces:'Water' };
+const ELEMENT_MOOD = { Fire:'spirited and ready to move', Earth:'grounded and practical', Air:'mental and social', Water:'feeling and intuitive' };
+const PHASE_ENERGY = {
+  'New Moon':'a beginning — plant the seed, set the intention',
+  'Waxing Crescent':'building momentum — take the first steps',
+  'First Quarter':'a push through resistance — commit to the work',
+  'Waxing Gibbous':'refine and adjust — you are almost there',
+  'Full Moon':'culmination — what was seeded now stands in full light',
+  'Waning Gibbous':'gratitude and sharing — give some of it back',
+  'Last Quarter':'release — let go of what has finished',
+  'Waning Crescent':'rest and surrender — the dark before the new'
+};
+function autoEnergyRead(scope, startISO, endISO) {
+  const d = new Date();
+  const ph = moonPhase(d); const sign = moonSign(d);
+  const el = SIGN_ELEMENT[sign] || '';
+  if (scope==='today') {
+    return 'The Moon is ' + ph.name.toLowerCase() + ' in ' + sign + ' — ' + (ELEMENT_MOOD[el]||'') + '. ' +
+      'Energetically this is ' + (PHASE_ENERGY[ph.name]||'') + '.';
+  }
+  // week/month/year: summarize what dominates the period
+  const keys = Object.keys(SKY_EVENTS).filter(k => k >= startISO && k <= endISO).sort();
+  let moons=0, ingresses=0, retros=0, aspects=0, portals=0;
+  keys.forEach(k => (SKY_EVENTS[k]||[]).forEach(e => {
+    if (e.kind==='moon') { moons++; if(e.portal) portals++; }
+    else if (e.kind==='ingress') ingresses++;
+    else if (e.kind==='retro'||e.kind==='station') retros++;
+    else if (e.kind==='aspect') aspects++;
+  }));
+  const activeRetro = activeRetrogrades(startISO);
+  let parts = [];
+  if (portals) parts.push('an eclipse portal — fated, accelerated, not the time to force');
+  if (moons) parts.push(moons + (moons===1?' major moon':' major moons') + ' anchoring the rhythm');
+  if (ingresses) parts.push(ingresses + ' sign change' + (ingresses===1?'':'s') + ' shifting the tone');
+  if (retros) parts.push(retros + ' station' + (retros===1?'':'s') + ' — planets changing direction');
+  if (activeRetro.length) parts.push(activeRetro.length + ' planet' + (activeRetro.length===1?'':'s') + ' retrograde, asking for review');
+  const label = scope==='week'?'This week':scope==='month'?'This month':'This stretch';
+  if (!parts.length) return label + ' the sky is quiet — a steady backdrop to move at your own pace.';
+  return label + ' carries ' + parts.slice(0,3).join(', ') + '.';
+}
+
 function skyEventsInRange(startISO, endISO, title) {
   const keys = Object.keys(SKY_EVENTS).filter(k => k >= startISO && k <= endISO).sort();
   const cats = { moon:[], ingress:[], retro:[], aspect:[] };
@@ -2625,14 +2631,16 @@ function skyEventsInRange(startISO, endISO, title) {
 
   let out = title ? '<div class="sky-title-lg">'+title+'</div>' : '';
 
-  // ===== TOP: the changes happening THIS period =====
+  // ===== TOP: the changes happening THIS period (always shown) =====
   const anyChange = cats.moon.length || cats.ingress.length || cats.retro.length || cats.aspect.length;
+  out += '<div class="sky-section-label">What shifts this period</div>';
   if (anyChange) {
-    out += '<div class="sky-section-label">What shifts this period</div>';
     if (cats.moon.length) out += '<div class="sky-cat"><div class="sky-cat-head">\ud83c\udf19 Moons</div>'+rowsOf(cats.moon)+'</div>';
     if (cats.ingress.length) out += '<div class="sky-cat"><div class="sky-cat-head">\u2192 Ingresses</div>'+rowsOf(cats.ingress)+'</div>';
     if (cats.retro.length) out += '<div class="sky-cat"><div class="sky-cat-head">\u211E Stations (retrograde &amp; direct)</div>'+rowsOf(cats.retro)+'</div>';
     if (cats.aspect.length) out += '<div class="sky-cat"><div class="sky-cat-head">\u260c Aspects</div>'+rowsOf(cats.aspect)+'</div>';
+  } else {
+    out += '<div class="sky-empty">No major shifts this period \u2014 a steady stretch of sky.</div>';
   }
 
   // ===== BOTTOM: the ongoing backdrop (what's retrograde the whole period) =====
@@ -2652,58 +2660,37 @@ function renderGlowNote(scope) {
   const map = { today: 'glow-energy-note', week: 'glow-week-note', month: 'glow-month-note' };
   const el = document.getElementById(map[scope]);
   if (!el) return;
-  let key, dateLabel;
   const d = new Date();
-  if (scope==='today') { key = isoDay(d); dateLabel = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); }
-  else if (scope==='week') { key = weekKey(d); dateLabel = 'This week'; }
-  else { key = monthKey(d); dateLabel = d.toLocaleDateString('en-US',{month:'long',year:'numeric'}); }
-  // attach the sky events list for week/month
-  if (scope==='week' || scope==='month') {
-    let s, e;
-    if (scope==='week') {
-      const day = d.getDay(); const start = new Date(d); start.setDate(d.getDate()-day);
-      const end = new Date(start); end.setDate(start.getDate()+6);
-      s = isoDay(start); e = isoDay(end);
-    } else {
-      s = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01';
-      const last = new Date(d.getFullYear(), d.getMonth()+1, 0);
-      e = isoDay(last);
-    }
-    setTimeout(()=>{
-      const noteEl = document.getElementById(map[scope]);
-      if (noteEl) {
-        let skyDiv = document.getElementById('sky-list-'+scope);
-        if (!skyDiv) { skyDiv = document.createElement('div'); skyDiv.id='sky-list-'+scope; skyDiv.className='sky-events-list'; noteEl.parentNode.insertBefore(skyDiv, noteEl.nextSibling); }
-        skyDiv.innerHTML = skyEventsInRange(s, e, 'In the sky · ET');
-      }
-    }, 0);
-  }
-  const body = (GLOW_NOTES[scope] && GLOW_NOTES[scope][key]) || '';
-  const ph = moonPhase(d); const sign = moonSign(d);
-  if (body) {
-    el.innerHTML = '<div class="glow-note-label">' + dateLabel + '</div>' +
-      (scope==='today' ? '<div class="glow-note-moon">' + ph.emoji + ' ' + ph.name + ' · Moon in ' + sign + '</div>' : '') +
-      '<div class="glow-note-body">' + body.replace(/\n/g,'<br>') + '</div>';
+  let s, e, dateLabel;
+  if (scope==='today') {
+    s = e = isoDay(d);
+    dateLabel = d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  } else if (scope==='week') {
+    const day = d.getDay(); const start = new Date(d); start.setDate(d.getDate()-day);
+    const end = new Date(start); end.setDate(start.getDate()+6);
+    s = isoDay(start); e = isoDay(end); dateLabel = 'This week';
   } else {
-    // graceful fallback — never blank
-    el.innerHTML = '<div class="glow-note-label">' + dateLabel + '</div>' +
-      (scope==='today' ? '<div class="glow-note-moon">' + ph.emoji + ' ' + ph.name + ' · Moon in ' + sign + '</div>' : '') +
-      '<div class="glow-note-body" style="font-style:italic;opacity:0.75;">' + glowFallback(scope, ph, sign) + '</div>';
+    s = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01';
+    const last = new Date(d.getFullYear(), d.getMonth()+1, 0);
+    e = isoDay(last); dateLabel = d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
   }
-}
-function glowFallback(scope, ph, sign) {
-  if (scope==='today') return PHASE_WORDS[ph.name] + ' The moon moves through ' + sign + ' today — let that colour how you meet the hours.';
-  if (scope==='week') return 'This week\'s energy note is on its way. For now, notice how the moon shifts signs every couple of days and how your own energy moves with it.';
-  return 'This month\'s overview is coming. Watch for the new and full moon as the two poles of the month\'s rhythm.';
+  // ONE auto energy read (from the sky), then the what-shifts breakdown
+  const read = autoEnergyRead(scope, s, e);
+  el.innerHTML = '<div class="glow-note-label">' + dateLabel + '</div>' +
+    '<div class="glow-note-body">' + read + '</div>';
+  // attach the categorized sky breakdown below (today gets it too now)
+  let skyDiv = document.getElementById('sky-list-'+scope);
+  if (!skyDiv) { skyDiv = document.createElement('div'); skyDiv.id='sky-list-'+scope; skyDiv.className='sky-events-list'; el.parentNode.insertBefore(skyDiv, el.nextSibling); }
+  skyDiv.innerHTML = skyEventsInRange(s, e, null);
 }
 
 function renderSkyData(yearArg, boxId) {
   const box = document.getElementById(boxId || 'glow-ref-view');
   if (!box) return;
   const year = yearArg || new Date().getFullYear();
-  // group the year's real sky events by month, big events only (skip routine moon sign-changes)
+  const yStr = String(year);
   const byMonth = {};
-  Object.keys(SKY_EVENTS).filter(k => k.startsWith(year)).sort().forEach(k => {
+  Object.keys(SKY_EVENTS).filter(k => k.startsWith(yStr)).sort().forEach(k => {
     const m = k.slice(0,7);
     (byMonth[m] = byMonth[m] || []).push(...SKY_EVENTS[k].filter(e => e.kind !== 'moonsign').map(e => ({...e, date:k})));
   });
@@ -2726,10 +2713,19 @@ function renderSkyData(yearArg, boxId) {
     yearHTML += '<div class="sky-block"><div class="sky-block-head">'+monthNames[mi]+'</div>'+rows+'</div>';
   });
   if (!yearHTML) yearHTML = '<div class="sky-empty">The year\'s major events are being added.</div>';
+  // year-long retrograde backdrop
+  const yStart = yStr+'-01-01', yEnd = yStr+'-12-31';
+  const activeRetro = RETRO_PERIODS.filter(r => !(r.end < yStart || r.start > yEnd));
+  let retroHTML = '';
+  if (activeRetro.length) {
+    retroHTML = '<div class="sky-section-label" style="margin-top:1.5rem;">Retrograde backdrop of '+year+'</div>' +
+      '<div class="sky-cat">' + activeRetro.map(r => '<div class="sky-row"><span class="sky-event"><span class="astro-glyph">'+glyph(r.body)+'</span> '+r.body+' Rx in '+r.sign+'<div class="sky-range">'+fmtDateY(r.start)+' \u2014 '+fmtDateY(r.end)+'</div></span></div>').join('') + '</div>';
+  }
   box.innerHTML =
-    '<div class="glow-quote-card" style="margin-bottom:1.4rem;"><div class="quote-text" style="font-size:22px;">' + (YEAR_ENERGY || 'The year ahead — the major sky that shapes it.') + '</div></div>' +
-    '<p class="section-sub" style="margin-bottom:1.2rem;">The major sky of '+year+' — ingresses, retrogrades, eclipses, and the moons that anchor each month. All times Eastern (ET).</p>' +
-    yearHTML;
+    '<div class="glow-quote-card" style="margin-bottom:1rem;"><div class="quote-text" style="font-size:18px;">' + (YEAR_ENERGY || ('The major sky that shapes '+year+'.')) + '</div></div>' +
+    '<p class="section-sub" style="margin-bottom:1.2rem;">Ingresses, retrogrades, eclipses, and the moons that anchor each month. All times Eastern (ET).</p>' +
+    '<div class="sky-section-label">Month by month</div>' +
+    yearHTML + retroHTML;
 }
 
 
@@ -4258,21 +4254,32 @@ function logoTap() {
 </script>
 
 <script>
-// Keep the bottom nav pinned to the visible area even when the user pinch-zooms (iOS Safari).
+// Keep the bottom nav pinned to the visible viewport during pinch-zoom (iOS Safari).
+// iOS pins fixed elements to the layout viewport, so we counter-translate using the
+// visualViewport API. This is best-effort — iOS zoom is only partially controllable.
 (function(){
   if (!window.visualViewport) return;
-  var nav = null;
-  function pin(){
+  var nav = null, raf = null;
+  function pinNow(){
     if(!nav) nav = document.querySelector('.bottom-nav');
     if(!nav) return;
     var vv = window.visualViewport;
-    // offset the nav so it sits at the bottom of the *visual* viewport, not the layout viewport
-    var bottomGap = (window.innerHeight - (vv.height + vv.offsetTop));
-    nav.style.transform = 'translateY(' + (-bottomGap) + 'px) translateZ(0)';
+    var scale = vv.scale || 1;
+    // bottom of the visible area relative to the layout viewport
+    var visBottom = vv.offsetTop + vv.height;
+    var layoutH = document.documentElement.clientHeight;
+    var dy = visBottom - layoutH;              // how far the visible bottom is from layout bottom
+    // counter-scale so the bar keeps its size, and shift it to the visible bottom
+    nav.style.transformOrigin = 'bottom left';
+    nav.style.transform = 'translate(' + vv.offsetLeft + 'px, ' + dy + 'px) scale(' + (1/scale) + ')';
+    nav.style.width = (vv.width) + 'px';
   }
+  function pin(){ if(raf) cancelAnimationFrame(raf); raf = requestAnimationFrame(pinNow); }
   window.visualViewport.addEventListener('resize', pin);
   window.visualViewport.addEventListener('scroll', pin);
-  window.addEventListener('scroll', pin);
+  window.addEventListener('scroll', pin, {passive:true});
+  window.addEventListener('orientationchange', pin);
+  pin();
 })();
 </script>
 
