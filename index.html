@@ -68,7 +68,7 @@
   pre, code { white-space: pre-wrap; overflow-wrap: anywhere; }
   .section { overflow-wrap: anywhere; }
   body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text-primary); min-height: 100vh; transition: background 0.3s; }
-  header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: 1rem 1.25rem 0.75rem; margin-bottom: -1px; padding-bottom: calc(0.75rem + 1px); }
+  header { position: sticky; top: 0; z-index: 100; background: var(--bg); padding: calc(1rem + env(safe-area-inset-top)) 1.25rem 0.75rem; }
   .header-top { display: flex; align-items: center; justify-content: space-between; max-width: 1100px; margin: 0 auto; }
   .logo-wrap { cursor: pointer; user-select: none; -webkit-user-select: none; }
   .logo { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-weight: 600; letter-spacing: 0.02em; line-height: 1.05; }
@@ -325,6 +325,8 @@
   .sky-title-lg { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.8rem; }
   .sky-section-label { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0.4rem 0 0.8rem; }
   .sky-range { font-size: 11px; color: var(--gold); font-style: italic; margin-top: 1px; }
+  .sky-subcat { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 0.6rem 0 0.2rem; }
+  .sky-norx { font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: 0.7rem; line-height: 1.5; }
   .sky-cat { margin-bottom: 1.2rem; }
   .sky-cat-head { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; color: var(--accent); margin-bottom: 0.4rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
   .sky-until { color: var(--gold); font-size: 11px; font-style: italic; }
@@ -2692,43 +2694,79 @@ function renderSkyData(yearArg, boxId) {
   if (!box) return;
   const year = yearArg || new Date().getFullYear();
   const yStr = String(year);
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  // gather this year's events by month, split by category
   const byMonth = {};
+  const eclipses = [];
   Object.keys(SKY_EVENTS).filter(k => k.startsWith(yStr)).sort().forEach(k => {
     const m = k.slice(0,7);
-    (byMonth[m] = byMonth[m] || []).push(...SKY_EVENTS[k].filter(e => e.kind !== 'moonsign').map(e => ({...e, date:k})));
+    SKY_EVENTS[k].filter(e => e.kind !== 'moonsign').forEach(e => {
+      const ev = {...e, date:k};
+      (byMonth[m] = byMonth[m] || []).push(ev);
+      if (e.portal || /eclipse/i.test(e.note||'')) eclipses.push(ev);
+    });
   });
-  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-  let yearHTML = '';
+
+  const rowFor = (e) => {
+    let txt='';
+    if (e.kind==='ingress') txt=(e.body||'')+' enters '+(e.sign||'');
+    else if (e.kind==='moon') txt=e.note||('Moon in '+(e.sign||''));
+    else if (e.kind==='retro') txt=e.note||((e.body||'')+' goes retrograde');
+    else if (e.kind==='station') txt=e.note||((e.body||'')+' stations direct');
+    else if (e.kind==='aspect') txt=e.note||((e.body||'')+' '+(e.aspect||'')+' '+(e.sign||''));
+    else txt=e.note||'';
+    const dObj = new Date(e.date+'T12:00:00');
+    const dLabel = dObj.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    const portal = e.portal ? ' <span style="color:var(--gold);">\u2600</span>' : '';
+    return '<div class="sky-row"><span class="sky-date">'+dLabel+'</span><span class="sky-event">'+esc(txt)+portal+(e.time?' <span class="sky-time">'+esc(e.time)+'</span>':'')+'</span></div>';
+  };
+
+  // ===== TOP: eclipse highlights =====
+  let highlightHTML = '';
+  if (eclipses.length) {
+    highlightHTML = '<div class="sky-section-label">\u2600 Eclipse portals of '+year+'</div><div class="sky-cat">' +
+      eclipses.map(rowFor).join('') + '</div>';
+  }
+
+  // ===== month by month, split by category =====
+  let yearHTML = '<div class="sky-section-label" style="margin-top:1.4rem;">Month by month</div>';
   Object.keys(byMonth).sort().forEach(m => {
     const mi = parseInt(m.slice(5,7),10)-1;
-    const rows = byMonth[m].map(e => {
-      let txt='';
-      if (e.kind==='ingress') txt=(e.body||'')+' enters '+(e.sign||'');
-      else if (e.kind==='moon') txt=e.note||('Moon in '+(e.sign||''));
-      else if (e.kind==='retro') txt=e.note||((e.body||'')+' goes retrograde');
-      else if (e.kind==='station') txt=e.note||((e.body||'')+' stations direct');
-      else if (e.kind==='aspect') txt=e.note||((e.body||'')+' '+(e.aspect||'')+' '+(e.sign||''));
-      else txt=e.note||'';
-      const dLabel = new Date(e.date+'T12:00:00').toLocaleDateString('en-US',{day:'numeric'});
-      const portal = e.portal ? ' <span style="color:var(--gold);">\u2600</span>' : '';
-      return '<div class="sky-row"><span class="sky-date">'+monthNames[mi].slice(0,3)+' '+dLabel+'</span><span class="sky-event">'+esc(txt)+portal+(e.time?' <span class="sky-time">'+esc(e.time)+'</span>':'')+'</span></div>';
-    }).join('');
-    yearHTML += '<div class="sky-block"><div class="sky-block-head">'+monthNames[mi]+'</div>'+rows+'</div>';
+    const evs = byMonth[m];
+    const cats = { moon:[], ingress:[], retrostation:[], aspect:[] };
+    evs.forEach(e => {
+      if (e.kind==='moon') cats.moon.push(e);
+      else if (e.kind==='ingress') cats.ingress.push(e);
+      else if (e.kind==='retro'||e.kind==='station') cats.retrostation.push(e);
+      else if (e.kind==='aspect') cats.aspect.push(e);
+    });
+    let inner = '';
+    if (cats.moon.length) inner += '<div class="sky-subcat">\ud83c\udf19 Moons</div>'+cats.moon.map(rowFor).join('');
+    if (cats.ingress.length) inner += '<div class="sky-subcat">\u2192 Ingresses</div>'+cats.ingress.map(rowFor).join('');
+    if (cats.retrostation.length) inner += '<div class="sky-subcat">\u211E Stations</div>'+cats.retrostation.map(rowFor).join('');
+    if (cats.aspect.length) inner += '<div class="sky-subcat">\u260c Aspects</div>'+cats.aspect.map(rowFor).join('');
+    yearHTML += '<div class="sky-block"><div class="sky-block-head">'+monthNames[mi]+'</div>'+inner+'</div>';
   });
-  if (!yearHTML) yearHTML = '<div class="sky-empty">The year\'s major events are being added.</div>';
-  // year-long retrograde backdrop
+  if (Object.keys(byMonth).length===0) yearHTML += '<div class="sky-empty">The year\'s major events are being added.</div>';
+
+  // ===== retrograde summary: which planets DO and DON'T retrograde this year =====
   const yStart = yStr+'-01-01', yEnd = yStr+'-12-31';
   const activeRetro = RETRO_PERIODS.filter(r => !(r.end < yStart || r.start > yEnd));
-  let retroHTML = '';
-  if (activeRetro.length) {
-    retroHTML = '<div class="sky-section-label" style="margin-top:1.5rem;">Retrograde backdrop of '+year+'</div>' +
-      '<div class="sky-cat">' + activeRetro.map(r => '<div class="sky-row"><span class="sky-event"><span class="astro-glyph">'+glyph(r.body)+'</span> '+r.body+' Rx in '+r.sign+'<div class="sky-range">'+fmtDateY(r.start)+' \u2014 '+fmtDateY(r.end)+'</div></span></div>').join('') + '</div>';
+  const retroBodies = [...new Set(activeRetro.map(r => r.body))];
+  const allPlanets = ['Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Chiron'];
+  const noRetro = allPlanets.filter(p => !retroBodies.includes(p));
+  let retroHTML = '<div class="sky-section-label" style="margin-top:1.5rem;">Retrogrades of '+year+'</div><div class="sky-cat">' +
+    activeRetro.map(r => '<div class="sky-row"><span class="sky-event"><span class="astro-glyph">'+glyph(r.body)+'</span> '+r.body+' Rx in '+r.sign+'<div class="sky-range">'+fmtDateY(r.start)+' \u2014 '+fmtDateY(r.end)+'</div></span></div>').join('') +
+    '</div>';
+  if (noRetro.length) {
+    retroHTML += '<div class="sky-norx">No retrograde this year: '+noRetro.join(', ')+' \u2014 these planets move direct all year.</div>';
   }
+
   box.innerHTML =
     '<div class="glow-quote-card" style="margin-bottom:1rem;"><div class="quote-text" style="font-size:18px;">' + (YEAR_ENERGY || ('The major sky that shapes '+year+'.')) + '</div></div>' +
-    '<p class="section-sub" style="margin-bottom:1.2rem;">Ingresses, retrogrades, eclipses, and the moons that anchor each month. All times Eastern (ET).</p>' +
-    '<div class="sky-section-label">Month by month</div>' +
-    yearHTML + retroHTML;
+    '<p class="section-sub" style="margin-bottom:1.2rem;">Eclipses, ingresses, retrogrades, and the moons that anchor each month. All times Eastern (ET).</p>' +
+    highlightHTML + yearHTML + retroHTML;
 }
 
 
@@ -3090,9 +3128,19 @@ function dayEventsNoMoonsign(k) {
   const sorted = evs.slice().sort((a,b)=>(order[a.kind]??9)-(order[b.kind]??9));
   return sorted.slice(0,6).map(e => {
     if (e.kind === 'ingress') return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span><span class="cal-arrow">\u2192</span><span class="astro-glyph">'+glyph(e.sign)+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
-    if (e.kind === 'moon') return '<div class="cal-ev cal-ev-moon">'+esc((e.note||'').replace(/ in .*/,''))+'</div>';
+    if (e.kind === 'moon') { var mn=(e.note||'').replace('New Moon','New \u263d').replace('Full Moon','Full \u25cb'); return '<div class="cal-ev cal-ev-moon">'+esc(mn)+'</div>'; }
     if (e.kind === 'retro' || e.kind === 'station') return '<div class="cal-ev"><span class="astro-glyph">'+glyph(e.body)+'</span><span class="astro-glyph">'+glyph(e.kind==='retro'?'Rx':'D')+'</span>'+(e.time?'<span class="cal-ev-t">'+esc(e.time)+'</span>':'')+'</div>';
-    if (e.kind === 'aspect') return '<div class="cal-ev cal-ev-asp">'+esc((e.note||'').replace(/ in .*/,''))+'</div>';
+    if (e.kind === 'aspect') {
+      // note like "Sun conjunct Mercury" -> glyphs
+      var m = (e.note||'').match(/^(\w+)\s+(conjunct\w*|square\w*|trine\w*|sextile\w*|opposition|opposite)\s+(\w+)/i);
+      if (m) {
+        var aspGlyph = {conjunct:'conjunction',conjunction:'conjunction',square:'square',trine:'trine',sextile:'sextile',opposition:'opposition',opposite:'opposition'};
+        var ak = m[2].toLowerCase().replace(/tion$|t$/,''); 
+        var akey = m[2].toLowerCase().startsWith('conjunc')?'conjunction':m[2].toLowerCase().startsWith('squar')?'square':m[2].toLowerCase().startsWith('trin')?'trine':m[2].toLowerCase().startsWith('sextil')?'sextile':'opposition';
+        return '<div class="cal-ev cal-ev-asp"><span class="astro-glyph">'+glyph(m[1])+'</span><span class="astro-glyph">'+glyph(akey)+'</span><span class="astro-glyph">'+glyph(m[3])+'</span></div>';
+      }
+      return '<div class="cal-ev cal-ev-asp">'+esc(e.note||'')+'</div>';
+    }
     return '<div class="cal-ev">'+esc(e.note||'')+'</div>';
   }).join('');
 }
