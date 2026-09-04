@@ -1,4 +1,4 @@
-const CACHE = 'seshat-v22';
+const CACHE = 'seshat-v23';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
 
