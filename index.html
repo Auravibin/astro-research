@@ -86,7 +86,7 @@
   .section-eyebrow { font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase; color: var(--accent); font-weight: 500; margin-bottom: 0.5rem; }
   .section-title { font-family: 'Cormorant Garamond', serif; font-size: 40px; font-weight: 600; line-height: 1.08; margin-bottom: 0.6rem; }
   .section-sub { font-size: 14.5px; color: var(--text-secondary); line-height: 1.65; max-width: 620px; font-weight: 300; margin-bottom: 1.75rem; }
-  .search-bar { width: 100%; padding: 0.95rem 1.25rem; border: 1.5px solid var(--border); border-radius: 18px; background: var(--bg-input); color: var(--text-primary); font-size: 14.5px; font-family: inherit; margin-bottom: 1.25rem; outline: none; }
+  .search-bar { width: 100%; padding: 0.95rem 1.25rem; border: 1.5px solid var(--border); border-radius: 18px; background: var(--bg-input); color: var(--text-primary); font-size: 16px; font-family: inherit; margin-bottom: 1.25rem; outline: none; }
   .search-bar:focus { border-color: var(--accent); }
   .search-bar::placeholder { color: var(--text-muted); }
   .card { background: var(--bg-card); border: 1.5px solid var(--border); border-radius: 26px; padding: 1.6rem 1.5rem; margin-bottom: 1rem; }
@@ -122,7 +122,7 @@
   .filter-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
   label { display: block; font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--accent); margin: 1.15rem 0 0.45rem; font-weight: 500; }
   .optional-tag { color: var(--text-muted); font-weight: 400; letter-spacing: 0.05em; text-transform: none; }
-  input[type="text"], input[type="date"], input[type="time"], input[type="email"], input[type="password"], select, textarea { width: 100%; padding: 0.85rem 1.1rem; border: 1.5px solid var(--border); border-radius: 16px; background: var(--bg-input); color: var(--text-primary); font-size: 14.5px; font-family: inherit; outline: none; }
+  input[type="text"], input[type="date"], input[type="time"], input[type="email"], input[type="password"], select, textarea { width: 100%; padding: 0.85rem 1.1rem; border: 1.5px solid var(--border); border-radius: 16px; background: var(--bg-input); color: var(--text-primary); font-size: 16px; font-family: inherit; outline: none; }
   textarea { min-height: 115px; resize: vertical; line-height: 1.6; }
   input:focus, select:focus, textarea:focus { border-color: var(--accent); }
   .btn { margin-top: 1.35rem; padding: 0.85rem 1.9rem; background: var(--accent); color: #fff; border: none; border-radius: 999px; font-size: 12px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
@@ -2540,7 +2540,7 @@ let GLOW_NOTES = { today: {}, week: {}, month: {}, year: {} };   // keyed by dat
 let SKY_DATA = { aspects: [], ingresses: [], moons: [] };
 let YEAR_ENERGY = '';
 
-function isoDay(d) { return d.toISOString().slice(0,10); }
+function isoDay(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 function weekKey(d) {
   // ISO-ish: year + week number
   const t = new Date(d); t.setHours(0,0,0,0);
@@ -2617,6 +2617,22 @@ function autoEnergyRead(scope, startISO, endISO) {
   return label + ' carries ' + parts.slice(0,3).join(', ') + '.';
 }
 
+
+// Build a specific, aesthetic station description using the retrograde period data.
+function stationDetail(e) {
+  const body = e.body || '';
+  // find the retrograde period this station belongs to (start or end near this date)
+  const per = RETRO_PERIODS.find(r => r.body===body && (Math.abs(new Date(r.start)-new Date(e.date))<86400000*2 || Math.abs(new Date(r.end)-new Date(e.date))<86400000*2));
+  const isStart = /retro/i.test(e.kind) || /retrograde/i.test(e.note||'');
+  if (per) {
+    if (isStart) return body + ' stations retrograde in ' + per.sign + ' \u2014 through ' + fmtDateY(per.end);
+    return body + ' stations direct in ' + per.sign + ' \u2014 the retrograde since ' + fmtDateY(per.start) + ' ends';
+  }
+  // fallback: use whatever we have
+  if (e.note) return e.note + (e.sign?(' in '+e.sign):'');
+  return body + (isStart?' stations retrograde':' stations direct') + (e.sign?(' in '+e.sign):'');
+}
+
 function skyEventsInRange(startISO, endISO, title) {
   const keys = Object.keys(SKY_EVENTS).filter(k => k >= startISO && k <= endISO).sort();
   const cats = { moon:[], ingress:[], retro:[], aspect:[] };
@@ -2627,12 +2643,12 @@ function skyEventsInRange(startISO, endISO, title) {
       let txt='';
       if (e.kind==='ingress') { txt=(e.body||'')+' enters '+(e.sign||''); cats.ingress.push({dayLabel,txt,time:e.time,portal:e.portal}); }
       else if (e.kind==='moon') { txt=e.note||('Moon in '+(e.sign||'')); cats.moon.push({dayLabel,txt,time:e.time,portal:e.portal}); }
-      else if (e.kind==='retro'||e.kind==='station') { txt=e.note||((e.body||'')+(e.kind==='retro'?' retrograde':' direct')); cats.retro.push({dayLabel,txt,time:e.time,portal:e.portal}); }
+      else if (e.kind==='retro'||e.kind==='station') { txt=stationDetail(e); cats.retro.push({dayLabel,txt,time:e.time,portal:e.portal}); }
       else if (e.kind==='aspect') { txt=e.note||((e.body||'')+' '+(e.aspect||'')+' '+(e.sign||'')); cats.aspect.push({dayLabel,txt,time:e.time,portal:e.portal}); }
     });
   });
   const rowsOf = (arr) => arr.map(i =>
-    '<div class="sky-row"><span class="sky-date">'+i.dayLabel+'</span><span class="sky-event">'+esc(i.txt)+(i.portal?' <span style="color:var(--gold);">\u2600</span>':'')+(i.time?' <span class="sky-time">'+esc(i.time)+'</span>':'')+'</span></div>').join('');
+    '<div class="sky-row"><span class="sky-date">'+i.dayLabel+'</span><span class="sky-event">'+esc(i.txt)+(i.portal?' <span style="color:var(--gold);">'+(/lunar/i.test(i.txt)?'\u263e':'\u2600')+'</span>':'')+(i.time?' <span class="sky-time">'+esc(i.time)+'</span>':'')+'</span></div>').join('');
 
   let out = title ? '<div class="sky-title-lg">'+title+'</div>' : '';
 
@@ -2712,20 +2728,19 @@ function renderSkyData(yearArg, boxId) {
     let txt='';
     if (e.kind==='ingress') txt=(e.body||'')+' enters '+(e.sign||'');
     else if (e.kind==='moon') txt=e.note||('Moon in '+(e.sign||''));
-    else if (e.kind==='retro') txt=e.note||((e.body||'')+' goes retrograde');
-    else if (e.kind==='station') txt=e.note||((e.body||'')+' stations direct');
+    else if (e.kind==='retro'||e.kind==='station') txt=stationDetail(e);
     else if (e.kind==='aspect') txt=e.note||((e.body||'')+' '+(e.aspect||'')+' '+(e.sign||''));
     else txt=e.note||'';
     const dObj = new Date(e.date+'T12:00:00');
     const dLabel = dObj.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    const portal = e.portal ? ' <span style="color:var(--gold);">\u2600</span>' : '';
+    const portal = e.portal ? ' <span style="color:var(--gold);">'+(/lunar/i.test(e.note||'')?'\u263e':'\u2600')+'</span>' : '';
     return '<div class="sky-row"><span class="sky-date">'+dLabel+'</span><span class="sky-event">'+esc(txt)+portal+(e.time?' <span class="sky-time">'+esc(e.time)+'</span>':'')+'</span></div>';
   };
 
   // ===== TOP: eclipse highlights =====
   let highlightHTML = '';
   if (eclipses.length) {
-    highlightHTML = '<div class="sky-section-label">\u2600 Eclipse portals of '+year+'</div><div class="sky-cat">' +
+    highlightHTML = '<div class="sky-section-label">\u2600\u263e Eclipse portals of '+year+'</div><div class="sky-cat">' +
       eclipses.map(rowFor).join('') + '</div>';
   }
 
@@ -3035,7 +3050,7 @@ const MOVE_WORDS = ['Rest','Walk','Cardio','Strength','Yoga','Pilates','Dance','
 const PERIOD_WORDS = ['Period'];
 let flowCalDate = new Date();
 
-function flowKey(d) { return d.toISOString().slice(0,10); }
+function flowKey(d) { return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 
 
 
