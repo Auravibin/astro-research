@@ -1,4 +1,4 @@
-const CACHE = 'seshat-v26';
+const CACHE = 'solstere-v28';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
 
