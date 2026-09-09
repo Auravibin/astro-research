@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="color-scheme" content="light">
-<title>Seshat · Aura Vibin Astrology</title>
+<title>Solstere · Aura Vibin Astrology</title>
 <meta name="description" content="A living astrology research hub — learn the real mechanics of astrology and contribute to community-driven pattern research.">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Noto+Sans+Symbols:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -154,6 +154,9 @@
   .del-x { position: absolute; top: 0.7rem; right: 0.85rem; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; }
   h2.subhead { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; margin: 2rem 0 1rem; }
   h2.subhead em { color: var(--accent); font-style: italic; }
+  .meta-tabs { display: flex; gap: 0.4rem; margin-bottom: 1.3rem; border-bottom: 1.5px solid var(--border); }
+  .meta-tab { padding: 0.6rem 1rem; font-size: 13px; font-weight: 600; letter-spacing: 0.03em; color: var(--text-muted); cursor: pointer; border-bottom: 2.5px solid transparent; margin-bottom: -1.5px; transition: all 0.15s; }
+  .meta-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
   .subtabs { display: flex; gap: 0.45rem; flex-wrap: wrap; margin-bottom: 1.4rem; }
   .subtab { padding: 0.5rem 1.05rem; border-radius: 999px; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border: 1.5px solid var(--border-strong); background: transparent; color: var(--text-secondary); cursor: pointer; font-weight: 500; }
   .subtab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -327,6 +330,7 @@
   .sky-title-lg { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.8rem; }
   .sky-section-label { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0.4rem 0 0.8rem; }
   .sky-range { font-size: 11px; color: var(--gold); font-style: italic; margin-top: 1px; }
+  .sky-shadow { font-size: 10.5px; color: var(--text-muted); margin-top: 2px; }
   .sky-subcat { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin: 0.6rem 0 0.2rem; }
   .sky-norx { font-size: 12px; color: var(--text-secondary); font-style: italic; margin-top: 0.7rem; line-height: 1.5; }
   .sky-cat { margin-bottom: 1.2rem; }
@@ -398,8 +402,8 @@
 <header>
   <div class="header-top">
     <div class="logo-wrap" onclick="logoTap()">
-      <div class="logo">Sesh<span>at</span></div>
-      <div class="logo-tag">Sacred scribe of the stars</div>
+      <div class="logo">Sol<span>stere</span></div>
+      <div class="logo-tag">Know yourself through the stars</div>
     </div>
     <div class="header-actions">
       <div class="header-link tab" data-tab="account" id="account-tab" onclick="showTab('account')">Sign in</div>
@@ -411,6 +415,11 @@
 <main>
 
 <div class="section active" id="section-learn">
+  <div class="meta-tabs">
+    <div class="meta-tab active" data-meta="learn" onclick="showMeta('learn')">Learn</div>
+    <div class="meta-tab" data-meta="cheat" onclick="showMeta('cheat')">Cheats</div>
+    <div class="meta-tab" data-meta="glossary" onclick="showMeta('glossary')">Glossary</div>
+  </div>
   <div class="section-eyebrow">Study</div>
   <h1 class="section-title">Learn</h1>
   <p class="section-sub">The real mechanics of astrology, explained the way they should have been explained to you the first time. Click any topic to expand.</p>
@@ -896,12 +905,11 @@
 
   <h2 class="subhead">Mythology</h2>
   <p class="section-sub" style="margin-bottom:1rem;">The stories the meanings grew out of. Learn the myth and the astrology stops being a list to memorize.</p>
-  <div class="acc-head" onclick="acc(this)"><h3>Why Seshat?</h3><span class="acc-arrow">↓</span></div>
-  <div class="acc-body">Seshat is the ancient Egyptian goddess of writing, measurement, mathematics, architecture, and astronomy. Her name means roughly <em>she who scribes</em> — and she is very likely the oldest recorded deity of literacy anywhere.<br><br>
-  <strong>Keeper of the House of Books.</strong> The <em>per ankh</em>, the sacred library attached to temples, was hers. She kept the records: the years of each pharaoh's reign inscribed on the leaves of the persea tree, the inventories, the measurements, the accumulated knowledge of a civilisation. She was the archive.<br><br>
-  <strong>She aligned buildings to the stars.</strong> At the founding of every temple, a ceremony called the <em>pedj shes</em> — the stretching of the cord — was performed. The pharaoh and Seshat together pulled a measuring cord taut between stakes while sighting along it to a chosen star or constellation, fixing the building's orientation to the sky. Egyptian temples are astronomically aligned because of a ritual carried out in her name. She is, quite literally, the goddess who used the stars to determine where things belong.<br><br>
-  <strong>Her emblem is an unsolved mystery.</strong> Seshat is always shown wearing a seven-pointed star or rosette beneath what looks like an inverted set of horns or a bow. Nobody knows for certain what it depicts — it remains one of the genuinely open questions in Egyptology, a symbol whose meaning her own archive did not preserve.<br><br>
-  <div class="hl"><strong>Why this site carries her name</strong>What you're reading is a library of records, measurements, and star knowledge, kept so that anyone can find their own alignment. Definitions, degrees, dignities, patterns submitted by strangers and preserved for the next person. That is Seshat's entire portfolio: writing things down, measuring carefully, and using the sky to know where something ought to stand.</div></div>
+  <div class="acc-head" onclick="acc(this)"><h3>Why Solstere?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">The name <strong>Solstere</strong> is born from the language of the sky itself — <em>sol</em>, the Sun, the source of light and life, the center everything orbits; and <em>stere</em>, from the Latin and Greek roots for the stars and the solid, three-dimensional heavens (<em>stereos</em> — solid, spatial, the measured cosmos).<br><br>
+  <strong>Sol.</strong> The Sun is the heart of any chart — your core identity, your vitality, the light you're here to shine. Everything in astrology begins with the Sun's position and radiates outward. To know yourself through the stars is to start at the center: your own light.<br><br>
+  <strong>Stere.</strong> The stars give that light its architecture. The signs, houses, and angles are the measured, dimensional space the light moves through — the structure that turns raw radiance into meaning. <em>Stereos</em> is where we get words for solidity and space: the sky made tangible, mappable, knowable.<br><br>
+  <div class="hl"><strong>What this space is</strong>Solstere is where your light meets its map. A place to learn the real mechanics of the sky, to track the living movements above you, and to come home to your own chart — the energetic patterns you're here to consciously work with. Know yourself through the stars.</div></div>
 
   <div class="acc-head" onclick="acc(this)"><h3>Why mythology matters — and where to begin</h3><span class="acc-arrow">↓</span></div>
   <div class="acc-body">If astrology has ever felt like a Frankenstein — a pile of disconnected pieces, Saturn here, a Greek name there, no thread tying them — this is the section that stitches it together. Here is the honest truth of it: <strong>the myths are not decoration bolted onto the planets. The myths came first, and the meanings grew out of them.</strong><br><br>
@@ -1037,6 +1045,11 @@
 </div>
 
 <div class="section" id="section-cheat">
+  <div class="meta-tabs">
+    <div class="meta-tab" data-meta="learn" onclick="showMeta('learn')">Learn</div>
+    <div class="meta-tab active" data-meta="cheat" onclick="showMeta('cheat')">Cheats</div>
+    <div class="meta-tab" data-meta="glossary" onclick="showMeta('glossary')">Glossary</div>
+  </div>
   <div class="section-eyebrow">Quick Reference</div>
   <h1 class="section-title">The <span style="color:var(--accent);font-style:italic;">Cheat Sheet</span></h1>
   <p class="section-sub">Everything at a glance — the tables and frameworks you reach for mid-reading.</p>
@@ -1197,6 +1210,11 @@
 </div>
 
 <div class="section" id="section-glossary">
+  <div class="meta-tabs">
+    <div class="meta-tab" data-meta="learn" onclick="showMeta('learn')">Learn</div>
+    <div class="meta-tab" data-meta="cheat" onclick="showMeta('cheat')">Cheats</div>
+    <div class="meta-tab active" data-meta="glossary" onclick="showMeta('glossary')">Glossary</div>
+  </div>
   <div class="section-eyebrow">Quick Reference</div>
   <h1 class="section-title">Glossary</h1>
   <p class="section-sub">The full working vocabulary of astrology — one clean line per term. Star anything to save it into your Study Space.</p>
@@ -1206,6 +1224,10 @@
 </div>
 
 <div class="section" id="section-library">
+  <div class="meta-tabs">
+    <div class="meta-tab active" data-meta="library" onclick="showMetaP('library')">Browse</div>
+    <div class="meta-tab" data-meta="submit" onclick="showMetaP('submit')">Submit</div>
+  </div>
   <div class="section-eyebrow">Community Research</div>
   <h1 class="section-title">Pattern Library</h1>
   <p class="section-sub">A growing archive of real placements matched to real life events — submitted by the community, reviewed before publishing, and tagged so you can research by whatever you're curious about. Filter by planet, house, aspect, or strength of evidence to find the patterns that matter to you.</p>
@@ -1216,6 +1238,10 @@
 </div>
 
 <div class="section" id="section-submit">
+  <div class="meta-tabs">
+    <div class="meta-tab" data-meta="library" onclick="showMetaP('library')">Browse</div>
+    <div class="meta-tab active" data-meta="submit" onclick="showMetaP('submit')">Submit</div>
+  </div>
   <div class="section-eyebrow">Contribute</div>
   <h1 class="section-title">Add to the <span style="color:var(--accent);font-style:italic;">record</span></h1>
   <p class="section-sub">Every chart that gets shared makes the pattern clearer for the next person. Nothing is published without review, and your name is never attached unless you ask for it.</p>
@@ -1608,6 +1634,37 @@
   </div>
 </div>
 
+<div class="section" id="section-me">
+  <div class="section-eyebrow">Your Chart</div>
+  <h1 class="section-title">Me</h1>
+  <p class="section-sub">Your birth details, kept private on your device. This is the home for your own chart — with your placements, and readings in Aura's voice, coming as the next chapter of Solstere.</p>
+
+  <div class="card">
+    <label>Your name <span class="optional-tag">— optional</span></label>
+    <input type="text" id="me-name" placeholder="What should we call you?">
+    <label>Birth date</label>
+    <input type="date" id="me-date">
+    <label>Birth time <span class="optional-tag">— as exact as you can; needed for houses & rising</span></label>
+    <input type="time" id="me-time">
+    <label>Birth place</label>
+    <input type="text" id="me-place" placeholder="City, Country">
+    <button class="btn" onclick="saveMe()">Save my details</button>
+    <div class="msg" id="me-msg"></div>
+    <p style="font-size:11px;color:var(--text-muted);font-weight:300;line-height:1.5;margin-top:0.7rem;">Stored privately on your device (and synced to your account if you have one). You can edit anytime.</p>
+  </div>
+
+  <div id="me-saved" style="display:none;">
+    <div class="glow-note-card" style="margin-top:1.4rem;">
+      <div class="glow-note-label">Your details</div>
+      <div class="glow-note-body" id="me-summary"></div>
+      <button class="btn btn-quiet" onclick="editMe()" style="margin-top:0.8rem;">Edit</button>
+    </div>
+    <div class="card" style="margin-top:1.2rem; text-align:center;">
+      <p style="font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.6;">✨ Your full birth chart wheel and personal readings — in Aura's voice, through the lens of Kabbalah — are being woven into Solstere. You'll see them here soon.</p>
+    </div>
+  </div>
+</div>
+
 <div class="section" id="section-admin">
   <div class="section-eyebrow">Private</div>
   <h1 class="section-title">Admin</h1>
@@ -1740,13 +1797,11 @@
 
 </main>
 <nav class="bottom-nav">
-  <div class="tab active" data-tab="learn" onclick="showTab('learn')"><span class="tab-icon">✨</span><span class="tab-label">Learn</span></div>
-  <div class="tab" data-tab="cheat" onclick="showTab('cheat')"><span class="tab-icon">📜</span><span class="tab-label">Cheats</span></div>
-  <div class="tab" data-tab="glossary" onclick="showTab('glossary')"><span class="tab-icon">🪶</span><span class="tab-label">Glossary</span></div>
-  <div class="tab" data-tab="flow" onclick="showTab('flow')"><span class="tab-icon">🌙</span><span class="tab-label">Glow</span></div>
+  <div class="tab active" data-tab="learn" onclick="showTab('learn')"><span class="tab-icon">📜</span><span class="tab-label">Learn</span></div>
   <div class="tab" data-tab="library" onclick="showTab('library')"><span class="tab-icon">🔮</span><span class="tab-label">Patterns</span></div>
-  <div class="tab" data-tab="submit" onclick="showTab('submit')"><span class="tab-icon">💌</span><span class="tab-label">Submit</span></div>
-  <div class="tab" data-tab="mynotes" onclick="showTab('mynotes')"><span class="tab-icon">⭐</span><span class="tab-label">Notes</span></div>
+  <div class="tab" data-tab="flow" onclick="showTab('flow')"><span class="tab-icon">🌙</span><span class="tab-label">Glow</span></div>
+  <div class="tab" data-tab="mynotes" onclick="showTab('mynotes')"><span class="tab-icon">🪶</span><span class="tab-label">Notes</span></div>
+  <div class="tab" data-tab="me" onclick="showTab('me')"><span class="tab-icon">⭐</span><span class="tab-label">Me</span></div>
 </nav>
 
 <div id="lightbox" onclick="closeLightbox()">
@@ -1796,13 +1851,77 @@ function showTab(id) {
   if (id === 'admin' && !IS_ADMIN && !ADMIN_REVEALED) return;
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  // cheat & glossary live under the Learn bottom-tab now
+  const bottomTabId = (id==='cheat'||id==='glossary') ? 'learn' : (id==='submit') ? 'library' : id;
   document.getElementById('section-' + id).classList.add('active');
-  document.querySelector('.tab[data-tab="' + id + '"]').classList.add('active');
+  const bt = document.querySelector('.tab[data-tab="' + bottomTabId + '"]');
+  if (bt) bt.classList.add('active');
   window.scrollTo(0, 0);
   if (id === 'library') loadLibrary();
   
   if (id === 'flow') { flowDate = new Date(); Promise.all([loadGlowContent(), loadQuotes(), loadSkyEvents()]).then(()=>{ renderQuote('today'); renderGlowNote('today'); renderFlowCal(); }); setGlowView('today'); renderFlow(); }
   if (id === 'mynotes') { renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); }
+  if (id === 'me') { renderMe(); }
+}
+
+
+// ================= ME (personal chart data) =================
+let ME = JSON.parse(localStorage.getItem('avr-me') || 'null');
+function saveMe() {
+  const me = {
+    name: document.getElementById('me-name').value.trim(),
+    date: document.getElementById('me-date').value,
+    time: document.getElementById('me-time').value,
+    place: document.getElementById('me-place').value.trim()
+  };
+  const msg = document.getElementById('me-msg');
+  if (!me.date) { msg.className='msg err'; msg.textContent='Add at least your birth date.'; return; }
+  ME = me;
+  localStorage.setItem('avr-me', JSON.stringify(me));
+  if (typeof scheduleSync==='function') scheduleSync();
+  renderMe();
+}
+function editMe() {
+  document.getElementById('me-saved').style.display='none';
+  document.querySelector('#section-me .card').style.display='block';
+  if (ME) {
+    document.getElementById('me-name').value = ME.name||'';
+    document.getElementById('me-date').value = ME.date||'';
+    document.getElementById('me-time').value = ME.time||'';
+    document.getElementById('me-place').value = ME.place||'';
+  }
+}
+function renderMe() {
+  const saved = document.getElementById('me-saved');
+  const form = document.querySelector('#section-me .card');
+  if (!ME || !ME.date) { if(saved) saved.style.display='none'; if(form) form.style.display='block'; return; }
+  form.style.display='none';
+  saved.style.display='block';
+  const d = new Date(ME.date+'T12:00:00');
+  const dateStr = d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('me-summary').innerHTML =
+    (ME.name?('<strong>'+esc(ME.name)+'</strong><br>'):'') +
+    'Born ' + dateStr + (ME.time?(' at '+ME.time):'') + (ME.place?('<br>'+esc(ME.place)):'');
+}
+
+function showMetaP(id) {
+  ['library','submit'].forEach(s => { const sec=document.getElementById('section-'+s); if(sec) sec.classList.remove('active'); });
+  document.getElementById('section-'+id).classList.add('active');
+  document.querySelectorAll('#section-library .meta-tab, #section-submit .meta-tab').forEach(t => t.classList.toggle('active', t.getAttribute('data-meta')===id));
+  window.scrollTo(0,0);
+  if (id==='library') { try{loadLibrary();}catch(e){} }
+}
+
+function showMeta(id) {
+  // switch among learn/cheat/glossary sections while keeping the Learn bottom-tab active
+  ['learn','cheat','glossary'].forEach(s => {
+    const sec = document.getElementById('section-'+s);
+    if (sec) sec.classList.remove('active');
+  });
+  document.getElementById('section-'+id).classList.add('active');
+  document.querySelectorAll('.meta-tab').forEach(t => t.classList.toggle('active', t.getAttribute('data-meta')===id));
+  window.scrollTo(0,0);
+  if (id==='glossary') { try{renderGlossary();}catch(e){} }
 }
 
 function showSub(id) {
@@ -2671,16 +2790,33 @@ function skyEventsInRange(startISO, endISO, title) {
     out += '<div class="sky-empty">No major shifts this period \u2014 a steady stretch of sky.</div>';
   }
 
-  // ===== BOTTOM: the ongoing backdrop (what's retrograde the whole period) =====
+  // ===== BOTTOM: retrograde context — ongoing now + coming up soon =====
   const activeRetro = activeRetrogrades(startISO).concat(activeRetrogrades(endISO))
     .filter((r,i,arr)=>arr.findIndex(x=>x.body===r.body&&x.start===r.start)===i);
+  // upcoming: retrogrades that START within ~45 days after this period ends
+  const horizon = new Date(new Date(endISO).getTime() + 45*86400000);
+  const horizonISO = isoDay(horizon);
+  const upcoming = RETRO_PERIODS.filter(r => r.start > endISO && r.start <= horizonISO);
+
+  const shadowNote = (r) => {
+    // pre-shadow ~ up to 2 weeks before start; post-shadow ~ 2-3 weeks after end
+    const pre = new Date(new Date(r.start).getTime() - 18*86400000);
+    const post = new Date(new Date(r.end).getTime() + 20*86400000);
+    return '<div class="sky-shadow">pre-shadow from ~'+fmtDate(isoDay(pre))+' · post-shadow through ~'+fmtDate(isoDay(post))+'</div>';
+  };
+
   if (activeRetro.length) {
-    out += '<div class="sky-section-label" style="margin-top:1.5rem;">The sky right now · ongoing</div>';
-    out += '<div class="sky-cat"><div class="sky-cat-head">\u211E Retrogrades in motion</div>' +
-      activeRetro.map(r => '<div class="sky-row"><span class="sky-event"><span class="astro-glyph">'+glyph(r.body)+'</span> '+r.body+' Rx in '+r.sign+'<div class="sky-range">'+fmtDateY(r.start)+' \u2014 '+fmtDateY(r.end)+'</div></span></div>').join('') + '</div>';
+    out += '<div class="sky-section-label" style="margin-top:1.5rem;">Retrogrades in motion now</div>';
+    out += '<div class="sky-cat">' +
+      activeRetro.map(r => '<div class="sky-row"><span class="sky-event"><span class="astro-glyph">'+glyph(r.body)+'</span> '+r.body+' Rx in '+r.sign+'<div class="sky-range">'+fmtDateY(r.start)+' \u2014 '+fmtDateY(r.end)+'</div>'+shadowNote(r)+'</span></div>').join('') + '</div>';
+  }
+  if (upcoming.length) {
+    out += '<div class="sky-section-label" style="margin-top:1.3rem;">Retrogrades coming up</div>';
+    out += '<div class="sky-cat">' +
+      upcoming.map(r => '<div class="sky-row"><span class="sky-event"><span class="astro-glyph">'+glyph(r.body)+'</span> '+r.body+' stations retrograde in '+r.sign+'<div class="sky-range">'+fmtDateY(r.start)+' \u2014 '+fmtDateY(r.end)+'</div>'+shadowNote(r)+'</span></div>').join('') + '</div>';
   }
 
-  if (!anyChange && !activeRetro.length) out += '<div class="sky-empty">No major events entered for this range yet.</div>';
+  if (!anyChange && !activeRetro.length && !upcoming.length) out += '<div class="sky-empty">No major events entered for this range yet.</div>';
   return out;
 }
 
