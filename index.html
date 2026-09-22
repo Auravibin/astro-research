@@ -76,7 +76,7 @@
   .logo-tag { font-size: 8.5px; letter-spacing: 0.26em; text-transform: uppercase; color: var(--text-muted); font-weight: 400; margin-top: 3px; white-space: nowrap; }
   .header-actions { display: flex; align-items: center; gap: 0.6rem; }
   .theme-toggle { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border-strong); background: var(--bg-card); cursor: pointer; font-size: 16px; }
-  .header-link { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); cursor: pointer; }
+  .header-link { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); cursor: pointer; white-space: nowrap; }
   .admin-link { display: none !important; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); cursor: pointer; }
   .admin-link.show { display: block !important; }
   main { max-width: 1100px; margin: 0 auto; padding: 1.25rem 1.25rem 6rem; }
@@ -2780,7 +2780,7 @@ function skyEventsInRange(startISO, endISO, title) {
 
   // ===== TOP: the changes happening THIS period (always shown) =====
   const anyChange = cats.moon.length || cats.ingress.length || cats.retro.length || cats.aspect.length;
-  out += '<div class="sky-section-label">What shifts this period</div>';
+  out += '<div class="sky-section-label">Major events this period</div>';
   if (anyChange) {
     if (cats.moon.length) out += '<div class="sky-cat"><div class="sky-cat-head">\ud83c\udf19 Moons</div>'+rowsOf(cats.moon)+'</div>';
     if (cats.ingress.length) out += '<div class="sky-cat"><div class="sky-cat-head">\u2192 Ingresses</div>'+rowsOf(cats.ingress)+'</div>';
