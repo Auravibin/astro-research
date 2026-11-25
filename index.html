@@ -487,7 +487,7 @@
 </div>
 <main>
 
-<div class="section active" id="section-learn">
+<div class="section" id="section-learn">
   <div class="meta-tabs">
     <div class="meta-tab active" data-meta="learn" onclick="showMeta('learn')">Learn</div>
     <div class="meta-tab" data-meta="cheat" onclick="showMeta('cheat')">Cheats</div>
@@ -1631,7 +1631,7 @@
   </div>
 </div>
 
-<div class="section" id="section-flow">
+<div class="section active" id="section-flow">
   <div class="section-eyebrow">Glow with the moon</div>
   <h1 class="section-title">Let's help you <span style="color:var(--accent);font-style:italic;">glow</span></h1>
   <p class="section-sub">Your daily check-in with the sky. What today holds, how the energy moves through the week and month, and space to track your own rhythm alongside it.</p>
@@ -2088,9 +2088,9 @@
 
 </main>
 <nav class="bottom-nav">
-  <div class="tab active" data-tab="learn" onclick="showTab('learn')"><span class="tab-icon">📜</span><span class="tab-label">Learn</span></div>
+  <div class="tab" data-tab="learn" onclick="showTab('learn')"><span class="tab-icon">📜</span><span class="tab-label">Learn</span></div>
   <div class="tab" data-tab="library" onclick="showTab('library')"><span class="tab-icon">🔮</span><span class="tab-label">Patterns</span></div>
-  <div class="tab" data-tab="flow" onclick="showTab('flow')"><span class="tab-icon">🌙</span><span class="tab-label">Glow</span></div>
+  <div class="tab active" data-tab="flow" onclick="showTab('flow')"><span class="tab-icon">🌙</span><span class="tab-label">Glow</span></div>
   <div class="tab" data-tab="mynotes" onclick="showTab('mynotes')"><span class="tab-icon">🪶</span><span class="tab-label">Notes</span></div>
   <div class="tab" data-tab="me" onclick="showTab('me')"><span class="tab-icon">⭐</span><span class="tab-label">Placements</span></div>
 </nav>
@@ -4826,6 +4826,7 @@ function logoTap() {
   renderGlossCats();
   renderGloss();
   loadGlossaryFromDB();
+  showTab('flow');   // open on the Glow tab (calendar + quote) by default
   const { data: { session } } = await db.auth.getSession();
   if (session) { document.getElementById('admin-tab').classList.add('show'); }
 })();
