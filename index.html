@@ -418,6 +418,28 @@
     .gloss-term { min-width: 0; }
     .section-title { font-size: 34px; }
   }
+  /* ===== Hamburger menu ===== */
+  .menu-btn { background:none; border:none; cursor:pointer; padding:7px 4px; display:flex; flex-direction:column; gap:4px; justify-content:center; align-items:center; }
+  .menu-btn span { display:block; width:21px; height:2px; background:var(--text-primary); border-radius:2px; transition:background 0.3s; }
+  .menu-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:300; }
+  .menu-overlay.open { opacity:1; pointer-events:auto; }
+  .menu-panel { position:fixed; top:0; right:0; height:100%; width:min(84vw,350px); background:var(--bg); box-shadow:-10px 0 34px rgba(0,0,0,0.20); transform:translateX(102%); transition:transform .3s cubic-bezier(.4,0,.2,1); z-index:301; display:flex; flex-direction:column; padding:1.3rem 1.7rem 2.2rem; overflow-y:auto; -webkit-overflow-scrolling:touch; }
+  .menu-panel.open { transform:translateX(0); }
+  .menu-close { align-self:flex-end; background:none; border:none; font-size:28px; line-height:1; color:var(--text-primary); cursor:pointer; padding:0 2px 0.6rem; }
+  .menu-items { display:flex; flex-direction:column; align-items:flex-end; margin-top:0.4rem; }
+  .menu-item { background:none; border:none; font-family:inherit; font-size:13px; letter-spacing:0.2em; text-transform:uppercase; color:var(--text-primary); cursor:pointer; padding:0.9rem 0; text-align:right; width:100%; transition:color .15s; }
+  .menu-item:hover, .menu-item:active { color:var(--accent); }
+  .menu-divider { width:100%; height:1px; background:var(--border); margin:0.7rem 0; }
+  .menu-legal .menu-item { font-size:10.5px; color:var(--text-muted); letter-spacing:0.16em; padding:0.55rem 0; }
+  .menu-socials { display:flex; justify-content:flex-end; gap:1.3rem; margin-top:1.4rem; }
+  .menu-socials a { color:var(--text-muted); font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase; text-decoration:none; }
+  .menu-socials a:hover { color:var(--accent); }
+  body.menu-open { overflow:hidden; }
+  /* Legal / about page typography */
+  .legal-body { font-size:14.5px; line-height:1.75; color:var(--text-secondary); font-weight:300; }
+  .legal-body h2.subhead { margin-top:1.6rem; }
+  .legal-body strong { color:var(--text-primary); font-weight:500; }
+  .legal-updated { font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-muted); margin-bottom:1rem; }
 </style>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#E01A86">
@@ -436,9 +458,33 @@
       <div class="header-link tab" data-tab="account" id="account-tab" onclick="showTab('account')">Sign in</div>
       <div class="admin-link tab" data-tab="admin" id="admin-tab" onclick="showTab('admin')">Admin</div>
       <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+      <button class="menu-btn" aria-label="Menu" onclick="openMenu()"><span></span><span></span><span></span></button>
     </div>
   </div>
 </header>
+
+<div class="menu-overlay" id="menu-overlay" onclick="closeMenu()"></div>
+<div class="menu-panel" id="menu-panel" role="dialog" aria-label="Menu">
+  <button class="menu-close" aria-label="Close menu" onclick="closeMenu()">&times;</button>
+  <div class="menu-items">
+    <button class="menu-item" onclick="menuGo('account')">Account &amp; Sync</button>
+    <button class="menu-item" onclick="menuGo('about')">About Solstere</button>
+    <button class="menu-item" onclick="menuGo('faq')">FAQs</button>
+    <button class="menu-item" onclick="menuGo('submit')">Submit a Question</button>
+    <button class="menu-item" onclick="window.open('https://www.auravibin.com','_blank')">Work With Aura</button>
+    <div class="menu-divider"></div>
+    <div class="menu-legal" style="width:100%;display:flex;flex-direction:column;align-items:flex-end;">
+      <button class="menu-item" onclick="menuGo('privacy')">Privacy Policy</button>
+      <button class="menu-item" onclick="menuGo('terms')">Terms of Service</button>
+      <button class="menu-item" onclick="menuGo('disclaimer')">Disclaimer</button>
+    </div>
+  </div>
+  <div class="menu-socials">
+    <a href="https://www.instagram.com/auravibin" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.tiktok.com/@auravibin" target="_blank" rel="noopener">TikTok</a>
+    <a href="https://www.threads.net/@auravibin" target="_blank" rel="noopener">Threads</a>
+  </div>
+</div>
 <main>
 
 <div class="section active" id="section-learn">
@@ -1680,7 +1726,11 @@
       <input type="password" id="acct-pass" autocomplete="current-password">
       <label style="display:flex;align-items:flex-start;gap:0.5rem;font-size:12.5px;font-weight:300;color:var(--text-muted);line-height:1.5;margin-top:0.7rem;cursor:pointer;">
         <input type="checkbox" id="acct-consent" style="width:auto;margin:0.2rem 0 0 0;flex:0 0 auto;">
-        <span>I agree to my notes being stored so they can sync between my devices. I can delete everything at any time.</span>
+        <span>I'm 18 or older, and I agree to the <a onclick="event.preventDefault();showTab('terms')" style="color:var(--accent);text-decoration:underline;cursor:pointer;">Terms</a> &amp; <a onclick="event.preventDefault();showTab('privacy')" style="color:var(--accent);text-decoration:underline;cursor:pointer;">Privacy Policy</a>. My notes are stored so they can sync between my devices, and I can delete everything any time.</span>
+      </label>
+      <label style="display:flex;align-items:flex-start;gap:0.5rem;font-size:12.5px;font-weight:300;color:var(--text-muted);line-height:1.5;margin-top:0.6rem;cursor:pointer;">
+        <input type="checkbox" id="acct-marketing" style="width:auto;margin:0.2rem 0 0 0;flex:0 0 auto;">
+        <span>Optional: email me occasional astrology updates, new features, and offers from Aura Vibin. I can unsubscribe any time.</span>
       </label>
       <div class="backup-row" style="margin-top:0.8rem;">
         <button class="btn btn-sm btn-ghost" onclick="acctSignUp()">Create account</button>
@@ -1879,6 +1929,163 @@
   </div>
 </div>
 
+<!-- ===== ABOUT ===== -->
+<div class="section" id="section-about">
+  <div class="section-eyebrow">The Mission</div>
+  <h1 class="section-title">About Solstere</h1>
+  <p class="section-sub">Why this exists, and what it's for.</p>
+  <div class="legal-body">
+  Solstere is a home for people who want to <strong>actually understand</strong> astrology — not just read their horoscope and scroll on. It's free, it's deep, and it treats you like someone capable of learning the real mechanics: the chart, the aspects, the traditional techniques most apps never bother to teach.<br><br>
+  There are a few places to live here. <strong>Learn</strong> — a library that explains astrology the way it should have been explained to you the first time. <strong>Glow</strong> — a daily ritual built around a quote and a living astrological calendar, so you can flow with the real sky instead of a generic feed. <strong>Patterns</strong> — a community research space where we test astrological ideas against real, anonymized data, together. <strong>Placements</strong> — a deep reference library you can look up any placement in and read it in full. And <strong>Notes</strong> — your own private space to track charts, save terms, and keep what's yours.<br><br>
+  And it's alive. Solstere is a <strong>constantly growing resource</strong> — new lessons, placements, and research are added all the time, and the Patterns library grows sharper the more our collective knowledge pieces the links together. What you see today is a fraction of where it's going.<br><br>
+  Solstere is <strong>Aura's</strong> (Aura Vibin) brain baby — an evolutionary astrologer based in Montreal. It's built by her, from her own study, her own voice, and years of practice. Every interpretation, lesson, and placement description here comes from her. The astronomy is fact; the way it's taught is the craft.<br><br>
+  <strong>A note on how to use it:</strong> astrology here is a language for self-understanding and reflection — a mirror, not a map of fate. Take what resonates, question what doesn't, and never hand your decisions over to the stars. You're the one living the life.<br><br>
+  Want to go deeper, book a reading, or work with Aura directly? <a href="https://www.auravibin.com" target="_blank" rel="noopener" style="color:var(--accent);">auravibin.com</a>
+  </div>
+</div>
+
+<!-- ===== FAQ ===== -->
+<div class="section" id="section-faq">
+  <div class="section-eyebrow">Help</div>
+  <h1 class="section-title">FAQs</h1>
+  <p class="section-sub">The quick answers. Tap any question.</p>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Is Solstere free?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Yes. The app — Learn, Glow, Patterns, Notes, and the Placements library — is completely free to use. If you want to go deeper, Aura offers a paid course and readings separately, but nothing here is locked behind a paywall.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Is Solstere always going to be free?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">The app is free right now, and the core learning library, calendar, and tools are here for you to use. Down the road, Aura may add optional paid features or products — but you'll always be told first, and <strong>nothing you use for free now will ever start charging you without your clear say-so</strong>. Using Solstere today never signs you up for a future bill.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Will you email me?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Only service messages (like a password reset) unless you tick the optional box at signup to hear from Aura. If you do opt in, you'll get occasional astrology updates and offers — and you can unsubscribe any time. Your email is never shared or sold.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Do I need my birth time to use it?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">No. Your birth time and birth place are always optional. You can use the Learn library, the calendar, the quotes, and the Placements library without entering any personal data at all. Birth details only power your own private features — and you can delete them any time.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Is my birth information private?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Yes. Your birth time, birth location, and contact email are <strong>never shown publicly</strong> — not even on research submissions you choose to make public. Public listings are stripped of those fields by design. See the Privacy Policy for the full detail.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Where is my data stored?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Your account and any data you sync are stored securely using Supabase, with encrypted connections and database-level access controls so only you (and, for support, the Solstere admin) can reach your private data. If you'd rather keep everything only on your own device, you can — just use the backup file instead of making an account.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>How do backups work?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Two ways. The easiest is <strong>Sync across devices</strong> — make a free account and your notes save to the cloud and appear anywhere you sign in. Or use the <strong>Export a backup file</strong> button in Notes to download a small file holding everything, which you can re-import on a new phone. Both live in the Notes tab.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Is Solstere a substitute for professional advice?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">No — and this matters. Solstere is for education and entertainment. Nothing here is medical, psychological, legal, or financial advice. Astrology is a tool for reflection, not prediction or diagnosis. For real decisions about your health, money, or wellbeing, please talk to a qualified professional. See the Disclaimer for more.</div>
+
+  <div class="acc-head" onclick="acc(this)"><h3>Who made this?</h3><span class="acc-arrow">↓</span></div>
+  <div class="acc-body">Solstere is built and written by Aura (Aura Vibin), an evolutionary astrologer in Montreal. Questions, feedback, or a bug to report? Email <strong>auravibin@icloud.com</strong>.</div>
+</div>
+
+<!-- ===== PRIVACY ===== -->
+<div class="section" id="section-privacy">
+  <div class="section-eyebrow">Legal</div>
+  <h1 class="section-title">Privacy Policy</h1>
+  <div class="legal-updated">Updated November 2026</div>
+  <div class="legal-body">
+  Solstere ("we," "us") is operated by Aura Vibin (Fiona Maynard), based in Montreal, Quebec, Canada. This policy explains what we collect, why, and the rights you have. By using solstere.com you agree to it. <strong>You must be 18 or older to use Solstere</strong>; we do not knowingly collect information from anyone under 18.
+
+  <h2 class="subhead">What we collect</h2>
+  <strong>Account info</strong> — the email you sign in with (handled by Supabase).<br><br>
+  <strong>Astrological info you choose to enter</strong> — optionally your birth date, time, and place, plus any notes, journal entries, cycle-tracking colours, and placements you save. Birth time and place are never required.<br><br>
+  <strong>Research submissions</strong> — if you submit a pattern or question, what you type, which may include birth data and an optional contact email.<br><br>
+  <strong>Technical info</strong> — basic non-identifying data your browser sends, and standard server logs needed to keep the service secure.<br><br>
+  We do <strong>not</strong> use third-party advertising trackers, Meta Pixel, or Google Analytics.
+
+  <h2 class="subhead">How it's used</h2>
+  To run your account, save and sync your notes and placements across devices, display approved community research, and keep the service secure. <strong>Public research listings never show birth time, birth location, or contact email</strong> — those are hidden by a dedicated privacy view and visible only to the Solstere administrator. We do <strong>not sell</strong> your personal information.
+
+  <h2 class="subhead">Emails we send</h2>
+  We use your email for <strong>account and service messages</strong> (like password resets and important notices). We'll only send <strong>marketing or promotional emails</strong> — astrology updates, new features, offers — <strong>if you opt in</strong> when you create your account, and you can unsubscribe at any time from any such email or by emailing us. We never share your email with anyone else for their own marketing.
+
+  <h2 class="subhead">Future paid features</h2>
+  Solstere is free today. If we add optional paid features later, any payment would be handled by a secure third-party payment processor — <strong>we would never store your card details ourselves</strong>, and using the free app now never obligates you to pay for anything.
+
+  <h2 class="subhead">Where your data lives</h2>
+  Data is stored using Supabase (database and login) and served through Cloudflare. These providers process data on our behalf and may store it on servers outside Quebec, including in the United States. By using Solstere you consent to this transfer. We only share data with service providers who need it to run the app.
+
+  <h2 class="subhead">How long we keep it</h2>
+  As long as your account exists. Delete your account or ask us to delete your data and we remove your personal information from our active systems, except anything we must keep for legal reasons. Public submissions may be kept in anonymized form (birth time, location, and email removed) for ongoing research.
+
+  <h2 class="subhead">Your rights</h2>
+  You may <strong>access, correct, delete</strong>, or <strong>port</strong> your information, and <strong>withdraw consent</strong> at any time. Email <strong>auravibin@icloud.com</strong> and we'll respond within the time your law requires (30 days under Quebec's Law 25; without undue delay under GDPR).<br><br>
+  <strong>Quebec residents (Law 25):</strong> the person responsible for the protection of personal information at Solstere is Fiona Maynard, at auravibin@icloud.com. You may file a complaint with the Commission d'accès à l'information du Québec.<br><br>
+  <strong>EU/UK residents (GDPR):</strong> our legal basis is your consent and performance of our service to you. You may complain to your local data protection authority.
+
+  <h2 class="subhead">Security</h2>
+  We protect your data with database-level access controls (row-level security), encrypted connections (HTTPS), and restricted admin access, and we hide sensitive fields from public view. No online service is perfectly secure, but we take reasonable measures and will notify you and the authorities of a breach where the law requires.
+
+  <h2 class="subhead">Contact</h2>
+  Questions or requests: <strong>auravibin@icloud.com</strong>
+  </div>
+</div>
+
+<!-- ===== TERMS ===== -->
+<div class="section" id="section-terms">
+  <div class="section-eyebrow">Legal</div>
+  <h1 class="section-title">Terms of Service</h1>
+  <div class="legal-updated">Updated November 2026</div>
+  <div class="legal-body">
+  Welcome to Solstere. These Terms are an agreement between you and Aura Vibin (Fiona Maynard), Montreal, Quebec. By using solstere.com you agree to them.
+
+  <h2 class="subhead">1. Eligibility</h2>
+  You must be <strong>18 or older</strong> to use Solstere. By using it, you confirm that you are.
+
+  <h2 class="subhead">2. What Solstere is — and isn't</h2>
+  Solstere is an <strong>educational and entertainment</strong> platform. <strong>It is not a substitute for professional advice.</strong> Nothing here is medical, psychological, legal, or financial advice. Astrology is a tool for reflection, not prediction or diagnosis. Always consult a qualified professional for decisions about your health, finances, legal matters, or wellbeing.
+
+  <h2 class="subhead">3. Your account</h2>
+  You're responsible for keeping your login secure and for activity under your account. Tell us at auravibin@icloud.com if you suspect unauthorized access.
+
+  <h2 class="subhead">4. Your content</h2>
+  You keep ownership of the notes and submissions you create. By submitting to the community research area, you grant Solstere a non-exclusive, royalty-free license to store it and to display and analyze it in <strong>anonymized form</strong> (birth time, location, and contact email removed) as part of ongoing research. Your private notes are not shared publicly. Don't submit content that is unlawful, harassing, infringing, or that contains someone else's private information without permission.
+
+  <h2 class="subhead">5. Our content</h2>
+  The original writing, interpretations, placement descriptions, lessons, designs, and branding on Solstere are the property of Aura Vibin and protected by copyright. Astronomical facts belong to no one, but the way they're written and presented here is ours. You may use Solstere for personal, non-commercial learning. You may not copy, scrape, resell, or republish our original content without written permission.
+
+  <h2 class="subhead">6. Acceptable use</h2>
+  Don't attempt to break, overload, hack, or reverse-engineer the service, access other users' data, or use the service to harm others.
+
+  <h2 class="subhead">7. Disclaimers</h2>
+  Solstere is provided <strong>"as is"</strong> and <strong>"as available,"</strong> without warranties of any kind. We don't guarantee it will be uninterrupted, error-free, or that astrological content is accurate, complete, or suited to your situation.
+
+  <h2 class="subhead">8. Limitation of liability</h2>
+  To the fullest extent permitted by law, Aura Vibin (Fiona Maynard) will not be liable for indirect, incidental, or consequential damages arising from your use of Solstere. Our total liability for any claim is limited to what you paid to use the service (for the free app, zero).
+
+  <h2 class="subhead">9. Termination</h2>
+  You can stop using Solstere any time and ask us to delete your account. We may suspend access for anyone who violates these Terms.
+
+  <h2 class="subhead">10. Governing law</h2>
+  These Terms are governed by the laws of the Province of Quebec and the laws of Canada applicable there.
+
+  <h2 class="subhead">11. Fees and future features</h2>
+  Solstere is currently <strong>free to use</strong>. We may introduce optional paid features, subscriptions, or products in the future. If we do, we'll give notice, and <strong>you will never be charged without your explicit, separate agreement at the time</strong>. Using the free app now does not obligate you to pay for anything later, and any future paid features will have their own terms and their own secure payment process.
+
+  <h2 class="subhead">12. Changes</h2>
+  We may update these Terms. Continued use after changes means you accept them.<br><br>
+  Contact: <strong>auravibin@icloud.com</strong>
+  </div>
+</div>
+
+<!-- ===== DISCLAIMER ===== -->
+<div class="section" id="section-disclaimer">
+  <div class="section-eyebrow">Legal</div>
+  <h1 class="section-title">Disclaimer</h1>
+  <div class="legal-updated">Updated November 2026</div>
+  <div class="legal-body">
+  <strong>Solstere is for education and entertainment.</strong><br><br>
+  The astrology, placement descriptions, calendars, lessons, and community research on Solstere are offered for self-reflection, learning, and enjoyment. They are <strong>not</strong>:<br><br>
+  — medical, psychiatric, or psychological advice or diagnosis;<br>
+  — legal or financial advice;<br>
+  — a prediction of guaranteed future events;<br>
+  — a replacement for care from a qualified professional.<br><br>
+  Astrology is a symbolic language for thinking about yourself and your life — not a science of certainty. <strong>Please don't make important decisions about your health, relationships, finances, or safety based solely on anything you read here.</strong> For those, talk to a doctor, therapist, lawyer, financial advisor, or other qualified professional.<br><br>
+  If you are in crisis or thinking about harming yourself, astrology is not the right tool in that moment — please reach out to a local crisis line or emergency services. In Canada, you can call or text <strong>988</strong> (Suicide Crisis Helpline), any time.<br><br>
+  By using Solstere, you understand and accept that you are responsible for your own choices.
+  </div>
+</div>
+
 </main>
 <nav class="bottom-nav">
   <div class="tab active" data-tab="learn" onclick="showTab('learn')"><span class="tab-icon">📜</span><span class="tab-label">Learn</span></div>
@@ -1930,6 +2137,10 @@ async function loadGlossaryFromDB() {
   } catch(e) {}
   renderGlossCats(); renderGloss();
 }
+
+function openMenu(){ document.getElementById('menu-overlay').classList.add('open'); document.getElementById('menu-panel').classList.add('open'); document.body.classList.add('menu-open'); }
+function closeMenu(){ document.getElementById('menu-overlay').classList.remove('open'); document.getElementById('menu-panel').classList.remove('open'); document.body.classList.remove('menu-open'); }
+function menuGo(id){ closeMenu(); showTab(id); }
 
 function showTab(id) {
   if (id === 'admin' && !IS_ADMIN && !ADMIN_REVEALED) return;
@@ -2203,8 +2414,9 @@ async function acctSignUp() {
   const pass = document.getElementById('acct-pass').value;
   if (!email || !pass) return acctMsg('Email and password are both needed.');
   if (pass.length < 8) return acctMsg('Password needs to be at least 8 characters.');
-  if (!document.getElementById('acct-consent').checked) return acctMsg('Please tick the consent box to create an account.');
-  const { error } = await db.auth.signUp({ email, password: pass });
+  if (!document.getElementById('acct-consent').checked) return acctMsg('Please confirm you are 18+ and agree to the Terms & Privacy Policy to create an account.');
+  const marketingOk = !!document.getElementById('acct-marketing') && document.getElementById('acct-marketing').checked;
+  const { error } = await db.auth.signUp({ email, password: pass, options: { data: { marketing_opt_in: marketingOk, consent_at: new Date().toISOString() } } });
   if (error) return acctMsg(error.message);
   acctMsg('Account created ✦ Your notes will now sync automatically.', true);
   await refreshAccountUI();
@@ -4484,10 +4696,10 @@ function renderAdminList() {
       <span class="pill"${s.submission_type === 'question' ? ' style="background:var(--diagram-gold);color:#fff;"' : ''}>${s.submission_type === 'question' ? '❓ QUESTION' : esc(s.event_category) + (s.event_other ? ' — ' + esc(s.event_other) : '')}</span>
       <span class="pill" style="background:transparent;border:1px solid var(--border-strong);color:var(--text-muted);">${esc(s.status)}</span>
       <div class="sub-meta">${s.show_name && s.display_name ? esc(s.display_name) + ' (name consented)' : 'Anonymous'}${s.contact_email ? ' · ' + esc(s.contact_email) : ''} · submitted ${new Date(s.created_at).toLocaleString()}</div>
-      ${s.event_date ? '<div class="sub-meta">Event date: ' + s.event_date + (s.event_date_end ? ' through ' + s.event_date_end : '') + '</div>' : ''}
+      ${s.event_date ? '<div class="sub-meta">Event date: ' + esc(s.event_date) + (s.event_date_end ? ' through ' + esc(s.event_date_end) : '') + '</div>' : ''}
       ${s.placements ? '<div class="sub-placements">' + esc(s.placements) + '</div>' : ''}
-      ${s.birth_date ? '<div class="sub-meta">Born ' + s.birth_date + (s.birth_time ? ' at ' + s.birth_time : '') + (s.birth_location ? ' in ' + esc(s.birth_location) : '') + '</div>' : ''}
-      ${s.related_charts && s.related_charts.length ? '<div class="sub-meta">Related charts: ' + s.related_charts.map(c => esc(c.who || '?') + (c.birth_date ? ' (' + c.birth_date + (c.birth_time ? ' ' + c.birth_time : '') + (c.birth_location ? ', ' + esc(c.birth_location) : '') + ')' : '')).join(' · ') + '</div>' : ''}
+      ${s.birth_date ? '<div class="sub-meta">Born ' + esc(s.birth_date) + (s.birth_time ? ' at ' + esc(s.birth_time) : '') + (s.birth_location ? ' in ' + esc(s.birth_location) : '') + '</div>' : ''}
+      ${s.related_charts && s.related_charts.length ? '<div class="sub-meta">Related charts: ' + s.related_charts.map(c => esc(c.who || '?') + (c.birth_date ? ' (' + esc(c.birth_date) + (c.birth_time ? ' ' + esc(c.birth_time) : '') + (c.birth_location ? ', ' + esc(c.birth_location) : '') + ')' : '')).join(' · ') + '</div>' : ''}
       <div class="sub-story">${esc(s.story)}</div>
       ${s.submission_type === 'question' ? '' : `<div style="margin-top:0.9rem;padding-top:0.8rem;border-top:1px solid var(--border);">
         <div style="font-size:10.5px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent);margin-bottom:0.2rem;">Research tags</div>
