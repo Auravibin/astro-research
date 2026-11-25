@@ -302,11 +302,38 @@
   .flow-moon-emoji { font-size: 40px; line-height: 1; }
   .flow-phase-name { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--text-primary); }
   .flow-phase-sub { font-size: 12px; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; font-weight: 500; }
+  .flow-moon-blurb { font-size: 12.5px; color: var(--text-secondary); font-weight: 300; text-align: center; margin-top: 0.5rem; line-height: 1.5; max-width: 320px; margin-left: auto; margin-right: auto; }
   .flow-sky-poem { font-size: 13px; line-height: 1.6; font-style: italic; opacity: 0.9; margin-top: 0.5rem; }
   .glow-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
   .glow-tabs .subtab { white-space: nowrap; flex: 0 0 auto; }
   #glow-today-view, #glow-week-view, #glow-month-view, #glow-ref-view, #glow-y2027-view { border: 0; outline: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
   .glow-tabs { border: 0; box-shadow: none; }
+
+
+  .plac-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 1rem; }
+  .plac-chip { padding: 0.7rem 0.5rem; border-radius: 14px; border: 1.5px solid var(--border-strong); background: transparent; color: var(--text-secondary); text-align: center; font-size: 13px; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 0.3rem; transition: all 0.15s; }
+  .plac-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .plac-chip .astro-glyph { font-size: 14px; }
+  .plac-hint { font-size: 13px; color: var(--text-muted); font-style: italic; text-align: center; padding: 1.5rem 0; }
+  .plac-row { display: flex; align-items: center; gap: 0.7rem; padding: 0.85rem 1rem; border: 1px solid var(--border); border-radius: 14px; margin-bottom: 0.5rem; cursor: pointer; transition: all 0.15s; background: var(--bg-card); }
+  .plac-row:active { transform: scale(0.99); }
+  .plac-empty { opacity: 0.5; cursor: default; }
+  .plac-row-glyph { font-size: 17px; color: var(--accent); flex: 0 0 auto; }
+  .plac-row-label { flex: 1; font-size: 14.5px; color: var(--text-primary); font-weight: 500; }
+  .plac-row-arrow { color: var(--text-muted); font-size: 18px; }
+  .plac-row-soon { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+  .plac-detail-card { background: var(--bg-card); border: 1.5px solid var(--accent); border-radius: 22px; padding: 1.8rem 1.5rem; margin-top: 1.4rem; }
+  .plac-detail-glyphs { text-align: center; font-size: 30px; color: var(--accent); margin-bottom: 0.4rem; display: flex; justify-content: center; gap: 0.3rem; }
+  .plac-detail-title { font-family: 'Cormorant Garamond', serif; font-size: 27px; font-weight: 600; color: var(--text-primary); text-align: center; margin-bottom: 1.1rem; }
+  .plac-detail-body { font-size: 15px; line-height: 1.75; color: var(--text-primary); font-weight: 300; }
+  .plac-facet { border-top: 1px solid var(--border); }
+  .plac-facet:first-of-type { border-top: 1.5px solid var(--accent); margin-top: 0.4rem; }
+  .plac-facet-head { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 0; cursor: pointer; font-family: 'Cormorant Garamond', serif; font-size: 19px; font-weight: 600; color: var(--text-primary); }
+  .plac-facet-head.open { color: var(--accent); }
+  .plac-facet-arrow { font-size: 16px; color: var(--text-muted); transition: transform 0.2s; }
+  .plac-facet-head.open .plac-facet-arrow { transform: rotate(180deg); color: var(--accent); }
+  .plac-facet-body { display: none; font-size: 14.5px; line-height: 1.75; color: var(--text-primary); font-weight: 300; padding-bottom: 1rem; }
+  .plac-facet-body.open { display: block; }
 
   .glow-quote-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.1rem 1.3rem; margin-bottom: 1rem; text-align: center; }
   .quote-text { font-family: 'Cormorant Garamond', serif; font-size: 20px; line-height: 1.35; font-weight: 600; color: var(--accent); letter-spacing: 0.01em; }
@@ -1635,34 +1662,20 @@
 </div>
 
 <div class="section" id="section-me">
-  <div class="section-eyebrow">Your Chart</div>
-  <h1 class="section-title">Me</h1>
-  <p class="section-sub">Your birth details, kept private on your device. This is the home for your own chart — with your placements, and readings in Aura's voice, coming as the next chapter of Solstere.</p>
+  <div class="section-eyebrow">The Library</div>
+  <h1 class="section-title">Placements</h1>
+  <p class="section-sub">Look up any placement and go deep. Found your Mars sign or Moon sign in another app? Come here to actually understand it — in Aura's voice, through the lens of self-concept, evolution, and operant power.</p>
 
-  <div class="card">
-    <label>Your name <span class="optional-tag">— optional</span></label>
-    <input type="text" id="me-name" placeholder="What should we call you?">
-    <label>Birth date</label>
-    <input type="date" id="me-date">
-    <label>Birth time <span class="optional-tag">— as exact as you can; needed for houses & rising</span></label>
-    <input type="time" id="me-time">
-    <label>Birth place</label>
-    <input type="text" id="me-place" placeholder="City, Country">
-    <button class="btn" onclick="saveMe()">Save my details</button>
-    <div class="msg" id="me-msg"></div>
-    <p style="font-size:11px;color:var(--text-muted);font-weight:300;line-height:1.5;margin-top:0.7rem;">Stored privately on your device (and synced to your account if you have one). You can edit anytime.</p>
+  <div class="subtabs" style="margin-bottom:1.2rem;">
+    <div class="subtab active" id="plac-mode-sign" onclick="setPlacMode('sign')">By Sign</div>
+    <div class="subtab" id="plac-mode-planet" onclick="setPlacMode('planet')">By Planet</div>
   </div>
 
-  <div id="me-saved" style="display:none;">
-    <div class="glow-note-card" style="margin-top:1.4rem;">
-      <div class="glow-note-label">Your details</div>
-      <div class="glow-note-body" id="me-summary"></div>
-      <button class="btn btn-quiet" onclick="editMe()" style="margin-top:0.8rem;">Edit</button>
-    </div>
-    <div class="card" style="margin-top:1.2rem; text-align:center;">
-      <p style="font-size:13px;color:var(--text-secondary);font-weight:300;line-height:1.6;">✨ Your full birth chart wheel and personal readings — in Aura's voice, through the lens of Kabbalah — are being woven into Solstere. You'll see them here soon.</p>
-    </div>
-  </div>
+  <input class="search-bar" id="plac-search" placeholder="Search — try 'Cancer Moon' or 'Mars in Leo'..." oninput="renderPlacements()">
+
+  <div id="plac-picker"></div>
+  <div id="plac-list"></div>
+  <div id="plac-detail"></div>
 </div>
 
 <div class="section" id="section-admin">
@@ -1697,6 +1710,23 @@
       <textarea id="glow-body" rows="4" placeholder="Today the Leo moon lights up your desire to be seen — say yes to what makes you shine. Just watch a tendency to overextend by evening."></textarea>
       <button class="btn" onclick="saveGlowNote()">Save note</button>
       <div class="msg" id="glow-admin-msg"></div>
+    </div>
+
+    <h2 class="subhead">Placements Library</h2>
+    <div class="card">
+      <p style="font-size:12px;color:var(--text-muted);font-weight:300;margin-bottom:0.7rem;">Add or update a placement description. Pick the sign and body, write it in your voice, save. It appears instantly in the Placements tab.</p>
+      <label>Sign</label>
+      <select id="plac-a-sign"><option>Aries</option><option>Taurus</option><option>Gemini</option><option>Cancer</option><option>Leo</option><option>Virgo</option><option>Libra</option><option>Scorpio</option><option>Sagittarius</option><option>Capricorn</option><option>Aquarius</option><option>Pisces</option></select>
+      <label>Body / point</label>
+      <select id="plac-a-body"><option>Sun</option><option>Moon</option><option>Mercury</option><option>Venus</option><option>Mars</option><option>Jupiter</option><option>Saturn</option><option>Uranus</option><option>Neptune</option><option>Pluto</option><option>Rising</option><option>North Node</option><option>Chiron</option></select>
+      <label>Facet / toggle name <span class="optional-tag">— e.g. "Emotional processing", "Sexuality", "How you take action", "Manifestation", "This month"</span></label>
+      <input type="text" id="plac-a-facet" placeholder="Emotional processing" value="Overview">
+      <label>Order <span class="optional-tag">— lower shows first (0, 1, 2...)</span></label>
+      <input type="number" id="plac-a-sort" value="0" style="width:90px;">
+      <label>Description <span class="optional-tag">— your voice; use blank lines for paragraphs</span></label>
+      <textarea id="plac-a-text" rows="7" placeholder="Your emotional world runs deep and tidal..."></textarea>
+      <button class="btn" onclick="savePlacement()">Save facet</button>
+      <div class="msg" id="plac-a-msg"></div>
     </div>
 
     <h2 class="subhead">Glow — Quotes</h2>
@@ -1801,7 +1831,7 @@
   <div class="tab" data-tab="library" onclick="showTab('library')"><span class="tab-icon">🔮</span><span class="tab-label">Patterns</span></div>
   <div class="tab" data-tab="flow" onclick="showTab('flow')"><span class="tab-icon">🌙</span><span class="tab-label">Glow</span></div>
   <div class="tab" data-tab="mynotes" onclick="showTab('mynotes')"><span class="tab-icon">🪶</span><span class="tab-label">Notes</span></div>
-  <div class="tab" data-tab="me" onclick="showTab('me')"><span class="tab-icon">⭐</span><span class="tab-label">Me</span></div>
+  <div class="tab" data-tab="me" onclick="showTab('me')"><span class="tab-icon">⭐</span><span class="tab-label">Placements</span></div>
 </nav>
 
 <div id="lightbox" onclick="closeLightbox()">
@@ -1861,47 +1891,137 @@ function showTab(id) {
   
   if (id === 'flow') { flowDate = new Date(); Promise.all([loadGlowContent(), loadQuotes(), loadSkyEvents()]).then(()=>{ renderQuote('today'); renderGlowNote('today'); renderFlowCal(); }); setGlowView('today'); renderFlow(); }
   if (id === 'mynotes') { renderSavedTerms(); renderCharts(); renderMyNotes(); renderPractice(); renderQuestions(); }
-  if (id === 'me') { renderMe(); }
+  if (id === 'me') { loadPlacements().then(()=>{ setPlacMode('sign'); }); }
 }
 
 
-// ================= ME (personal chart data) =================
-let ME = JSON.parse(localStorage.getItem('avr-me') || 'null');
-function saveMe() {
-  const me = {
-    name: document.getElementById('me-name').value.trim(),
-    date: document.getElementById('me-date').value,
-    time: document.getElementById('me-time').value,
-    place: document.getElementById('me-place').value.trim()
-  };
-  const msg = document.getElementById('me-msg');
-  if (!me.date) { msg.className='msg err'; msg.textContent='Add at least your birth date.'; return; }
-  ME = me;
-  localStorage.setItem('avr-me', JSON.stringify(me));
-  if (typeof scheduleSync==='function') scheduleSync();
-  renderMe();
+
+async function savePlacement() {
+  const sign = document.getElementById('plac-a-sign').value;
+  const body = document.getElementById('plac-a-body').value;
+  const text = document.getElementById('plac-a-text').value.trim();
+  const msg = document.getElementById('plac-a-msg');
+  if (!text) { msg.className='msg err'; msg.textContent='Write the description first.'; return; }
+  // gentle guard against contrast framing
+  if (/\bnot\b[^.?!]*\bit'?s\b/i.test(text) || /isn'?t\b[^.?!]*\bit'?s\b/i.test(text) || /you'?re not\b/i.test(text)) {
+    msg.className='msg err'; msg.textContent='That reads like contrast framing. Say what it IS directly.'; return;
+  }
+  const facet = (document.getElementById('plac-a-facet').value||'Overview').trim();
+  const sort_order = parseInt(document.getElementById('plac-a-sort').value||'0',10);
+  const { error } = await db.from('placements').upsert({ sign, body, facet, sort_order, text }, { onConflict: 'sign,body,facet' });
+  if (error) { msg.className='msg err'; msg.textContent='Save failed: '+error.message; return; }
+  msg.className='msg ok'; msg.textContent='Saved ✦';
+  document.getElementById('plac-a-text').value='';
+  loadPlacements();
 }
-function editMe() {
-  document.getElementById('me-saved').style.display='none';
-  document.querySelector('#section-me .card').style.display='block';
-  if (ME) {
-    document.getElementById('me-name').value = ME.name||'';
-    document.getElementById('me-date').value = ME.date||'';
-    document.getElementById('me-time').value = ME.time||'';
-    document.getElementById('me-place').value = ME.place||'';
+
+// ================= PLACEMENTS (the library) =================
+const PLAC_SIGNS = ['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+const PLAC_BODIES = ['Sun','Moon','Mercury','Venus','Mars','Jupiter','Saturn','Uranus','Neptune','Pluto','Rising','North Node','Chiron'];
+let PLACEMENTS = {};   // { "Cancer|Moon": [ {facet, text, sort}, ... ] }
+let placMode = 'sign';
+let placPick = null;   // selected sign or planet
+
+async function loadPlacements() {
+  if (!db) return;
+  try {
+    const { data } = await db.from('placements').select('*');
+    if (data) {
+      PLACEMENTS = {};
+      data.forEach(p => {
+        const key = p.sign+'|'+p.body;
+        (PLACEMENTS[key] = PLACEMENTS[key] || []).push({ facet: p.facet || 'Overview', text: p.text, sort: p.sort_order||0 });
+      });
+      Object.keys(PLACEMENTS).forEach(k => PLACEMENTS[k].sort((a,b)=> a.sort-b.sort));
+    }
+  } catch(e) { console.warn('placements load failed', e); }
+}
+
+function setPlacMode(m) {
+  placMode = m; placPick = null;
+  document.getElementById('plac-mode-sign').classList.toggle('active', m==='sign');
+  document.getElementById('plac-mode-planet').classList.toggle('active', m==='planet');
+  document.getElementById('plac-detail').innerHTML = '';
+  document.getElementById('plac-search').value = '';
+  renderPlacements();
+}
+
+function placGlyph(name) {
+  try { return glyph(name==='Rising'?'Ascendant':name==='North Node'?'NorthNode':name); } catch(e){ return ''; }
+}
+
+function renderPlacements() {
+  const search = (document.getElementById('plac-search').value||'').trim().toLowerCase();
+  const picker = document.getElementById('plac-picker');
+  const list = document.getElementById('plac-list');
+  const detail = document.getElementById('plac-detail');
+
+  // SEARCH mode: show any matching entry directly
+  if (search) {
+    picker.innerHTML=''; detail.innerHTML='';
+    const hits = Object.keys(PLACEMENTS).filter(k => {
+      const [s,b] = k.split('|');
+      const label = (b+' in '+s).toLowerCase();
+      const label2 = (s+' '+b).toLowerCase();
+      return label.includes(search) || label2.includes(search);
+    });
+    list.innerHTML = hits.length ? hits.map(k => { const [s,b]=k.split('|'); return placRow(s,b); }).join('')
+      : '<div class="sky-empty">No matching placement yet. Aura is adding more all the time.</div>';
+    return;
+  }
+
+  // PICKER: choose a sign or a planet
+  const opts = placMode==='sign' ? PLAC_SIGNS : PLAC_BODIES;
+  picker.innerHTML = '<div class="plac-grid">' + opts.map(o =>
+    '<div class="plac-chip ' + (placPick===o?'active':'') + '" onclick="placSelect(\''+o+'\')"><span class="astro-glyph">'+placGlyph(o)+'</span> '+o+'</div>'
+  ).join('') + '</div>';
+
+  // LIST: once a pick is made, show the cross-placements
+  if (!placPick) { list.innerHTML = '<div class="plac-hint">Tap a '+(placMode==='sign'?'sign':'planet')+' to explore its placements.</div>'; detail.innerHTML=''; return; }
+  detail.innerHTML='';
+  if (placMode==='sign') {
+    list.innerHTML = '<h2 class="subhead" style="margin-top:1.4rem;">'+placPick+' placements</h2>' +
+      PLAC_BODIES.map(b => placRow(placPick, b)).join('');
+  } else {
+    list.innerHTML = '<h2 class="subhead" style="margin-top:1.4rem;">'+placPick+' through the signs</h2>' +
+      PLAC_SIGNS.map(s => placRow(s, placPick)).join('');
   }
 }
-function renderMe() {
-  const saved = document.getElementById('me-saved');
-  const form = document.querySelector('#section-me .card');
-  if (!ME || !ME.date) { if(saved) saved.style.display='none'; if(form) form.style.display='block'; return; }
-  form.style.display='none';
-  saved.style.display='block';
-  const d = new Date(ME.date+'T12:00:00');
-  const dateStr = d.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  document.getElementById('me-summary').innerHTML =
-    (ME.name?('<strong>'+esc(ME.name)+'</strong><br>'):'') +
-    'Born ' + dateStr + (ME.time?(' at '+ME.time):'') + (ME.place?('<br>'+esc(ME.place)):'');
+
+function placSelect(o) { placPick = o; renderPlacements(); }
+
+function placRow(sign, body) {
+  const key = sign+'|'+body;
+  const has = PLACEMENTS[key] && PLACEMENTS[key].length;
+  const label = body==='Rising' ? (sign+' Rising') : (body + ' in ' + sign);
+  return '<div class="plac-row ' + (has?'':'plac-empty') + '" onclick="'+(has?'placOpen(\''+key+'\')':'')+'">' +
+    '<span class="astro-glyph plac-row-glyph">'+placGlyph(body)+'</span>' +
+    '<span class="plac-row-label">'+esc(label)+'</span>' +
+    (has ? '<span class="plac-row-arrow">›</span>' : '<span class="plac-row-soon">soon</span>') +
+    '</div>';
+}
+
+function placOpen(key) {
+  const [sign,body] = key.split('|');
+  const facets = PLACEMENTS[key] || [];
+  const label = body==='Rising' ? (sign+' Rising') : (body + ' in ' + sign);
+  const detail = document.getElementById('plac-detail');
+  // facet toggles — first one open by default
+  const facetHTML = facets.map((f, i) =>
+    '<div class="plac-facet">' +
+      '<div class="plac-facet-head' + (i===0?' open':'') + '" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\');">' +
+        '<span>'+esc(f.facet)+'</span><span class="plac-facet-arrow">⌄</span>' +
+      '</div>' +
+      '<div class="plac-facet-body' + (i===0?' open':'') + '">'+esc(f.text).replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>')+'</div>' +
+    '</div>'
+  ).join('');
+  detail.innerHTML = '<div class="plac-detail-card">' +
+    '<div class="plac-detail-glyphs"><span class="astro-glyph">'+placGlyph(body)+'</span><span class="astro-glyph">'+placGlyph(sign)+'</span></div>' +
+    '<div class="plac-detail-title">'+esc(label)+'</div>' +
+    facetHTML +
+    '<button class="btn btn-quiet" onclick="document.getElementById(\'plac-detail\').innerHTML=\'\';window.scrollTo(0,0);" style="margin-top:1.2rem;">← Back</button>' +
+    '</div>';
+  window.scrollTo(0, document.getElementById('plac-detail').offsetTop - 60);
 }
 
 function showMetaP(id) {
@@ -3472,11 +3592,14 @@ function renderFlowToday() {
   const sign = moonSign(flowDate);
   const el = MOON_ELEMENTS[sign];
   const card = document.getElementById('flow-today');
+  let blurb = '';
+  try { blurb = (typeof PHASE_ENERGY!=='undefined' && PHASE_ENERGY[ph.name]) ? PHASE_ENERGY[ph.name] : ''; } catch(e){}
   if (card) card.innerHTML =
     '<div class="flow-sky-label">The sky, alongside you</div>' +
     '<div class="flow-moon-graphic">' + moonSVG(flowDate, 118, {tint:true}) + '</div>' +
     '<div class="flow-phase-name" style="text-align:center;">' + ph.name + '</div>' +
-    '<div class="flow-phase-sub" style="text-align:center;">' + ph.illum + '% lit · Moon in ' + sign + ' · ' + el + '</div>';
+    '<div class="flow-phase-sub" style="text-align:center;">' + ph.illum + '% lit · Moon in ' + sign + ' · ' + el + '</div>' +
+    (blurb ? '<div class="flow-moon-blurb">' + esc(blurb.charAt(0).toUpperCase()+blurb.slice(1)) + '.</div>' : '');
 }
 
 function renderEnergyRow() {
