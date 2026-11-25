@@ -1,4 +1,4 @@
-const CACHE = 'solstere-v31';
+const CACHE = 'solstere-v32';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
 
