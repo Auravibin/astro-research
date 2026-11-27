@@ -241,8 +241,8 @@
   .cal-top { display: flex; align-items: flex-start; justify-content: space-between; }
   .cal-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1px; }
   .cal-midsign { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; line-height: 1; padding-top: 1px; padding-right: 2px; }
-  .cal-signs { display: flex; gap: 0px; justify-content: flex-end; }
-  .cal-signs .astro-glyph { font-size: 8px; color: var(--text-primary); }
+  .cal-signs { display: flex; gap: 2px; justify-content: flex-end; flex-wrap: nowrap; align-items: center; }
+  .cal-signs .astro-glyph { font-size: 9px; color: var(--text-primary); flex: 0 0 auto; line-height: 1; }
   .cal-signtime { font-size: 6px; color: var(--text-muted); margin-top: 1px; white-space: nowrap; }
   .cal-ev-asp { font-size: 6.5px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .cal-dir-rx { font-size: 6.5px; font-weight: 700; color: #c0392b; margin-left: 1px; }
@@ -446,14 +446,14 @@
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
-<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </head>
 <body>
 <header>
   <div class="header-top">
-    <div class="logo-wrap" onclick="logoTap()">
+    <div class="logo-wrap">
       <div class="logo">Sol<span>stere</span></div>
       <div class="logo-tag">Know yourself through the stars</div>
     </div>
@@ -475,6 +475,7 @@
     <button class="menu-item" onclick="menuGo('faq')">FAQs</button>
     <button class="menu-item" onclick="menuGo('submit')">Submit a Question</button>
     <button class="menu-item" onclick="window.open('https://www.auravibin.com','_blank')">Work With Aura</button>
+    <button class="menu-item" onclick="menuGo('install')">Add to Home Screen</button>
     <div class="menu-divider"></div>
     <div class="menu-legal" style="width:100%;display:flex;flex-direction:column;align-items:flex-end;">
       <button class="menu-item" onclick="menuGo('privacy')">Privacy Policy</button>
@@ -1932,6 +1933,28 @@
   </div>
 </div>
 
+<!-- ===== ADD TO HOME SCREEN ===== -->
+<div class="section" id="section-install">
+  <div class="section-eyebrow">Quick Access</div>
+  <h1 class="section-title">Add to Home Screen</h1>
+  <p class="section-sub">Use Solstere like a real app — one tap from your phone, full screen, no browser bar.</p>
+  <div class="legal-body">
+  <h2 class="subhead">On iPhone (Safari)</h2>
+  <strong>1.</strong> Open <strong>solstere.com</strong> in <strong>Safari</strong> (it has to be Safari on iPhone — not Chrome).<br><br>
+  <strong>2.</strong> Tap the <strong>Share button</strong> — the little square with an arrow pointing up <span style="font-size:1.1em;">⎙</span>, at the bottom of the screen.<br><br>
+  <strong>3.</strong> Scroll down the list and tap <strong>"Add to Home Screen."</strong><br><br>
+  <strong>4.</strong> Tap <strong>"Add"</strong> in the top-right corner. Done — the gold Solstere star is now on your home screen like any other app. ✦
+
+  <h2 class="subhead">On Android (Chrome)</h2>
+  <strong>1.</strong> Open <strong>solstere.com</strong> in <strong>Chrome</strong>.<br><br>
+  <strong>2.</strong> Tap the <strong>⋮ menu</strong> (three dots, top-right).<br><br>
+  <strong>3.</strong> Tap <strong>"Add to Home screen"</strong> (or "Install app").<br><br>
+  <strong>4.</strong> Tap <strong>Add</strong> to confirm.
+
+  <div class="hl"><strong>Why bother?</strong> Once it's on your home screen, Solstere opens full-screen and instantly — it looks and feels like a downloaded app, and your daily Glow ritual is always one tap away. 🌙</div>
+  </div>
+</div>
+
 <!-- ===== ABOUT ===== -->
 <div class="section" id="section-about">
   <div class="section-eyebrow">The Mission</div>
@@ -2419,11 +2442,17 @@ async function acctSignUp() {
   if (pass.length < 8) return acctMsg('Password needs to be at least 8 characters.');
   if (!document.getElementById('acct-consent').checked) return acctMsg('Please confirm you are 18+ and agree to the Terms & Privacy Policy to create an account.');
   const marketingOk = !!document.getElementById('acct-marketing') && document.getElementById('acct-marketing').checked;
-  const { error } = await db.auth.signUp({ email, password: pass, options: { data: { marketing_opt_in: marketingOk, consent_at: new Date().toISOString() } } });
+  const { data, error } = await db.auth.signUp({ email, password: pass, options: { data: { marketing_opt_in: marketingOk, consent_at: new Date().toISOString() } } });
   if (error) return acctMsg(error.message);
-  acctMsg('Account created ✦ Your notes will now sync automatically.', true);
-  await refreshAccountUI();
-  autoSync();
+  if (data && data.session) {
+    // Email confirmation is OFF — the user is signed in immediately.
+    acctMsg('Account created ✦ You are all set — your notes will sync automatically.', true);
+    await refreshAccountUI();
+    autoSync();
+  } else {
+    // Email confirmation is ON — they must click the link in their email first.
+    acctMsg('Almost there ✦ Check your email and tap the confirmation link to finish signing up. Then come back and you are in.', true);
+  }
 }
 
 async function acctSignIn() {
@@ -4574,6 +4603,7 @@ async function loadNotes() {
 }
 
 function revealAdmin() {
+  if (!IS_ADMIN) return;   // never reveal the admin tab to a non-admin
   document.getElementById('admin-tab').classList.add('show');
   showTab('admin');
 }
@@ -4830,8 +4860,15 @@ function logoTap() {
   renderGloss();
   loadGlossaryFromDB();
   showTab('flow');   // open on the Glow tab (calendar + quote) by default
-  const { data: { session } } = await db.auth.getSession();
-  if (session) { document.getElementById('admin-tab').classList.add('show'); }
+  await refreshAccountUI();   // reflect signed-in state on load (and when landing back from the confirm-email link)
+  // Keep the UI in sync on any auth change: email-confirm landing, token refresh, sign in/out.
+  // Deferred with setTimeout so we never call Supabase from inside its own callback (prevents deadlocks).
+  db.auth.onAuthStateChange((event, session) => {
+    setTimeout(() => {
+      refreshAccountUI();
+      if (session && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) autoSync();
+    }, 0);
+  });
 })();
 </script>
 <script>
