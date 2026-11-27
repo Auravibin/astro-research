@@ -1389,7 +1389,7 @@
     <textarea id="q-text" placeholder="e.g. How do I tell which planet is the almuten of my Ascendant degree?"></textarea>
     <label>Email <span class="optional-tag">— optional, only if you'd like a reply</span></label>
     <input type="email" id="q-email" autocomplete="email">
-    <input type="text" id="q-website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+    <input type="text" id="q-xtra" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
     <button class="btn" onclick="submitQuestion()">Send question</button>
     <div class="msg" id="q-msg"></div>
   </div>
@@ -1473,7 +1473,7 @@
       <div id="name-wrap" style="display:none;"><label>Name to show</label><input type="text" id="sub-name" placeholder="First name or handle"></div>
       <label style="margin-top:1rem;">Email <span class="optional-tag">— optional, only if you're open to follow-up questions</span></label>
       <input type="email" id="sub-email" autocomplete="email">
-      <input type="text" id="sub-website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
+      <input type="text" id="sub-xtra" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;" aria-hidden="true">
       <div class="step-nav"><button class="btn btn-ghost" onclick="goStep(3)">← Back</button><button class="btn" id="sub-btn" onclick="submitEntry()">Submit to the record</button></div>
       <div class="msg" id="sub-msg"></div>
     </div>
@@ -4405,7 +4405,7 @@ async function submitEntry() {
   const msg = document.getElementById('sub-msg');
   const btn = document.getElementById('sub-btn');
   msg.className = 'msg';
-  if (document.getElementById('sub-website').value) return;
+  if (document.getElementById('sub-xtra').value) return;
   if (Date.now() - lastSubmit < 20000) { msg.className = 'msg err'; msg.textContent = 'Just a moment before submitting again.'; return; }
   const category = document.getElementById('sub-category').value;
   const story = document.getElementById('sub-story').value.trim();
@@ -4462,7 +4462,7 @@ async function submitEntry() {
 async function submitQuestion() {
   const msg = document.getElementById('q-msg');
   msg.className = 'msg';
-  if (document.getElementById('q-website').value) return;
+  if (document.getElementById('q-xtra').value) return;
   const text = document.getElementById('q-text').value.trim();
   if (!text) { msg.className = 'msg err'; msg.textContent = 'Please write your question first.'; return; }
   if (Date.now() - lastSubmit < 20000) { msg.className = 'msg err'; msg.textContent = 'Just a moment before sending again.'; return; }
